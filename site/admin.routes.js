@@ -163,8 +163,27 @@ function limparSessoes(res) {
 }
 
 router.get(["/app", "/app/"], (req, res) => res.set("Cache-Control", "no-store").sendFile(path.join(appPublicDir, "index.html")));
+router.get("/app/service-worker.js", (req, res) => {
+  res.set("Service-Worker-Allowed", "/");
+  res.sendFile(path.join(appPublicDir, "service-worker.js"));
+});
 router.use("/app", express.static(appPublicDir, { etag: false, lastModified: false }));
-router.get(["/instalar", "/instalar/"], (req, res) => res.set("Cache-Control", "no-store").sendFile(path.join(installPublicDir, "index.html")));
+router.get(["/instalar", "/instalar/"], (req, res) => {
+  const arquivo = path.join(installPublicDir, "index.html");
+  const scriptInstalacao = `<script>
+    const botaoMyBot=document.querySelector('#instalar'); const ajudaMyBot=document.querySelector('#ajuda'); let promptMyBot;
+    if('serviceWorker' in navigator) navigator.serviceWorker.register('/app/service-worker.js',{scope:'/'}).catch(()=>{});
+    if(matchMedia('(display-mode: standalone)').matches||navigator.standalone){botaoMyBot.disabled=true;botaoMyBot.textContent='✓ MYBOT JÁ ESTÁ INSTALADO';ajudaMyBot.textContent='Você já está usando o MyBot como aplicativo. Abra-o pelo ícone na tela inicial.';}
+    else ajudaMyBot.textContent='Aguarde alguns segundos para o Chrome liberar a instalação.';
+    addEventListener('beforeinstallprompt',e=>{e.preventDefault();promptMyBot=e;ajudaMyBot.textContent='Pronto: toque em INSTALAR MYBOT para confirmar.';});
+    addEventListener('appinstalled',()=>{promptMyBot=null;botaoMyBot.disabled=true;botaoMyBot.textContent='✓ MYBOT INSTALADO';ajudaMyBot.textContent='Pronto! O ícone MyBot foi adicionado à tela inicial.';});
+    botaoMyBot.onclick=async()=>{if(matchMedia('(display-mode: standalone)').matches||navigator.standalone)return;if(!promptMyBot){ajudaMyBot.textContent='O Chrome ainda está preparando a instalação. Aguarde alguns segundos ou use o menu ⋮ e escolha Instalar app.';return;}promptMyBot.prompt();const escolha=await promptMyBot.userChoice;if(escolha.outcome==='dismissed')ajudaMyBot.textContent='Instalação cancelada. Toque no botão quando quiser tentar novamente.';promptMyBot=null;};
+  </script>`;
+  try {
+    const html = fs.readFileSync(arquivo, "utf8").replace("</body>", `${scriptInstalacao}</body>`);
+    res.set("Cache-Control", "no-store").type("html").send(html);
+  } catch { res.status(500).send("Não foi possível abrir a página de instalação."); }
+});
 router.use("/instalar", express.static(installPublicDir, { etag: false, lastModified: false }));
 router.get("/api/app/sessao", (req, res) => res.set("Cache-Control", "no-store").json({ autenticado: appAutenticado(req), configurado: Boolean(tokenDoApp()) }));
 router.post("/api/app/entrar", (req, res) => {

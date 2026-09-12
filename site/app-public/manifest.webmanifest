@@ -2,7 +2,7 @@
   "name": "MyBot Delivery",
   "short_name": "MyBot",
   "start_url": "/app/",
-  "scope": "/app/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#063c25",
   "theme_color": "#08783f",
