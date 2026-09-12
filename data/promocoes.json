@@ -1,2 +1,10 @@
-{"pizzas":{},"bebidas":{}}
+{
+  "pizzas": {
+    "Calabresa": { "G": { "de": 100, "por": 85, "categoria": "Segunda da Borcelle" } },
+    "Marguerita": { "G": { "de": 100, "por": 85, "categoria": "Segunda da Borcelle" } },
+    "Frango com Queijo": { "M": { "de": 75, "por": 65, "categoria": "Noite Especial" } },
+    "Quatro Queijos": { "M": { "de": 75, "por": 65, "categoria": "Noite Especial" } }
+  },
+  "bebidas": {}
+}
 

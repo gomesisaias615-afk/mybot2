@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#121c18">
   <title>MyBot | Painel da Nova pizzaria</title>
-  <link rel="icon" type="image/png" href="/cardapio/mascote-saborear.png">
-  <link rel="apple-touch-icon" href="/cardapio/mascote-saborear.png">
+  <link rel="icon" type="image/png" href="/cardapio/borcelle-logo.png">
+  <link rel="apple-touch-icon" href="/cardapio/borcelle-logo.png">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
   <link rel="stylesheet" href="/painel/style.css">
   <script src="/painel/identidade.js" defer></script>
 </head>
 <body>
-  <div id="mybotSplash" class="mybot-splash" role="status" aria-label="Carregando MyBot"><div><img src="/cardapio/mascote-saborear.png" alt=""><strong>MyBot</strong><span>Preparando seu atendimento...</span></div></div>
+  <div id="mybotSplash" class="mybot-splash" role="status" aria-label="Carregando Pizzaria Borcelle"><div><img src="/cardapio/borcelle-logo.png" alt=""><strong>Pizzaria Borcelle</strong><span>Preparando seu atendimento...</span></div></div>
   <section id="login" class="login-shell oculto">
     <div class="login-card">
       <div class="marca grande marca-login"><img class="marca-logo" data-logo-pizzaria src="/cardapio/mascote-saborear.png" alt="Logo da pizzaria" onerror="this.onerror=null;this.removeAttribute('data-logo-pizzaria');this.src='/cardapio/mascote-saborear.png'"><span><b data-nome-pizzaria>Nova pizzaria</b><small>Painel Administrativo MyBot</small></span></div>
@@ -48,7 +48,7 @@
           <h1>Olá, atendente 👋</h1>
           <p>Tenha controle do atendimento, dos pedidos e do cardápio em um só lugar.</p>
         </div>
-        <div class="hero-marca"><img src="/cardapio/mascote-saborear.png" alt="Assistente MyBot"><button id="alternarBot" class="btn status-grande">Carregando...</button></div>
+        <div class="hero-marca"><img src="/painel/borcelle-pizza.png" alt="Pizza da Pizzaria Borcelle"><button id="alternarBot" class="btn status-grande">Carregando...</button></div>
       </section>
 
       <nav class="guias-principais" aria-label="Áreas do painel"><button class="guia-principal ativa" data-guia="pedidos">Pedidos <b class="contador-pedidos contador-geral" data-contador="geral" hidden>0</b></button><button class="guia-principal" data-guia="historico">Histórico</button><button class="guia-principal" data-guia="estoque">Estoque</button><button class="guia-principal" data-guia="precos">Preços e promoções</button><button class="guia-principal" data-guia="itens">Adicionar itens</button><button class="guia-principal" data-guia="ingredientes">Ingredientes</button><button class="guia-principal" data-guia="imagens">Imagens</button><button class="guia-principal" data-guia="horario">Horário</button><button class="guia-principal" data-guia="taxa">Taxa e localização</button><button class="guia-principal" data-guia="ajuda">Ajuda</button></nav><section id="resumo" class="metricas"></section>

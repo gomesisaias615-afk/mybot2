@@ -1,10 +1,10 @@
 {
-  "nome": "Minha Pizzaria",
-  "logo": "/cardapio/mascote-saborear.png",
+  "nome": "Pizzaria Borcelle",
+  "logo": "/cardapio/borcelle-logo.png",
   "cores": {
-    "primaria": "#117546",
-    "escura": "#10271d",
-    "clara": "#f3faf6",
-    "destaque": "#e3ad59"
+    "primaria": "#16964b",
+    "escura": "#111111",
+    "clara": "#fffaf4",
+    "destaque": "#e63131"
   }
 }

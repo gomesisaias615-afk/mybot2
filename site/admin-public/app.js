@@ -38,7 +38,8 @@ function escapar(texto) {
 }
 
 function pedidosDemonstracao() {
-  const agora = Date.now();
+  // Horários fixos: a demonstração fica idêntica em todas as gravações.
+  const agora = new Date("2026-09-12T20:30:00-03:00").getTime();
   const criar = (numero, minutos, status, modalidade, nome, pizzas, pagamento = "pix") => ({
     id: `DEMO-${String(numero).padStart(3, "0")}`,
     demonstracao: true,
@@ -72,13 +73,13 @@ function pedidosDemonstracao() {
   return [
     criar(1, 2, "pago", "entrega", "Mariana Santos", [{ quantidade: 2, sabores: ["Calabresa"], tamanho: "G" }]),
     criar(2, 6, "pago", "entrega", "Carlos Oliveira", [{ quantidade: 1, sabores: ["Portuguesa"], tamanho: "F" }], "maquininha"),
-    criar(3, 11, "pago", "entrega", "Ana Beatriz", [{ quantidade: 1, sabores: ["Milho"], tamanho: "M" }, { quantidade: 1, sabores: ["Quatro Queijos"], tamanho: "G" }]),
-    criar(4, 18, "em_preparo", "entrega", "João Pedro", [{ quantidade: 3, sabores: ["Frango com Catupiry"], tamanho: "G" }], "dinheiro"),
-    criar(5, 27, "em_preparo", "entrega", "Fernanda Lima", [{ quantidade: 1, sabores: ["Mussarela"], tamanho: "F" }]),
+    criar(3, 11, "pago", "entrega", "Ana Beatriz", [{ quantidade: 1, sabores: ["Marguerita"], tamanho: "M" }, { quantidade: 1, sabores: ["Quatro Queijos"], tamanho: "G" }]),
+    criar(4, 18, "em_preparo", "entrega", "João Pedro", [{ quantidade: 1, sabores: ["Frango com Queijo"], tamanho: "G" }], "dinheiro"),
+    criar(5, 27, "em_preparo", "entrega", "Fernanda Lima", [{ quantidade: 1, sabores: ["Muçarela"], tamanho: "F" }]),
     criar(6, 34, "pronto", "entrega", "Rafael Souza", [{ quantidade: 2, sabores: ["Calabresa", "Portuguesa"], tamanho: "G" }]),
     criar(7, 4, "pago", "salao", "Mesa 07", [{ quantidade: 2, sabores: ["Quatro Queijos"], tamanho: "M" }], "maquininha"),
     criar(8, 15, "em_preparo", "salao", "Mesa 12", [{ quantidade: 1, sabores: ["Portuguesa"], tamanho: "F" }], "dinheiro"),
-    criar(9, 3, "pago", "retirada", "Lucas Almeida", [{ quantidade: 2, sabores: ["Milho"], tamanho: "G" }]),
+    criar(9, 3, "pago", "retirada", "Lucas Almeida", [{ quantidade: 1, sabores: ["Romeu e Julieta"], tamanho: "G" }]),
     criar(10, 22, "pronto", "retirada", "Patrícia Costa", [{ quantidade: 1, sabores: ["Calabresa"], tamanho: "F" }], "maquininha")
   ];
 }

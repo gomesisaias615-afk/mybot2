@@ -1,1 +1,14 @@
-{}
+{
+  "Calabresa": { "P": 50, "M": 75, "G": 100, "F": 115 },
+  "Marguerita": { "P": 50, "M": 75, "G": 100, "F": 115 },
+  "Portuguesa": { "P": 50, "M": 75, "G": 100, "F": 115 },
+  "Quatro Queijos": { "P": 50, "M": 75, "G": 100, "F": 115 },
+  "Frango com Queijo": { "P": 50, "M": 75, "G": 100, "F": 115 },
+  "Muçarela": { "P": 50, "M": 75, "G": 100, "F": 115 },
+  "Napolitana": { "P": 50, "M": 75, "G": 100, "F": 115 },
+  "Atum com Cebola": { "P": 50, "M": 75, "G": 100, "F": 115 },
+  "Romeu e Julieta": { "P": 50, "M": 75, "G": 100, "F": 115 },
+  "Brigadeiro": { "P": 50, "M": 75, "G": 100, "F": 115 },
+  "Prestígio": { "P": 50, "M": 75, "G": 100, "F": 115 },
+  "Banana com Canela": { "P": 50, "M": 75, "G": 100, "F": 115 }
+}

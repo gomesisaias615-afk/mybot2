@@ -1,8 +1,8 @@
 {
   "pizzaria": {
-    "nome": "Minha Pizzaria",
-    "nomeCurto": "Pizzaria",
-    "slogan": "Cardápio digital"
+    "nome": "Pizzaria Borcelle",
+    "nomeCurto": "Borcelle",
+    "slogan": "Pizzas artesanais e delivery"
   },
   "categorias": {
     "tradicionais": true,
@@ -11,9 +11,9 @@
     "bebidas": true
   },
   "pizzasPorCategoria": {
-    "tradicionais": [],
+    "tradicionais": ["Calabresa", "Marguerita", "Portuguesa", "Quatro Queijos", "Frango com Queijo", "Muçarela", "Napolitana", "Atum com Cebola"],
     "especiais": [],
-    "doces": []
+    "doces": ["Romeu e Julieta", "Brigadeiro", "Prestígio", "Banana com Canela"]
   },
   "promocoes": {
     "tradicionais": [],
