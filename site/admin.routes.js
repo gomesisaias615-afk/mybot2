@@ -171,6 +171,8 @@ router.get("/service-worker.js", (req, res) => {
   res.sendFile(path.join(appPublicDir, "service-worker.js"));
 });
 router.use("/app", express.static(appPublicDir, { etag: false, lastModified: false }));
+// A instalação ocorre dentro do escopo do aplicativo, onde Chrome valida o PWA.
+router.get(["/instalar", "/instalar/"], (req, res) => res.redirect(302, "/app/instalar.html"));
 router.get(["/instalar", "/instalar/"], (req, res) => {
   const arquivo = path.join(installPublicDir, "index.html");
   const scriptInstalacao = `<script>
