@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pagamento seguro | __PIZZARIA_NOME__</title>
+  <meta name="description" content="Finalize seu pedido da __PIZZARIA_NOME__ com segurança.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:site_name" content="__PIZZARIA_NOME__">
+  <meta property="og:title" content="__PIZZARIA_NOME__ | Pagamento seguro">
+  <meta property="og:description" content="Finalize seu pedido da __PIZZARIA_NOME__ com segurança.">
+  <meta property="og:url" content="__CHECKOUT_URL__">
+  <meta property="og:image" content="__PUBLIC_URL__/api/identidade/logo">
+  <meta property="og:image:secure_url" content="__PUBLIC_URL__/api/identidade/logo">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="1200">
+  <meta property="og:image:alt" content="__PIZZARIA_NOME__ — Pagamento seguro">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="__PIZZARIA_NOME__ | Pagamento seguro">
+  <meta name="twitter:description" content="Finalize seu pedido com segurança.">
+  <meta name="twitter:image" content="__PUBLIC_URL__/api/identidade/logo">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div id="mybotSplash" class="mybot-splash" role="status" aria-label="Carregando MyBot"><div><img src="/cardapio/mascote-saborear.png" alt=""><strong>MyBot</strong><span>Preparando seu atendimento...</span></div></div><img class="logo-checkout" src="/cardapio/mascote-saborear.png" alt="Logo MyBot">
+  <main class="page">
+    <header class="topbar">
+      <button id="btnVoltar" class="back hidden" type="button" aria-label="Voltar">←</button>
+      <h1 id="tituloTela">Endereço de entrega</h1>
+    </header>
+
+    <nav class="checkout-progress" aria-label="Etapas da finalização">
+      <div class="progress-step active" data-progress="endereco"><span>1</span><small>Recebimento</small></div>
+      <i aria-hidden="true"></i>
+      <div class="progress-step" data-progress="pagamento"><span>2</span><small>Pagamento</small></div>
+      <i aria-hidden="true"></i>
+      <div class="progress-step" data-progress="confirmacao"><span>3</span><small>Confirmação</small></div>
+    </nav>
+
+    <section class="summary" aria-label="Resumo financeiro do pedido">
+      <span>Código do pedido</span><strong id="pedidoId">Carregando...</strong>
+      <span>Valor do pedido</span><strong id="pedidoSubtotal">R$ 0,00</strong>
+      <span>Taxa de entrega</span><strong id="pedidoTaxaEntrega">R$ 0,00</strong>
+      <span>Total final</span><strong id="pedidoTotal">R$ 0,00</strong>
+      <p id="statusTaxaEntrega" class="delivery-fee-status" aria-live="polite">Carregando a taxa de entrega...</p>
+    </section>
+
+    <section id="telaEndereco">
+      <p class="section-label">Como deseja receber seu pedido?</p>
+      <div class="delivery-options">
+        <button class="delivery-option active" data-modalidade="entrega" type="button"><span>🚚</span><strong>Entrega</strong><small>≈ 40 min</small></button>
+        <button class="delivery-option" data-modalidade="salao" type="button"><span>🏪</span><strong>Salão</strong><small>Consumir no local</small></button>
+        <button class="delivery-option" data-modalidade="retirada" type="button"><span>🛍️</span><strong>Retirada</strong><small>≈ 25 min</small></button>
+      </div>
+
+      <h2 id="tituloFormulario" class="form-title">Endereço de entrega</h2>
+      <form id="formEndereco" autocomplete="off">
+        <label>Nome
+          <input id="nomeCliente" required placeholder="Como podemos chamar você?">
+        </label>
+        <label>Telefone para contato
+          <span class="phone-input">
+            <span class="phone-prefix" aria-hidden="true">🇧🇷 +55</span>
+            <input
+              id="contato"
+              type="tel"
+              required
+              inputmode="numeric"
+              autocomplete="tel-national"
+              maxlength="11"
+              pattern="[1-9]{2}9[0-9]{8}"
+              placeholder="79900000000"
+              aria-label="Telefone com DDD"
+            >
+          </span>
+          <small>Digite 11 números, incluindo o DDD.</small>
+        </label>
+
+        <div id="camposEntrega">
+          <button id="btnMinhaLocalizacao" class="location-button" type="button">📍 Usar minha localização atual</button>
+          <p id="statusLocalizacao" class="location-status" aria-live="polite"></p>
+
+          <div class="field-row location-region-row">
+            <label>Estado
+              <span class="select-wrap">
+                <select id="estadoEntrega" required aria-label="Estado da entrega"></select>
+                <span class="select-chevron" aria-hidden="true">⌄</span>
+              </span>
+            </label>
+            <label>Cidade<input id="cidadeEntrega" required value="Estância" autocomplete="address-level2"></label>
+          </div>
+          <p class="region-hint">Escolha o estado e a cidade antes de pesquisar a rua.</p>
+          <div class="field-row">
+            <label class="address-search-field">Rua<input id="rua" autocomplete="street-address" placeholder="Comece a digitar a rua"></label>
+            <label class="number-field">Número<input id="numero" inputmode="numeric"></label>
+          </div>
+          <div id="sugestoesEndereco" class="address-suggestions hidden" role="listbox" aria-label="Sugestões de endereço"></div>
+          <div class="field-row">
+            <label>Bairro<input id="bairro" autocomplete="address-level3" placeholder="Digite ou selecione uma sugestão"></label>
+            <label class="cep-field">CEP<input id="cep" required inputmode="numeric" maxlength="8" pattern="[0-9]{8}" placeholder="00000000"></label>
+          </div>
+          <label>Tipo de residência
+            <span class="select-wrap">
+              <select id="complemento">
+                <option value="">Selecione casa ou apartamento</option>
+                <option value="Casa">Casa</option>
+                <option value="Apartamento">Apartamento</option>
+              </select>
+              <span class="select-chevron" aria-hidden="true">⌄</span>
+            </span>
+          </label>
+          <label>Ponto de referência (opcional)<input id="referencia"></label>
+        </div>
+
+        <div id="camposAgendamento" class="hidden">
+          <label id="labelHorario">Horário
+            <span class="select-wrap">
+              <select id="horario"></select>
+              <span class="select-chevron" aria-hidden="true">⌄</span>
+            </span>
+          </label>
+          <label id="campoPessoas" class="hidden">Quantidade de pessoas
+            <input id="quantidadePessoas" type="number" min="1" max="20" value="2">
+          </label>
+        </div>
+
+        <p id="erroEndereco" class="form-error hidden"></p>
+        <button class="primary-button" type="submit">Continuar para pagamento</button>
+      </form>
+    </section>
+
+    <section id="telaMetodos" class="hidden">
+      <div class="section-heading"><span>Escolha como pagar</span><p>Selecione uma opção segura para concluir seu pedido.</p></div>
+      <section class="payment-card">
+        <button class="option" data-tipo="pix" type="button"><span class="payment-icon" aria-hidden="true">◆</span><span class="radio"></span><span><strong>PIX</strong><small>Aprovação rápida</small></span></button>
+        <button class="option" data-tipo="cartao" type="button"><span class="payment-icon" aria-hidden="true">💳</span><span class="radio"></span><span><strong>Cartão online</strong><small>Preencha os dados do cartão</small></span></button>
+        <button class="option" data-tipo="dinheiro" type="button"><span class="payment-icon" aria-hidden="true">💵</span><span class="radio"></span><span><strong id="tituloDinheiro">Dinheiro na entrega</strong><small id="descricaoDinheiro">Informe se precisa de troco</small></span></button>
+        <button class="option" data-tipo="maquininha" type="button"><span class="payment-icon" aria-hidden="true">◉</span><span class="radio"></span><span><strong id="tituloMaquininha">Cartão na entrega</strong><small id="descricaoMaquininha">O entregador leva a maquininha</small></span></button>
+      </section>
+
+      <section id="painelTroco" class="result hidden">
+        <h3>Você precisa de troco?</h3>
+        <label class="choice-line"><input type="radio" name="precisaTroco" value="nao" checked> Não preciso de troco</label>
+        <label class="choice-line"><input type="radio" name="precisaTroco" value="sim"> Sim, preciso de troco</label>
+        <label id="campoTroco" class="hidden">Quanto de troco devemos levar?
+          <input id="trocoPara" inputmode="decimal" placeholder="Ex.: 20,00">
+        </label>
+        <p id="erroTroco" class="form-error hidden"></p>
+        <button id="btnConfirmarDinheiro" class="primary-button" type="button">Confirmar pedido</button>
+      </section>
+
+      <section id="painelMaquininha" class="result hidden">
+        <h3 id="tituloConfirmacaoLocal">Cartão na entrega</h3>
+        <p id="textoConfirmacaoLocal">O entregador levará a maquininha.</p>
+        <button id="btnConfirmarMaquininha" class="primary-button" type="button">Confirmar pedido</button>
+      </section>
+    </section>
+
+    <section id="telaPix" class="hidden"><section class="result"><h3>PIX Online</h3><p>Clique no botão abaixo para gerar o pagamento.</p></section></section>
+    <section id="telaCartao" class="hidden">
+      <section class="result card-online-intro">
+        <h3>Cartão online</h3>
+        <p>Preencha abaixo os dados do cartão para concluir o pagamento com segurança.</p>
+      </section>
+      <div id="cardPaymentBrick_container"><p class="card-loading">Carregando formulário seguro...</p></div>
+    </section>
+    <section id="resultado" class="result hidden"></section>
+
+    <footer class="safe-box">
+      <div class="mp-logo"><img src="/assets/mercado-pago.png" alt="Mercado Pago" width="150" height="120"></div>
+      <div class="safe-copy"><strong>◇ Pagamento 100% seguro</strong><p>Seus dados são protegidos e criptografados.</p></div>
+    </footer>
+    <button id="btnPagar" class="pay-button hidden" type="button">Pagar</button>
+  </main>
+  <div id="modalLocalizacao" class="location-modal hidden" role="dialog" aria-modal="true" aria-labelledby="tituloModalLocalizacao">
+    <div class="location-modal-sheet">
+      <div class="location-modal-handle" aria-hidden="true"></div>
+      <header class="location-modal-header">
+        <div>
+          <h2 id="tituloModalLocalizacao">Confirmar localização</h2>
+          <p>Mova o mapa, toque em outro ponto ou arraste o marcador.</p>
+        </div>
+        <button id="btnFecharMapa" class="location-modal-close" type="button" aria-label="Fechar mapa">×</button>
+      </header>
+      <div id="mapaLocalizacao" class="location-map" aria-label="Mapa para ajustar o local de entrega"></div>
+      <p id="statusMapa" class="location-map-status" aria-live="polite">Ajuste o marcador até o ponto exato da entrega.</p>
+      <div class="location-modal-actions">
+        <button id="btnConfirmarLocalizacao" class="primary-button" type="button">Confirmar localização</button>
+        <button id="btnCancelarLocalizacao" class="location-secondary-button" type="button">Voltar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="https://sdk.mercadopago.com/js/v2"></script>
+  <script src="/checkout.js"></script>
+  <script>window.addEventListener("load",()=>setTimeout(()=>document.querySelector("#mybotSplash")?.classList.add("sair"),650));</script>
+</body>
+</html>

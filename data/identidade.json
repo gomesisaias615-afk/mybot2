@@ -1,0 +1,10 @@
+{
+  "nome": "Minha Hamburgueria",
+  "logo": "/cardapio/mascote-saborear.png",
+  "cores": {
+    "primaria": "#117546",
+    "escura": "#10271d",
+    "clara": "#f3faf6",
+    "destaque": "#e3ad59"
+  }
+}

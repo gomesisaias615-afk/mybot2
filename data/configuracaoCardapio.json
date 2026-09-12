@@ -1,0 +1,24 @@
+{
+  "pizzaria": {
+    "nome": "Minha Pizzaria",
+    "nomeCurto": "Pizzaria",
+    "slogan": "Cardápio digital"
+  },
+  "categorias": {
+    "tradicionais": true,
+    "especiais": true,
+    "doces": true,
+    "bebidas": true
+  },
+  "pizzasPorCategoria": {
+    "tradicionais": [],
+    "especiais": [],
+    "doces": []
+  },
+  "promocoes": {
+    "tradicionais": [],
+    "especiais": [],
+    "doces": [],
+    "bebidas": []
+  }
+}

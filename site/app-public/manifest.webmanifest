@@ -1,0 +1,10 @@
+{
+  "name": "MyBot Delivery",
+  "short_name": "MyBot",
+  "start_url": "/app/",
+  "scope": "/app/",
+  "display": "standalone",
+  "background_color": "#063c25",
+  "theme_color": "#08783f",
+  "icons": [{ "src": "/painel/mybot-logo-verde.png", "sizes": "any", "type": "image/png", "purpose": "any maskable" }]
+}

@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Painel de Estoque</title>
+  <link rel="stylesheet" href="/estoque.css">
+</head>
+<body>
+  <header><div><small>PAINEL DA ATENDENTE</small><h1>Controle de estoque</h1></div><span id="tempo">15:00</span></header>
+  <main>
+    <section class="resumo"><article><strong id="total">0</strong><span>Produtos</span></article><article><strong id="disponiveis">0</strong><span>Disponíveis</span></article><article><strong id="esgotados">0</strong><span>Esgotados</span></article></section>
+    <input id="busca" type="search" placeholder="🔎 Pesquisar produto..." autocomplete="off">
+    <nav><button class="ativo" data-filtro="todos">Todos</button><button data-filtro="pizzas">Pizzas</button><button data-filtro="bebidas">Bebidas</button><button data-filtro="esgotados">Esgotados</button></nav>
+    <p id="status" role="status"></p><section id="lista" class="lista"></section>
+  </main>
+  <dialog id="confirmacao"><h2>Zerar estoque?</h2><p id="confirmacaoTexto"></p><div><button id="cancelar">Cancelar</button><button id="confirmar" class="perigo">Zerar</button></div></dialog>
+  <script src="/estoque.js"></script>
+</body>
+</html>
+
+

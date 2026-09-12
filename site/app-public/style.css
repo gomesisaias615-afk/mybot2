@@ -1,0 +1,17 @@
+:root { color-scheme: dark; font-family: Arial, sans-serif; background: #063c25; color: #fff; }
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; background: radial-gradient(circle at 50% 10%, #18b568 0, #08783f 35%, #063c25 100%); }
+.shell { min-height: 100vh; display: grid; place-items: center; padding: 24px; }
+.card { width: min(100%, 440px); padding: 40px 30px 30px; border: 1px solid #62e19d77; border-radius: 28px; background: #062d1de8; text-align: center; box-shadow: 0 24px 70px #001c10aa; }
+.logo { width: 150px; height: 150px; object-fit: contain; margin: -12px auto 6px; }
+.tag { margin: 0; color: #82f5b7; font-weight: 800; font-size: 12px; letter-spacing: 1.5px; }
+h1 { margin: 8px 0; font-size: 32px; } .subtitulo, .instalar { color: #c8dfd1; line-height: 1.45; } .instalar { margin: 26px 0 0; font-size: 13px; }
+form { text-align: left; margin-top: 26px; } label { display: block; margin-bottom: 8px; font-weight: bold; }
+input { width: 100%; padding: 15px; border: 1px solid #69c994; border-radius: 12px; background: #fff; color: #12251d; font-size: 16px; }
+.botao { display: block; width: 100%; margin-top: 14px; padding: 15px; border: 0; border-radius: 12px; font-size: 16px; font-weight: 800; text-decoration: none; cursor: pointer; }
+.primario { background: #24c76e; color: #042716; } .secundario { background: #e9fff2; color: #07552e; } .botao:disabled { opacity: .6; }
+.apresentacao { margin: 24px 0 6px; padding: 16px; text-align: left; border-radius: 16px; background: #0b5738; }
+.apresentacao div { display: flex; gap: 11px; align-items: center; padding: 9px 0; color: #dcf8e7; line-height: 1.35; }
+.apresentacao b { display: grid; place-items: center; flex: 0 0 25px; height: 25px; border-radius: 50%; background: #27cf72; color: #04331b; }
+.instalar-app { background: #dfffea; color: #07552e; border: 2px solid #7cf0ae; }
+#erro { min-height: 20px; color: #ffb4ab; text-align: center; } .boas-vindas { margin: 26px 0 8px; color: #d9ffea; } .sair { margin-top: 20px; background: transparent; border: 0; color: #b8d8c6; text-decoration: underline; cursor: pointer; }

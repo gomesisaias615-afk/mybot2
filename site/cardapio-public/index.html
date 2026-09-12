@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#128653">
+  <title>Cardápio Digital | __PIZZARIA_NOME__</title>
+  <meta name="description" content="Confira hambúrgueres, acompanhamentos, combos, bebidas, promoções e disponibilidade no cardápio da __PIZZARIA_NOME__.">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:site_name" content="__PIZZARIA_NOME__">
+  <meta property="og:title" content="__PIZZARIA_NOME__ | Cardápio Digital">
+  <meta property="og:description" content="Escolha seus hambúrgueres, acompanhamentos, combos e bebidas favoritos no cardápio digital da __PIZZARIA_NOME__.">
+  <meta property="og:url" content="__CARDAPIO_URL__">
+  <meta property="og:image" content="__PUBLIC_URL__/api/identidade/logo">
+  <meta property="og:image:alt" content="Logo da __PIZZARIA_NOME__">
+  <meta name="twitter:image" content="__PUBLIC_URL__/api/identidade/logo">
+  <meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="__PIZZARIA_NOME__ | Cardápio Digital">
+  <meta name="twitter:description" content="Escolha seus hambúrgueres, acompanhamentos, combos e bebidas favoritos.">
+<link rel="stylesheet" href="style.css">
+  <script src="identidade.js" defer></script>
+</head>
+<body>
+  <div id="mybotSplash" class="mybot-splash" role="status" aria-label="Carregando MyBot"><div><img src="mascote-saborear.png" alt=""><strong>MyBot</strong><span>Preparando seu atendimento...</span></div></div>
+  <main class="cardapio">
+    <section id="telaInicial">
+      <header class="app-header">
+        <div class="marca-assinatura">
+          <div class="marca-mini"><img data-logo-pizzaria src="__LOGO_PIZZARIA__" alt="Logo da __PIZZARIA_NOME__"></div>
+        </div>
+        <div><small>Cardápio Digital</small><strong id="nomePizzaria">__PIZZARIA_NOME__</strong></div>
+      </header>
+
+      <section class="hero hero-inicial">
+        <img src="banner-placeholder.svg" alt="Imagem da pizzaria">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <span id="nomePizzariaBanner" class="hero-label">__PIZZARIA_NOME__</span>
+          <h1>Escolha o seu pedido</h1>
+          <p id="sloganPizzaria"></p>
+        </div>
+      </section>
+
+      <section class="conteudo inicial-conteudo">
+        <aside class="fala-mascote" aria-label="Ajuda do mascote">
+          <img src="mascote-saborear.png" alt="Logo da __PIZZARIA_NOME__">
+          <div>
+            <span>Olá! Eu sou o assistente da __PIZZARIA_NOME__ 👋</span>
+            <p>Escolha uma categoria para encontrar seu próximo sabor favorito.</p>
+          </div>
+        </aside>
+
+        <div class="section-heading">
+          <span>Nosso cardápio</span>
+          <h2>Escolha uma categoria</h2>
+        </div>
+
+        <nav class="categorias" aria-label="Categorias do cardápio">
+          <button class="categoria" data-categoria="tradicionais" type="button">
+            <span class="categoria-icone">🍔</span><span><strong>Hambúrgueres</strong><small>Os sabores que todo mundo ama</small></span><b>›</b>
+          </button>
+          <button class="categoria" data-categoria="especiais" type="button">
+            <span class="categoria-icone especial">🍟</span><span><strong>Acompanhamentos</strong><small>Porções para completar seu pedido</small></span><b>›</b>
+          </button>
+          <button class="categoria" data-categoria="bebidas" type="button">
+            <span class="categoria-icone bebida">🥤</span><span><strong>Bebidas</strong><small>Geladas para acompanhar seu pedido</small></span><b>›</b>
+          </button>
+          <button class="categoria" data-categoria="doces" type="button">
+            <span class="categoria-icone doce">🍔</span><span><strong>Combos</strong><small>Combinações para aproveitar melhor</small></span><b>›</b>
+          </button>
+        </nav>
+      </section>
+    </section>
+
+    <section id="telaCategoria" class="hidden">
+      <header class="categoria-hero">
+        <img src="banner-placeholder.svg" alt="Imagem da pizzaria">
+        <div class="categoria-overlay"></div>
+        <button id="voltar" class="voltar" type="button" aria-label="Voltar para categorias">←</button>
+        <div class="categoria-titulo"><small id="nomePizzariaCategoria">__PIZZARIA_NOME__</small><h1 id="tituloCategoria"></h1></div>
+      </header>
+
+      <section class="conteudo produtos-conteudo">
+        <div class="search-wrap">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m21 21-4.35-4.35m2.35-5.15a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z"/></svg>
+          <input id="busca" type="search" placeholder="Pesquise pelo nome" aria-label="Buscar nesta categoria">
+          <button id="limparBusca" class="clear hidden" type="button" aria-label="Limpar busca">×</button>
+        </div>
+        <aside class="fala-mascote fala-mascote-compacta" aria-label="Dica do mascote">
+          <img src="mascote-saborear.png" alt="">
+          <div><span>Uma dica!</span><p>Use a busca para encontrar um sabor mais rápido.</p></div>
+        </aside>
+        <p id="sincronizacao" class="sincronizacao">Consultando preços e estoque...</p>
+        <div id="listaProdutos" class="lista-produtos"></div>
+        <div id="semResultado" class="vazio hidden"><span>🍽️</span><strong>Nenhum produto encontrado</strong><p>Em breve teremos novidades nesta categoria.</p></div>
+      </section>
+    </section>
+  </main>
+  <script src="app.js"></script>
+  <script>window.addEventListener("load",()=>setTimeout(()=>document.querySelector("#mybotSplash")?.classList.add("sair"),650));</script>
+</body>
+</html>

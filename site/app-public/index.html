@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#08783f">
+  <meta name="description" content="MyBot: central de operação para delivery.">
+  <link rel="manifest" href="/app/manifest.webmanifest">
+  <link rel="icon" href="/painel/mybot-logo-verde.png" type="image/png">
+  <link rel="apple-touch-icon" href="/painel/mybot-logo-verde.png">
+  <link rel="stylesheet" href="/app/style.css">
+  <title>MyBot</title>
+</head>
+<body>
+  <main class="shell">
+    <section class="card" aria-labelledby="titulo">
+      <img class="logo" src="/painel/mybot-logo-verde.png" alt="MyBot">
+      <p class="tag">MYBOT DELIVERY</p>
+      <h1 id="titulo">Central MyBot</h1>
+      <p class="subtitulo">A central segura para administrar e atender os pedidos do seu delivery.</p>
+      <section class="apresentacao" aria-label="Como funciona o MyBot">
+        <div><b>1</b><span><strong>Instale</strong> na tela inicial para abrir como aplicativo.</span></div>
+        <div><b>2</b><span><strong>Entre</strong> com o token liberado pelo responsável.</span></div>
+        <div><b>3</b><span><strong>Escolha o painel</strong> de Administrador ou Atendente.</span></div>
+      </section>
+      <button id="instalarApp" class="botao instalar-app" type="button" hidden>⬇ INSTALAR MYBOT</button>
+      <form id="loginForm">
+        <label for="token">Token de acesso</label>
+        <input id="token" type="password" autocomplete="current-password" placeholder="Digite seu token" required>
+        <button class="botao primario" type="submit">Entrar</button>
+        <p id="erro" role="alert"></p>
+      </form>
+      <section id="portais" hidden aria-label="Escolha do painel">
+        <p class="boas-vindas">Acesso liberado. Escolha seu painel:</p>
+        <a class="botao primario" href="/painel/adm">Administrador</a>
+        <a class="botao secundario" href="/painel/atendente">Atendente</a>
+        <button id="sair" class="sair" type="button">Sair deste dispositivo</button>
+      </section>
+      <p class="instalar">O MyBot só solicita notificações quando o Atendente escolher ativá-las. No Chrome, toque em ⋮ e escolha <b>Instalar app</b>.</p>
+    </section>
+  </main>
+  <script src="/app/app.js"></script>
+</body>
+</html>
