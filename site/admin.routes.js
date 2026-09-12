@@ -129,7 +129,12 @@ function sessaoAssinadaValida(id, segredo, duracao) {
 
 function perfilAutenticado(req, perfilPreferido = "") {
   const recebidos = cookies(req);
-  const perfis = Object.entries(PERFIS_PAINEL).sort(([a], [b]) => (b === perfilPreferido) - (a === perfilPreferido));
+  // Quando a tela informa qual portal está sendo acessado, aceite somente a
+  // sessão daquele portal. Assim uma senha de administrador nunca libera o
+  // portal do atendente, nem o contrário.
+  const perfis = PERFIS_PAINEL[perfilPreferido]
+    ? [[perfilPreferido, PERFIS_PAINEL[perfilPreferido]]]
+    : Object.entries(PERFIS_PAINEL);
   for (const [perfil, dados] of perfis) {
     const id = recebidos[dados.cookie] || (perfil === "administrador" ? recebidos[COOKIE_PAINEL_LEGADO] : "");
     if (sessaoAssinadaValida(id, dados.token(), DURACAO_SESSAO)) return perfil;
@@ -167,7 +172,15 @@ router.post("/api/app/entrar", (req, res) => {
   if (!esperado || !compararSeguro(req.body?.token || "", esperado)) return res.status(401).json({ erro: "Código de acesso incorreto." });
   criarSessaoApp(res); res.json({ autenticado: true });
 });
-router.post("/api/app/sair", (req, res) => { res.clearCookie(COOKIE_APP, { path: "/" }); res.sendStatus(204); });
+router.post("/api/app/sair", (req, res) => {
+  // “Sair deste dispositivo” precisa encerrar também as sessões dos dois
+  // portais; na próxima entrada cada um voltará a pedir a própria senha.
+  res.clearCookie(COOKIE_APP, { path: "/" });
+  res.clearCookie(COOKIE_PAINEL_LEGADO, { path: "/" });
+  res.clearCookie(COOKIE_PAINEL_LEGADO, { path: "/api/painel" });
+  for (const dados of Object.values(PERFIS_PAINEL)) res.clearCookie(dados.cookie, { path: "/" });
+  res.sendStatus(204);
+});
 
 function autenticarPerfil(req, res, next) {
   const perfil = perfilAutenticado(req, String(req.get("x-mybot-portal") || ""));

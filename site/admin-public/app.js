@@ -803,7 +803,7 @@ async function validarSessaoPainel({ atualizarDados = true } = {}) {
   validacaoSessaoEmAndamento = (async () => {
     try {
       const sessao = await api(`/api/painel/sessao?_=${Date.now()}`, { cache: "no-store" });
-      if (!sessao.autenticado) {
+      if (!sessao.autenticado || sessao.perfil !== portalPainel) {
         mostrarLoginPainel();
         return false;
       }
