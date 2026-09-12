@@ -786,13 +786,14 @@ function mostrarLoginPainel() {
 }
 
 function aplicarPerfilPainel() {
-  if (portalPainel !== "atendente") return;
-  document.querySelectorAll(".guia-principal").forEach(botao => { if (!['pedidos', 'historico'].includes(botao.dataset.guia)) botao.hidden = true; });
-  document.querySelectorAll(".secao-painel").forEach(secao => { if (!['pedidos', 'historico'].includes(secao.dataset.secao)) secao.hidden = true; });
-  const titulo = document.querySelector('.hero h1'); if (titulo) titulo.textContent = 'Olá, atendente 👋';
-  const texto = document.querySelector('.hero p'); if (texto) texto.textContent = 'Receba, acompanhe e atualize os pedidos da pizzaria.';
-  const loginTitulo = document.querySelector('#login .eyebrow'); if (loginTitulo) loginTitulo.textContent = 'PORTAL DO ATENDENTE';
-  const loginTexto = document.querySelector('#login .muted'); if (loginTexto) loginTexto.textContent = 'Entre com o código do atendimento para operar os pedidos.';
+  const atendente = portalPainel === "atendente";
+  const permitidas = atendente ? ['pedidos', 'historico'] : ['estoque', 'precos', 'itens', 'ingredientes', 'imagens', 'horario', 'taxa', 'ajuda'];
+  document.querySelectorAll(".guia-principal").forEach(botao => { if (!permitidas.includes(botao.dataset.guia)) botao.hidden = true; });
+  document.querySelectorAll(".secao-painel").forEach(secao => { if (!permitidas.includes(secao.dataset.secao)) secao.hidden = true; });
+  const titulo = document.querySelector('.hero h1'); if (titulo) titulo.textContent = atendente ? 'Olá, atendente 👋' : 'Olá, administrador 👋';
+  const texto = document.querySelector('.hero p'); if (texto) texto.textContent = atendente ? 'Receba, acompanhe e atualize os pedidos da pizzaria.' : 'Configure cardápio, preços, horário, taxa, imagens e descrições da pizzaria.';
+  const loginTitulo = document.querySelector('#login .eyebrow'); if (loginTitulo) loginTitulo.textContent = atendente ? 'PORTAL DO ATENDENTE' : 'PORTAL DO ADMINISTRADOR';
+  const loginTexto = document.querySelector('#login .muted'); if (loginTexto) loginTexto.textContent = atendente ? 'Entre com o código do atendimento para operar os pedidos.' : 'Entre com o código administrativo para configurar a pizzaria.';
 }
 
 async function validarSessaoPainel({ atualizarDados = true } = {}) {
@@ -1167,7 +1168,7 @@ render = function renderComGuias() {
   aplicarGuia(estado.guia);
   renderHistorico();
 };
-aplicarGuia("pedidos");
+aplicarGuia(portalPainel === "atendente" ? "pedidos" : "estoque");
 
 function tempoNoHistorico(pedido) {
   const inicio = new Date(pedido.atualizadoEm || pedido.criadoEm || Date.now()).getTime();
