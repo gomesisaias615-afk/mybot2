@@ -176,7 +176,7 @@ router.get(["/instalar", "/instalar/"], (req, res) => {
     if(matchMedia('(display-mode: standalone)').matches||navigator.standalone){botaoMyBot.disabled=true;botaoMyBot.textContent='ABRINDO CENTRAL MYBOT...';ajudaMyBot.textContent='Abrindo Administrador e Atendente...';setTimeout(()=>location.replace('/app/'),500);}
     else ajudaMyBot.textContent='Aguarde alguns segundos para o Chrome liberar a instalação.';
     addEventListener('beforeinstallprompt',e=>{e.preventDefault();promptMyBot=e;ajudaMyBot.textContent='Pronto: toque em INSTALAR MYBOT para confirmar.';});
-    addEventListener('appinstalled',()=>{promptMyBot=null;botaoMyBot.disabled=true;botaoMyBot.textContent='✓ MYBOT INSTALADO';ajudaMyBot.textContent='Pronto! Abrindo a Central MyBot...';setTimeout(()=>location.replace('/app/'),700);});
+    addEventListener('appinstalled',()=>{promptMyBot=null;botaoMyBot.disabled=true;botaoMyBot.textContent='✓ MYBOT INSTALADO';ajudaMyBot.textContent='Pronto! Abra o ícone MyBot para acessar a Central.';});
     botaoMyBot.onclick=async()=>{if(matchMedia('(display-mode: standalone)').matches||navigator.standalone)return;if(!promptMyBot){ajudaMyBot.textContent='O Chrome ainda está preparando a instalação. Aguarde alguns segundos ou use o menu ⋮ e escolha Instalar app.';return;}promptMyBot.prompt();const escolha=await promptMyBot.userChoice;if(escolha.outcome==='dismissed')ajudaMyBot.textContent='Instalação cancelada. Toque no botão quando quiser tentar novamente.';promptMyBot=null;};
   </script>`;
   try {
