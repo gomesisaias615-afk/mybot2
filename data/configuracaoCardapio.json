@@ -12,7 +12,7 @@
   },
   "pizzasPorCategoria": {
     "tradicionais": ["Calabresa", "Marguerita", "Portuguesa", "Quatro Queijos", "Frango com Queijo", "Muçarela", "Napolitana", "Atum com Cebola"],
-    "especiais": [],
+    "especiais": ["Cinco Queijos", "Camarão Especial", "Lombo Canadense", "Borcelle Especial"],
     "doces": ["Romeu e Julieta", "Brigadeiro", "Prestígio", "Banana com Canela"]
   },
   "promocoes": {

@@ -1,1 +1,9 @@
-{}
+{
+  "coca_cola_lata": { "nome": "Coca-Cola lata 350 ml" },
+  "coca_cola_zero_lata": { "nome": "Coca-Cola Zero lata 350 ml" },
+  "guarana_lata": { "nome": "Guaraná Antarctica lata 350 ml" },
+  "fanta_laranja_lata": { "nome": "Fanta Laranja lata 350 ml" },
+  "agua_sem_gas": { "nome": "Água mineral sem gás 500 ml" },
+  "agua_com_gas": { "nome": "Água mineral com gás 500 ml" },
+  "suco_uva": { "nome": "Suco de uva integral 300 ml" }
+}

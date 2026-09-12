@@ -3,7 +3,11 @@
     "Calabresa": { "G": { "de": 100, "por": 85, "categoria": "Segunda da Borcelle" } },
     "Marguerita": { "G": { "de": 100, "por": 85, "categoria": "Segunda da Borcelle" } },
     "Frango com Queijo": { "M": { "de": 75, "por": 65, "categoria": "Noite Especial" } },
-    "Quatro Queijos": { "M": { "de": 75, "por": 65, "categoria": "Noite Especial" } }
+    "Quatro Queijos": { "M": { "de": 75, "por": 65, "categoria": "Noite Especial" } },
+    "Cinco Queijos": { "G": { "de": 110, "por": 94, "categoria": "Especialidades Borcelle" } },
+    "Camarão Especial": { "M": { "de": 85, "por": 72, "categoria": "Especialidades Borcelle" } },
+    "Brigadeiro": { "G": { "de": 100, "por": 85, "categoria": "Doces Borcelle" } },
+    "Prestígio": { "M": { "de": 75, "por": 63, "categoria": "Doces Borcelle" } }
   },
   "bebidas": {}
 }
