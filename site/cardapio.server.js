@@ -7,6 +7,7 @@ const pastaPublica = path.join(__dirname, "cardapio-public");
 const pastaBot = process.env.BOT1_PATH || path.resolve(__dirname, "..");
 const { garantirArquivo } = require("../services/dadosPersistentes.service");
 const configuracaoCardapioPath = garantirArquivo("configuracaoCardapio.json", "data/configuracaoCardapio.json", {});
+const descricoesBebidasPath = garantirArquivo("descricoesbebidas.json", "data/descricoesbebidas.json", {});
 const precosService = require("../services/precos.service");
 const { estoque, recarregarEstoque, produtoDisponivel } = require("../services/estoque.service");
 const imagensProdutos = require("../services/imagemProduto.service");
@@ -83,6 +84,7 @@ function montarCardapio() {
   const precosPizzas = catalogoPrecos.pizzas;
   const nomesBebidas = catalogoPrecos.nomesBebidas;
   const precosBebidas = catalogoPrecos.bebidas;
+  const descricoesBebidas = lerJson(descricoesBebidasPath, {});
   recarregarEstoque();
   const estoqueAtual = estoque;
   const configuracao = lerJson(configuracaoCardapioPath, {
@@ -102,18 +104,16 @@ function montarCardapio() {
     };
     const categoriaConfigurada = Object.entries(configuracao.pizzasPorCategoria || {})
       .find(([, nomes]) => nomes.includes(nome))?.[0];
-    const categoria = categoriaConfigurada || detalhes.categoria;
-    const tipoEstoque = categoria === "especiais" ? "acompanhamentos" : categoria === "doces" ? "combos" : "pizzas";
 
     return {
       tipo: "pizza",
       chave,
       nome,
-      categoria,
+      categoria: categoriaConfigurada || detalhes.categoria,
       ingredientes: catalogoPrecos.ingredientesPizzas?.[nome] || detalhes.ingredientes,
-      imagem: imagensProdutos.urlImagem(tipoEstoque, nome),
-      estoque: Object.prototype.hasOwnProperty.call(estoqueAtual[tipoEstoque] || {}, chave) ? Number(estoqueAtual[tipoEstoque][chave]) : null,
-      disponivel: produtoDisponivel(tipoEstoque, chave),
+      imagem: imagensProdutos.urlImagem("pizzas", nome),
+      estoque: Object.prototype.hasOwnProperty.call(estoqueAtual.pizzas || {}, chave) ? Number(estoqueAtual.pizzas[chave]) : null,
+      disponivel: produtoDisponivel("pizzas", chave),
       promocao: promocoesPizzas.has(chave) || Object.values(catalogoPrecos.promocoes.pizzas?.[nome] || {}).some(precosService.ativa),
       promocoes: Object.fromEntries(Object.keys(tamanhos || {}).map(tamanho => [tamanho, precosService.ativa(catalogoPrecos.promocoes.pizzas?.[nome]?.[tamanho]) ? catalogoPrecos.promocoes.pizzas[nome][tamanho] : null])),
       precos: Object.fromEntries(Object.entries(tamanhos || {}).map(([tamanho, valor]) => [tamanho, precosService.ativa(catalogoPrecos.promocoes.pizzas?.[nome]?.[tamanho]) ? Number(catalogoPrecos.promocoes.pizzas[nome][tamanho].por) : Number(valor)]))
@@ -125,7 +125,7 @@ function montarCardapio() {
     chave,
     nome: dados.nome,
     categoria: "bebidas",
-    ingredientes: "Bebida gelada para acompanhar seu pedido.",
+    ingredientes: descricoesBebidas[chave] || "Bebida gelada para acompanhar seu pedido.",
     imagem: imagensProdutos.urlImagem("bebidas", chave),
     estoque: Object.prototype.hasOwnProperty.call(estoqueAtual.bebidas || {}, chave) ? Number(estoqueAtual.bebidas[chave]) : null,
     disponivel: produtoDisponivel("bebidas", chave),

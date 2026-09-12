@@ -18,10 +18,6 @@ const {
 const router = express.Router();
 const publicDir = path.join(__dirname, "admin-public");
 const appPublicDir = path.join(__dirname, "app-public");
-const installPublicDir = path.join(__dirname, "install-public");
-// Os painéis exigem nova senha após uma hora. O acesso geral do MyBot fica
-// persistente por dispositivo; o Chrome limita cookies persistentes a 400 dias.
-// Alterar MYBOT_APP_ACCESS_TOKEN invalida imediatamente todas essas sessões.
 const DURACAO_SESSAO = 60 * 60 * 1000;
 const DURACAO_SESSAO_APP = 400 * 24 * 60 * 60 * 1000;
 const COOKIE_PAINEL_LEGADO = "mybot_painel_seguro";
@@ -33,9 +29,8 @@ const PERFIS_PAINEL = {
 const cacheLocalizacaoReversa = new Map();
 const LIMITE_CACHE_LOCALIZACAO = 300;
 const ARQUIVO_FICHAS_PUBLICAS = garantirArquivo("fichasEntregaCompartilhadas.json", "data/fichasEntregaCompartilhadas.json", {});
-const ARQUIVO_ADICIONAIS = garantirArquivo("adicionais.json", "data/adicionais.json", {});
-const ARQUIVO_DESCRICOES_BEBIDAS = garantirArquivo("descricoesbebidas.json", "data/descricoesbebidas.json", {});
 const DURACAO_FICHA_PUBLICA = 7 * 24 * 60 * 60 * 1000;
+const ARQUIVO_DESCRICOES_BEBIDAS = garantirArquivo("descricoesbebidas.json", "data/descricoesbebidas.json", {});
 
 function escaparSvg(valor) {
   return String(valor ?? "").replace(/[&<>\"']/g, caractere => ({
@@ -104,17 +99,12 @@ function cookies(req) {
 }
 
 function criarSessao(res, perfil = "administrador") {
-  // A sessão não pode depender da memória do processo: no Render uma próxima
-  // chamada pode chegar a outra instância. O cookie é assinado pelo token do
-  // painel e continua válido por 24 horas em qualquer instância.
   const emitidoEm = String(Date.now());
   const aleatorio = crypto.randomBytes(24).toString("base64url");
   const conteudo = `${emitidoEm}.${aleatorio}`;
   const assinatura = crypto.createHmac("sha256", tokenDoPerfil(perfil)).update(conteudo).digest("base64url");
   const id = `${conteudo}.${assinatura}`;
   res.clearCookie("mybot_painel", { path: "/" });
-  // Remove a versão anterior do mesmo cookie. Sem isso, alguns navegadores
-  // enviam os dois valores para /api/painel e o servidor pode ler o vencido.
   res.clearCookie(COOKIE_PAINEL_LEGADO, { path: "/api/painel" });
   res.cookie(PERFIS_PAINEL[perfil].cookie, id, {
     httpOnly: true,
@@ -136,45 +126,28 @@ function sessaoAssinadaValida(id, segredo, duracao) {
   return compararSeguro(assinatura, esperada);
 }
 
+function perfilAutenticado(req, perfilPreferido = "") {
+  const recebidos = cookies(req);
+  const perfis = Object.entries(PERFIS_PAINEL).sort(([a], [b]) => (b === perfilPreferido) - (a === perfilPreferido));
+  for (const [perfil, dados] of perfis) {
+    const id = recebidos[dados.cookie] || (perfil === "administrador" ? recebidos[COOKIE_PAINEL_LEGADO] : "");
+    if (sessaoAssinadaValida(id, dados.token(), DURACAO_SESSAO)) return perfil;
+  }
+  return null;
+}
+
+function autenticado(req) { return Boolean(perfilAutenticado(req)); }
+
 function criarSessaoApp(res) {
   const segredo = tokenDoApp();
   const emitidoEm = String(Date.now());
   const aleatorio = crypto.randomBytes(24).toString("base64url");
   const conteudo = `${emitidoEm}.${aleatorio}`;
   const assinatura = crypto.createHmac("sha256", segredo).update(conteudo).digest("base64url");
-  res.cookie(COOKIE_APP, `${conteudo}.${assinatura}`, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: DURACAO_SESSAO_APP,
-    path: "/"
-  });
+  res.cookie(COOKIE_APP, `${conteudo}.${assinatura}`, { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "strict", maxAge: DURACAO_SESSAO_APP, path: "/" });
 }
 
-function appAutenticado(req) {
-  return sessaoAssinadaValida(cookies(req)[COOKIE_APP], tokenDoApp(), DURACAO_SESSAO_APP);
-}
-
-function perfilAutenticado(req, perfilPreferido = "") {
-  const recebidos = cookies(req);
-  const perfis = Object.entries(PERFIS_PAINEL).sort(([a], [b]) => (b === perfilPreferido) - (a === perfilPreferido));
-  for (const [perfil, dados] of perfis) {
-    const id = recebidos[dados.cookie] || (perfil === "administrador" ? recebidos[COOKIE_PAINEL_LEGADO] : "");
-    if (!id || !dados.token()) continue;
-    const partes = String(id).split(".");
-    if (partes.length !== 3) continue;
-    const [emitidoEm, aleatorio, assinatura] = partes;
-    const instante = Number(emitidoEm);
-    if (!Number.isFinite(instante) || instante > Date.now() || Date.now() - instante > DURACAO_SESSAO) continue;
-    const esperada = crypto.createHmac("sha256", dados.token()).update(`${emitidoEm}.${aleatorio}`).digest("base64url");
-    if (compararSeguro(assinatura, esperada)) return perfil;
-  }
-  return null;
-}
-
-function autenticado(req) {
-  return Boolean(perfilAutenticado(req));
-}
+function appAutenticado(req) { return sessaoAssinadaValida(cookies(req)[COOKIE_APP], tokenDoApp(), DURACAO_SESSAO_APP); }
 
 function limparSessoes(res) {
   res.clearCookie(COOKIE_PAINEL_LEGADO, { path: "/" });
@@ -183,34 +156,21 @@ function limparSessoes(res) {
   res.clearCookie(COOKIE_APP, { path: "/" });
 }
 
-router.get(["/app", "/app/"], (req, res) => {
-  res.set("Cache-Control", "no-store").sendFile(path.join(appPublicDir, "index.html"));
-});
-router.get("/instalar", (req, res) => res.set("Cache-Control", "no-store").type("html").send(`<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#08783f"><link rel="manifest" href="/app/manifest.webmanifest"><title>Instalar MyBot</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#08783f;font-family:Arial;color:#fff}main{max-width:420px;margin:20px;padding:32px;text-align:center;border-radius:28px;background:#063c25}.logo{width:160px}.lista{text-align:left;line-height:2;background:#0c5939;padding:18px;border-radius:16px}.botao{width:100%;padding:18px;border:0;border-radius:14px;background:#25cf72;color:#042716;font-weight:bold;font-size:16px;cursor:pointer}.ajuda{font-size:13px;line-height:1.5;color:#d5eddf}</style><main><img class="logo" src="/painel/mybot-logo-verde.png" alt="MyBot"><h1>Instale o MyBot</h1><p>Tenha o MyBot na tela inicial do celular ou computador.</p><div class="lista">✓ Ícone MyBot<br>✓ Acesso por token e HTTPS<br>✓ Administrador e Atendente</div><br><button class="botao" id="instalar">⬇ INSTALAR MYBOT</button><p class="ajuda">Se o Chrome não abrir a instalação, use o menu ⋮ e escolha Instalar app.</p></main><script>let p;addEventListener('beforeinstallprompt',e=>{e.preventDefault();p=e});document.querySelector('#instalar').onclick=async()=>{if(!p)return alert('No Chrome, use ⋮ → Instalar app');p.prompt();await p.userChoice;p=null}</script>`));
+router.get(["/app", "/app/"], (req, res) => res.set("Cache-Control", "no-store").sendFile(path.join(appPublicDir, "index.html")));
 router.use("/app", express.static(appPublicDir, { etag: false, lastModified: false }));
-router.get(["/instalar", "/instalar/"], (req, res) => {
-  res.set("Cache-Control", "no-store").sendFile(path.join(installPublicDir, "index.html"));
-});
-router.use("/instalar", express.static(installPublicDir, { etag: false, lastModified: false }));
-router.get("/api/app/sessao", (req, res) => {
-  res.set("Cache-Control", "no-store").json({ autenticado: appAutenticado(req), configurado: Boolean(tokenDoApp()) });
-});
+router.get(["/instalar", "/instalar/"], (req, res) => res.set("Cache-Control", "no-store").redirect(302, "/app/"));
+router.get("/api/app/sessao", (req, res) => res.set("Cache-Control", "no-store").json({ autenticado: appAutenticado(req), configurado: Boolean(tokenDoApp()) }));
 router.post("/api/app/entrar", (req, res) => {
   const esperado = tokenDoApp();
   if (!esperado || !compararSeguro(req.body?.token || "", esperado)) return res.status(401).json({ erro: "Código de acesso incorreto." });
-  criarSessaoApp(res);
-  res.json({ autenticado: true });
+  criarSessaoApp(res); res.json({ autenticado: true });
 });
-router.post("/api/app/sair", (req, res) => {
-  res.clearCookie(COOKIE_APP, { path: "/" });
-  res.sendStatus(204);
-});
+router.post("/api/app/sair", (req, res) => { res.clearCookie(COOKIE_APP, { path: "/" }); res.sendStatus(204); });
 
 function autenticarPerfil(req, res, next) {
   const perfil = perfilAutenticado(req, String(req.get("x-mybot-portal") || ""));
   if (!perfil) return res.status(401).json({ erro: "Acesso expirado ou não autorizado." });
-  req.perfilPainel = perfil;
-  next();
+  req.perfilPainel = perfil; next();
 }
 
 function exigirAutenticacao(req, res, next) {
@@ -290,7 +250,7 @@ router.post("/api/painel/sair", exigirAutenticacao, (req, res) => {
 
 router.use("/api/painel", autenticarPerfil, (req, res, next) => {
   const rotaAtendimento = req.path === "/dados" || req.path.startsWith("/pedidos/") || req.path === "/ficha-entrega";
-  if (req.perfilPainel === "atendente" && !rotaAtendimento) return res.status(403).json({ erro: "Esta área é exclusiva do portal administrativo." });
+  if (req.perfilPainel === "atendente" && req.method !== "GET" && !rotaAtendimento) return res.status(403).json({ erro: "Esta área é exclusiva do portal administrativo." });
   if (req.perfilPainel === "administrador" && req.path.startsWith("/pedidos/")) return res.status(403).json({ erro: "Pedidos são atendidos somente no portal do atendente." });
   next();
 });
@@ -473,10 +433,7 @@ router.get("/cardapio/imagem/:tipo/:chave", (req, res) => {
 
 router.get("/api/painel/imagens", exigirAutenticacao, (req, res) => {
   const catalogo = precos.catalogo();
-  const configuracao = JSON.parse(fs.readFileSync(garantirArquivo("configuracaoCardapio.json", "data/configuracaoCardapio.json", {}), "utf8"));
-  const categoriaPorNome = Object.fromEntries(Object.entries(configuracao.pizzasPorCategoria || {}).flatMap(([categoria, nomes]) => (nomes || []).map(nome => [nome, categoria])));
-  const tipoProduto = nome => categoriaPorNome[nome] === "especiais" ? "acompanhamentos" : categoriaPorNome[nome] === "doces" ? "combos" : "pizzas";
-  const pizzas = Object.keys(catalogo.pizzas || {}).map(chave => { const tipo = tipoProduto(chave); return { tipo, chave, nome: chave, imagem: imagensProdutos.urlImagem(tipo, chave) }; });
+  const pizzas = Object.keys(catalogo.pizzas || {}).map(chave => ({ tipo: "pizzas", chave, nome: chave, imagem: imagensProdutos.urlImagem("pizzas", chave) }));
   const bebidas = Object.entries(catalogo.nomesBebidas || {}).map(([chave, dados]) => ({ tipo: "bebidas", chave, nome: dados.nome || chave, imagem: imagensProdutos.urlImagem("bebidas", chave) }));
   res.json([...pizzas, ...bebidas]);
 });
@@ -498,81 +455,33 @@ router.delete("/api/painel/imagens/:tipo/:chave", exigirAutenticacao, (req, res)
 });
 
 router.get("/api/painel/dados", exigirAutenticacao, (req, res) => {
-  const dados = obterDadosPainel();
-  // O administrador não usa nem recebe dados operacionais de pedidos; essa
-  // informação pertence exclusivamente ao portal do atendente.
-  if (req.perfilPainel === "administrador") dados.pedidos = [];
-  res.json(dados);
+  res.json(obterDadosPainel());
 });
 
 router.post("/api/painel/catalogo/item", exigirAutenticacao, (req,res)=>{try{
-  const tipo=String(req.body?.tipo||""),nome=String(req.body?.nome||"").trim(),ingredientes=String(req.body?.ingredientes||"").trim();
+  const tipo=String(req.body?.tipo||""),nome=String(req.body?.nome||"").trim(),categoria=String(req.body?.categoria||""),ingredientes=String(req.body?.ingredientes||"").trim();
   if(!nome||nome.length>80)throw Error("Informe o nome do item.");
   const ler=p=>JSON.parse(fs.readFileSync(p,"utf8")),salvar=(p,d)=>fs.writeFileSync(p,JSON.stringify(d,null,2));
-  if(["pizza","acompanhamento","combo"].includes(tipo)){
-    const categoriaDestino=tipo==="pizza"?"tradicionais":tipo==="acompanhamento"?"especiais":"doces";
-    if(!ingredientes||ingredientes.length>500)throw Error("Informe a descrição do produto (até 500 caracteres).");
-    const valor=Number(req.body?.preco);if(!Number.isFinite(valor)||valor<=0)throw Error("Informe um preço válido.");const tamanhos={U:valor};
+  if(tipo==="pizza"){
+    if(!["tradicionais","especiais","doces"].includes(categoria))throw Error("Escolha a categoria da pizza.");
+    if(!ingredientes||ingredientes.length>500)throw Error("Informe os ingredientes da pizza (até 500 caracteres).");
+    const valores=req.body?.precos||{},tamanhos={};
+    for(const tamanho of ["P","M","G","F"]){const valor=Number(valores[tamanho]);if(!Number.isFinite(valor)||valor<=0)throw Error(`Informe um preço válido para o tamanho ${tamanho}.`);tamanhos[tamanho]=valor}
     const p=garantirArquivo("precospizzas.json","data/precospizzas.json",{}),c=garantirArquivo("configuracaoCardapio.json","data/configuracaoCardapio.json",{}),e=garantirArquivo("estoque.json","services/monitoramento/estoque.json",{pizzas:{},bebidas:{}}),pre=ler(p),conf=ler(c),est=ler(e);
-    const tipoEstoque=tipo==="pizza"?"pizzas":tipo==="acompanhamento"?"acompanhamentos":"combos";
-    if(pre[nome])throw Error("Já existe um item com esse nome.");pre[nome]=tamanhos;conf.pizzasPorCategoria=conf.pizzasPorCategoria||{};conf.pizzasPorCategoria[categoriaDestino]||=[];conf.pizzasPorCategoria[categoriaDestino].push(nome);est[tipoEstoque]=est[tipoEstoque]||{};est[tipoEstoque][nome.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/-/g," ").replace(/\s+/g," ").trim()]=1;salvar(p,pre);salvar(c,conf);salvar(e,est);precos.atualizarIngredientesPizza(nome,ingredientes)
+    if(pre[nome])throw Error("Já existe uma pizza com esse nome.");pre[nome]=tamanhos;conf.pizzasPorCategoria[categoria]||=[];conf.pizzasPorCategoria[categoria].push(nome);est.pizzas=est.pizzas||{};est.pizzas[nome.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/-/g," ").replace(/\s+/g," ").trim()]=1;salvar(p,pre);salvar(c,conf);salvar(e,est);precos.atualizarIngredientesPizza(nome,ingredientes)
   }else if(tipo==="bebida"){
     const preco=Number(req.body?.preco);if(!Number.isFinite(preco)||preco<=0)throw Error("Informe um preço válido.");
     const k=nome.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"_"),p=garantirArquivo("precosbebidas.json","data/precosbebidas.json",{}),n=garantirArquivo("nomesbebidas.json","data/nomesbebidas.json",{}),e=garantirArquivo("estoque.json","services/monitoramento/estoque.json",{pizzas:{},bebidas:{}}),pre=ler(p),nom=ler(n),est=ler(e);
     if(pre[k])throw Error("Já existe uma bebida com esse nome.");if(!ingredientes||ingredientes.length>500)throw Error("Informe a descrição da bebida (até 500 caracteres).");const descricoes=ler(ARQUIVO_DESCRICOES_BEBIDAS);pre[k]=preco;nom[k]={nome,aliases:[k.replaceAll("_"," ")]};descricoes[k]=ingredientes;est.bebidas=est.bebidas||{};est.bebidas[k]=1;salvar(p,pre);salvar(n,nom);salvar(ARQUIVO_DESCRICOES_BEBIDAS,descricoes);salvar(e,est)
   }else throw Error("Tipo inválido.");res.json({ok:true})
 }catch(e){res.status(400).json({erro:e.message})}});
-router.get("/api/painel/precos", exigirAutenticacao, (req,res)=>{
-  const catalogo=precos.catalogo();
-  const configuracao=JSON.parse(fs.readFileSync(garantirArquivo("configuracaoCardapio.json","data/configuracaoCardapio.json",{}),"utf8"));
-  const categoriasProdutos={};
-  for(const [categoria,nomes] of Object.entries(configuracao.pizzasPorCategoria||{})){
-    for(const nome of nomes||[])categoriasProdutos[nome]=categoria;
-  }
-  res.json({...catalogo,categoriasProdutos});
-});
-router.get("/api/painel/ingredientes", exigirAutenticacao, (req,res)=>{const bebidas=precos.catalogo().nomesBebidas||{},descricoes=JSON.parse(fs.readFileSync(ARQUIVO_DESCRICOES_BEBIDAS,"utf8"));res.json([...montarCardapio().pizzas.map(({nome,ingredientes,categoria})=>({nome,ingredientes,categoria,tipo:"pizza",chave:nome})),...Object.entries(bebidas).map(([chave,dados])=>({nome:dados.nome||chave,ingredientes:descricoes[chave]||"",categoria:"bebidas",tipo:"bebida",chave}))])});
+router.get("/api/painel/precos", exigirAutenticacao, (req,res)=>res.json(precos.catalogo()));
+router.get("/api/painel/ingredientes", exigirAutenticacao, (req,res)=>{const bebidas=precos.catalogo().nomesBebidas||{},descricoes=JSON.parse(fs.readFileSync(ARQUIVO_DESCRICOES_BEBIDAS,"utf8"));res.json([...montarCardapio().pizzas.map(({nome,ingredientes})=>({nome,ingredientes,tipo:"pizza",chave:nome})),...Object.entries(bebidas).map(([chave,dados])=>({nome:dados.nome||chave,ingredientes:descricoes[chave]||"",tipo:"bebida",chave}))])});
 router.patch("/api/painel/ingredientes/pizza", exigirAutenticacao, (req,res)=>{try{res.json({nome:String(req.body?.nome||""),ingredientes:precos.atualizarIngredientesPizza(String(req.body?.nome||""),req.body?.ingredientes)})}catch(e){res.status(400).json({erro:e.message})}});
 router.patch("/api/painel/ingredientes/bebida", exigirAutenticacao, (req,res)=>{try{const chave=String(req.body?.chave||""),texto=String(req.body?.ingredientes||"").trim();if(!precos.catalogo().bebidas?.[chave])throw Error("Bebida não encontrada.");if(!texto||texto.length>500)throw Error("Informe a descrição da bebida (até 500 caracteres).");const descricoes=JSON.parse(fs.readFileSync(ARQUIVO_DESCRICOES_BEBIDAS,"utf8"));descricoes[chave]=texto;fs.writeFileSync(ARQUIVO_DESCRICOES_BEBIDAS,JSON.stringify(descricoes,null,2),"utf8");res.json({chave,ingredientes:texto})}catch(e){res.status(400).json({erro:e.message})}});
-router.get("/api/painel/adicionais", exigirAutenticacao, (req,res)=>{
-  const catalogo=precos.catalogo(),configuracao=JSON.parse(fs.readFileSync(garantirArquivo("configuracaoCardapio.json","data/configuracaoCardapio.json",{}),"utf8")),salvos=JSON.parse(fs.readFileSync(ARQUIVO_ADICIONAIS,"utf8"));
-  const categoriaPorNome=Object.fromEntries(Object.entries(configuracao.pizzasPorCategoria||{}).flatMap(([categoria,nomes])=>(nomes||[]).map(nome=>[nome,categoria])));
-  const tipo=nome=>categoriaPorNome[nome]==="especiais"?"acompanhamentos":categoriaPorNome[nome]==="doces"?"combos":"hamburgueres";
-  res.json(Object.keys(catalogo.pizzas||{}).filter(nome=>tipo(nome)!=="acompanhamentos").map(nome=>({nome,tipo:tipo(nome),adicionais:Array.isArray(salvos[nome])?salvos[nome]:[]})));
-});
-router.put("/api/painel/adicionais", exigirAutenticacao, (req,res)=>{try{
-  const recebidos=req.body?.adicionais||{},catalogo=precos.catalogo(),configuracao=JSON.parse(fs.readFileSync(garantirArquivo("configuracaoCardapio.json","data/configuracaoCardapio.json",{}),"utf8"));
-  const normalizar=valor=>String(valor||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
-  const categoriaPorNome=Object.fromEntries(Object.entries(configuracao.pizzasPorCategoria||{}).flatMap(([categoria,nomes])=>(nomes||[]).map(nome=>[nome,categoria])));
-  const permitidos=Object.keys(catalogo.pizzas||{}).filter(nome=>["tradicionais","doces"].includes(categoriaPorNome[nome]||"tradicionais"));
-  const salvar={};
-  for(const [produtoRecebido,itens] of Object.entries(recebidos)){
-    const produto=permitidos.find(nome=>normalizar(nome)===normalizar(produtoRecebido));
-    if(!produto)continue;
-    const linhas=Array.isArray(itens)?itens:[];
-    const limpos=[];
-    for(const item of linhas){
-      const nome=String(item?.nome||"").trim();
-      const preco=Number(String(item?.preco??"").replace(",","."));
-      if(!nome)continue;
-      if(nome.length>80||!Number.isFinite(preco)||preco<=0||preco>5000)throw Error(`Informe um valor válido para o adicional "${nome}".`);
-      limpos.push({nome,preco});
-    }
-    if(limpos.length>20)throw Error("Cada produto pode ter no máximo 20 adicionais.");
-    if(limpos.length)salvar[produto]=limpos;
-  }
-  fs.writeFileSync(ARQUIVO_ADICIONAIS,JSON.stringify(salvar,null,2),"utf8");res.json({ok:true,adicionais:salvar});
-}catch(e){res.status(400).json({erro:e.message})}});
-router.delete("/api/painel/catalogo/item", exigirAutenticacao, (req,res)=>{try{
-  const tipo=String(req.body?.tipo||""),chave=String(req.body?.chave||""),normalizar=v=>String(v).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/-/g," ").replace(/\s+/g," ").trim(),ler=p=>JSON.parse(fs.readFileSync(p,"utf8")),salvar=(p,d)=>fs.writeFileSync(p,JSON.stringify(d,null,2));
-  const e=garantirArquivo("estoque.json","services/monitoramento/estoque.json",{pizzas:{},bebidas:{}}),est=ler(e);
-  if(!["pizzas","acompanhamentos","combos","bebidas"].includes(tipo))throw Error("Tipo inválido.");
-  if(tipo==="bebidas"){const p=garantirArquivo("precosbebidas.json","data/precosbebidas.json",{}),n=garantirArquivo("nomesbebidas.json","data/nomesbebidas.json",{}),d=garantirArquivo("descricoesbebidas.json","data/descricoesbebidas.json",{}),pre=ler(p),nom=ler(n),desc=ler(d);if(!(chave in pre))throw Error("Bebida não encontrada.");delete pre[chave];delete nom[chave];delete desc[chave];delete est.bebidas?.[chave];salvar(p,pre);salvar(n,nom);salvar(d,desc)}else{const p=garantirArquivo("precospizzas.json","data/precospizzas.json",{}),c=garantirArquivo("configuracaoCardapio.json","data/configuracaoCardapio.json",{}),i=garantirArquivo("ingredientespizzas.json",null,{}),pre=ler(p),conf=ler(c),ing=ler(i),nome=Object.keys(pre).find(item=>normalizar(item)===normalizar(chave));if(!nome)throw Error("Produto não encontrado.");delete pre[nome];delete ing[nome];for(const nomes of Object.values(conf.pizzasPorCategoria||{})){const indice=nomes.indexOf(nome);if(indice>=0)nomes.splice(indice,1)}delete est[tipo]?.[normalizar(nome)];const extras=ler(ARQUIVO_ADICIONAIS);delete extras[nome];salvar(p,pre);salvar(c,conf);salvar(i,ing);salvar(ARQUIVO_ADICIONAIS,extras)}
-  salvar(e,est);res.json({ok:true});
-}catch(e){res.status(400).json({erro:e.message})}});
 router.patch("/api/painel/precos/pizza", exigirAutenticacao, (req,res)=>{try{res.json({preco:precos.atualizarPrecoPizza(String(req.body?.nome||""),String(req.body?.tamanho||""),req.body?.preco)})}catch(e){res.status(400).json({erro:e.message})}});
 router.patch("/api/painel/precos/bebida", exigirAutenticacao, (req,res)=>{try{res.json({preco:precos.atualizarPrecoBebida(String(req.body?.chave||""),req.body?.preco)})}catch(e){res.status(400).json({erro:e.message})}});
-router.put("/api/painel/promocoes", exigirAutenticacao, (req,res)=>{try{const dados=req.body||{};if(String(dados.tipo)==="pizza"){const estoque=recarregarEstoque(),configuracao=JSON.parse(fs.readFileSync(garantirArquivo("configuracaoCardapio.json","data/configuracaoCardapio.json",{}),"utf8")),categoria=Object.entries(configuracao.pizzasPorCategoria||{}).find(([,nomes])=>(nomes||[]).includes(String(dados.chave||"")))?.[0],tipoEstoque=categoria==="especiais"?"acompanhamentos":categoria==="doces"?"combos":"pizzas",chave=String(dados.chave||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();if(Number(estoque[tipoEstoque]?.[chave]||0)<=0)throw Error("Não é possível aplicar promoção em um produto indisponível.");}res.json(precos.salvarPromocao(dados))}catch(e){res.status(400).json({erro:e.message})}});
+router.put("/api/painel/promocoes", exigirAutenticacao, (req,res)=>{try{const dados=req.body||{};if(String(dados.tipo)==="pizza"){const estoque=recarregarEstoque();const chave=String(dados.chave||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();if(Number(estoque.pizzas?.[chave]||0)<=0)throw Error("Não é possível aplicar promoção em uma pizza indisponível.");}res.json(precos.salvarPromocao(dados))}catch(e){res.status(400).json({erro:e.message})}});
 router.delete("/api/painel/promocoes", exigirAutenticacao, (req,res)=>{try{res.json(precos.removerPromocao(String(req.body?.tipo||""),String(req.body?.chave||""),String(req.body?.tamanho||"")))}catch(e){res.status(400).json({erro:e.message})}});
 router.patch("/api/painel/configuracao", exigirAutenticacao, (req, res) => {
   res.json(atualizarConfiguracaoPainel(req.body || {}));
@@ -583,7 +492,7 @@ router.patch("/api/painel/estoque", exigirAutenticacao, (req, res) => {
   const chave = String(req.body?.chave || "");
   const quantidade = Number(req.body?.quantidade);
   const estoque = recarregarEstoque();
-  if (!["pizzas", "bebidas", "acompanhamentos", "combos"].includes(tipo) || !Object.prototype.hasOwnProperty.call(estoque[tipo], chave)) {
+  if (!["pizzas", "bebidas"].includes(tipo) || !Object.prototype.hasOwnProperty.call(estoque[tipo], chave)) {
     return res.status(404).json({ erro: "Produto não encontrado." });
   }
   if (!Number.isInteger(quantidade) || quantidade < 0 || quantidade > 10000) {

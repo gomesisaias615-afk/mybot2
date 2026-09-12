@@ -182,9 +182,7 @@ function obterDadosPainel() {
     fs.writeFileSync(pedidosPath, JSON.stringify(pedidos, null, 2), "utf8");
     fs.writeFileSync(enderecosPath, JSON.stringify(enderecos, null, 2), "utf8");
   }
-  const estoque = lerJson(garantirArquivo("estoque.json", "services/monitoramento/estoque.json", { pizzas: {}, bebidas: {}, acompanhamentos: {}, combos: {} }), { pizzas: {}, bebidas: {}, acompanhamentos: {}, combos: {} });
-  estoque.acompanhamentos = estoque.acompanhamentos || {};
-  estoque.combos = estoque.combos || {};
+  const estoque = lerJson(garantirArquivo("estoque.json", "services/monitoramento/estoque.json", { pizzas: {}, bebidas: {} }), { pizzas: {}, bebidas: {} });
 
   return {
     configuracao: obterConfiguracaoPainel(),

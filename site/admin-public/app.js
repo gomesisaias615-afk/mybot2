@@ -1,14 +1,12 @@
 const $ = seletor => document.querySelector(seletor);
-const estado = { dados: null, tipoEstoque: "todos", busca: "", filtro: "todos" };
 const portalPainel = window.MYBOT_PORTAL === "atendente" ? "atendente" : "administrador";
-const guiasPermitidas = portalPainel === "atendente" ? ["pedidos", "historico"] : ["estoque", "precos", "itens", "ingredientes", "imagens", "adicionais", "horario", "taxa", "ajuda"];
+const estado = { dados: null, tipoEstoque: "pizzas", busca: "", filtro: "todos" };
 const ZOOM_INICIAL_PIZZARIA = 15;
 
 async function api(url, opcoes = {}) {
   const resposta = await fetch(url, {
     ...opcoes,
-    credentials: "same-origin",
-    headers: { "Content-Type": "application/json", "X-MyBot-Portal": portalPainel, ...(opcoes.headers || {}) }
+    headers: { "Content-Type": "application/json", "x-mybot-portal": portalPainel, ...(opcoes.headers || {}) }
   });
   if (resposta.status === 204) return null;
   const dados = await resposta.json().catch(() => ({}));
@@ -85,15 +83,10 @@ function pedidosDemonstracao() {
 }
 
 async function carregar() {
-  if (portalPainel === "atendente") {
-    estado.dados = await api("/api/painel/dados");
-    render();
-    return;
-  }
-  [estado.dados, estado.catalogoPrecos, estado.ingredientesPizzas, estado.imagensProdutos] = await Promise.all([
-    api("/api/painel/dados"), api("/api/painel/precos"), api("/api/painel/ingredientes"), api("/api/painel/imagens")
-  ]);
-  if (!estado.adicionaisAlterados) estado.adicionais = await api("/api/painel/adicionais");
+  estado.dados = await api("/api/painel/dados");
+  estado.catalogoPrecos = await api("/api/painel/precos");
+  estado.ingredientesPizzas = await api("/api/painel/ingredientes");
+  estado.imagensProdutos = await api("/api/painel/imagens");
   if (new URLSearchParams(location.search).get("demo") === "1") {
     estado.dados.pedidos = [...pedidosDemonstracao(), ...(estado.dados.pedidos || [])];
   }
@@ -187,8 +180,8 @@ function renderPedidos() {
 }
 
 function renderEstoque() {
-  const busca=normalizarBuscaPainel(estado.busca);const produtos = Object.entries(estado.dados.estoque[estado.tipoEstoque] || {}).filter(([nome]) => {const exibido=estado.tipoEstoque==="pizzas"?nomePizzaPainel(nome.replaceAll("_"," ")):nome.replaceAll("_"," ");const termos=exibido+" "+nome+" "+(estado.tipoEstoque==="pizzas"?"hambúrguer hambúrgueres":"bebida bebidas");return normalizarBuscaPainel(termos).includes(busca)});
-  $("#estoque").innerHTML = produtos.map(([nome, qtd]) => { const titulo=estado.tipoEstoque==="pizzas"?`Hambúrguer de ${nome.replaceAll("_", " ")}`:nome.replaceAll("_", " "); return `<div class="produto"><div><div class="produto-nome">${escapar(titulo)}</div><small>${Number(qtd) === 0 ? "Indisponível" : Number(qtd) <= 5 ? "Estoque baixo" : "Disponível"}</small></div><div class="quantidade"><button data-delta="-1" data-tipo="${estado.tipoEstoque}" data-chave="${escapar(nome)}">−</button><input value="${Number(qtd)}" inputmode="numeric" data-qtd data-tipo="${estado.tipoEstoque}" data-chave="${escapar(nome)}"><button data-delta="1" data-tipo="${estado.tipoEstoque}" data-chave="${escapar(nome)}">+</button></div></div>`; }).join("");
+  const busca=normalizarBuscaPainel(estado.busca);const produtos = Object.entries(estado.dados.estoque[estado.tipoEstoque] || {}).filter(([nome]) => {const exibido=estado.tipoEstoque==="pizzas"?nomePizzaPainel(nome.replaceAll("_"," ")):nome.replaceAll("_"," ");const termos=exibido+" "+nome+" "+(estado.tipoEstoque==="pizzas"?"pizza pizzas":"bebida bebidas");return normalizarBuscaPainel(termos).includes(busca)});
+  $("#estoque").innerHTML = produtos.map(([nome, qtd]) => { const titulo=estado.tipoEstoque==="pizzas"?`Pizza de ${nome.replaceAll("_", " ")}`:nome.replaceAll("_", " "); return `<div class="produto"><div><div class="produto-nome">${escapar(titulo)}</div><small>${Number(qtd) === 0 ? "Indisponível" : Number(qtd) <= 5 ? "Estoque baixo" : "Disponível"}</small></div><div class="quantidade"><button data-delta="-1" data-tipo="${estado.tipoEstoque}" data-chave="${escapar(nome)}">−</button><input value="${Number(qtd)}" inputmode="numeric" data-qtd data-tipo="${estado.tipoEstoque}" data-chave="${escapar(nome)}"><button data-delta="1" data-tipo="${estado.tipoEstoque}" data-chave="${escapar(nome)}">+</button></div></div>`; }).join("");
 }
 
 async function atualizarConfig(chave, valor) {
@@ -210,8 +203,8 @@ document.addEventListener("click", async evento => {
       const atual = Number(estado.dados.estoque[delta.dataset.tipo][delta.dataset.chave]) || 0;
       return atualizarEstoque(delta.dataset.tipo, delta.dataset.chave, Math.max(0, atual + Number(delta.dataset.delta)));
     }
-    const aba = evento.target.closest(".aba-estoque");
-    if (aba) { document.querySelectorAll(".aba-estoque").forEach(a => a.classList.remove("ativa")); aba.classList.add("ativa"); estado.tipoEstoque = aba.dataset.tipo; renderEstoque(); }
+    const aba = evento.target.closest(".aba");
+    if (aba) { document.querySelectorAll(".aba").forEach(a => a.classList.remove("ativa")); aba.classList.add("ativa"); estado.tipoEstoque = aba.dataset.tipo; renderEstoque(); }
   } catch (erro) { toast(erro.message); }
 });
 
@@ -413,7 +406,7 @@ function adicionarMapaBase(mapa) {
     reservaAtivada = true;
     mapa.removeLayer(principal);
     L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
-      maxZoom: 20,
+      maxZoom: 19,
       subdomains: "abcd",
       crossOrigin: true,
       updateWhenIdle: false,
@@ -458,7 +451,7 @@ async function abrirMapaDaPizzaria(latitude, longitude, zoomInicial = 19) {
   adicionarMapaBase(mapaPizzaria);
   marcadorPizzaria = L.marker([latitude, longitude], {
     draggable: true,
-    title: "Local da hamburgueria",
+    title: "Local da pizzaria",
     icon: criarIconeCentroMapa()
   }).addTo(mapaPizzaria);
   marcadorPizzaria.on("dragend", evento => {
@@ -471,7 +464,7 @@ async function abrirMapaDaPizzaria(latitude, longitude, zoomInicial = 19) {
   enderecoMapaPizzariaValido = Boolean(enderecoMapaPizzaria);
   pontoMapaPizzaria = { latitude: Number(latitude), longitude: Number(longitude) };
   $("#statusMapaPizzaria").textContent = enderecoMapaPizzaria ||
-    (zoomInicial <= 4 ? "Mapa geral do Brasil. Aproxime e toque no local da hamburgueria." : "Mova o marcador ou toque no mapa para escolher o endereço.");
+    (zoomInicial <= 4 ? "Mapa geral do Brasil. Aproxime e toque no local da pizzaria." : "Mova o marcador ou toque no mapa para escolher o endereço.");
   mapaPizzaria.setView([latitude, longitude], zoomInicial, { animate: false });
   atualizarMapaVisivel(mapaPizzaria);
 }
@@ -556,7 +549,7 @@ async function buscarEnderecoPizzaria() {
         botao.textContent = "Salvando endereço...";
         await confirmarLocalPizzaria(item.latitude, item.longitude, item.texto);
         caixa.classList.add("hidden");
-        toast("Endereço da hamburgueria salvo.");
+        toast("Endereço da pizzaria salvo.");
       } catch (erro) {
         botao.disabled = false;
         botao.innerHTML = textoOriginal;
@@ -603,14 +596,14 @@ function atualizarRaioEntrega(valor) {
 async function abrirMapaDaArea() {
   if (typeof L === "undefined") return toast("O mapa não carregou. Verifique sua internet.");
   if (!atualizarDisponibilidadeAreaEntrega()) {
-    return toast("Primeiro adicione e confirme o endereço da hamburgueria.");
+    return toast("Primeiro adicione e confirme o endereço da pizzaria.");
   }
   const latitudeTexto = $("#latitudePizzaria").value;
   const longitudeTexto = $("#longitudePizzaria").value;
   const latitude = Number(latitudeTexto);
   const longitude = Number(longitudeTexto);
   if (!latitudeTexto || !longitudeTexto || !Number.isFinite(latitude) || !Number.isFinite(longitude)) {
-    return toast("Primeiro pesquise e confirme a localização da hamburgueria.");
+    return toast("Primeiro pesquise e confirme a localização da pizzaria.");
   }
 
   $("#modalAreaEntrega").classList.remove("hidden");
@@ -641,7 +634,7 @@ async function abrirMapaDaArea() {
   mapaAreaEntrega.setView([latitude, longitude], 13, { animate: false });
   marcadorCentroArea = L.marker([latitude, longitude], {
     draggable: false,
-    title: "Hamburgueria — centro da área",
+    title: "Pizzaria — centro da área",
     icon: criarIconeCentroMapa()
   }).addTo(mapaAreaEntrega);
 
@@ -710,7 +703,7 @@ $("#confirmarMapaPizzaria").addEventListener("click", async () => {
     botao.textContent = "Salvando endereço...";
     await confirmarLocalPizzaria(pontoMapaPizzaria.latitude, pontoMapaPizzaria.longitude, enderecoMapaPizzaria);
     fecharMapaDaPizzaria();
-    toast("Endereço da hamburgueria salvo.");
+    toast("Endereço da pizzaria salvo.");
   } catch (erro) {
     toast(erro.message);
   } finally {
@@ -791,66 +784,14 @@ function mostrarLoginPainel() {
   $("#login").classList.remove("oculto");
 }
 
-// Não atualiza dados automaticamente enquanto o atendente está preenchendo
-// uma área de edição. Assim o texto digitado não é substituído pelo servidor.
-function podeAtualizarDadosAutomaticamente() {
-  return !["pedidos", "itens", "ingredientes", "precos", "imagens", "horario", "taxa", "adicionais"].includes(estado.guia);
-}
-
-// Pedidos precisam chegar ao atendente sem atualizar o painel inteiro. A
-// atualização completa apaga campos que alguém pode estar preenchendo em
-// outras abas; aqui buscamos somente os dados operacionais e redesenhamos os
-// cartões quando a aba Pedidos estiver visível.
-let atualizacaoPedidosEmAndamento = false;
-let pedidosJaVistos = null;
-
-function atualizarBotaoNotificacoes() {
-  const botao = $("#ativarNotificacoes");
-  if (!botao || portalPainel !== "atendente" || !("Notification" in window)) return;
-  botao.hidden = false;
-  const ativo = Notification.permission === "granted";
-  botao.classList.toggle("ativo", ativo);
-  botao.textContent = ativo ? "🔔 NOTIFICAÇÕES ATIVADAS" : "🔔 RECEBER NOTIFICAÇÕES";
-}
-
-async function ativarNotificacoes() {
-  if (!("Notification" in window)) return toast("Este navegador não oferece notificações.");
-  const permissao = await Notification.requestPermission();
-  atualizarBotaoNotificacoes();
-  toast(permissao === "granted" ? "Você receberá avisos de novos pedidos." : "Permissão de notificações não concedida.");
-}
-
-function avisarPedidosNovos(pedidos) {
+function aplicarPerfilPainel() {
   if (portalPainel !== "atendente") return;
-  const ids = new Set((pedidos || []).map(pedido => String(pedido.id)));
-  if (pedidosJaVistos === null) { pedidosJaVistos = ids; return; }
-  const novos = (pedidos || []).filter(pedido => !pedidosJaVistos.has(String(pedido.id)));
-  pedidosJaVistos = ids;
-  if (!novos.length || Notification.permission !== "granted") return;
-  novos.forEach(pedido => new Notification("Novo pedido MyBot", {
-    body: `Pedido #${pedido.id} recebido. Abra o painel para atender.`,
-    icon: "/painel/mybot-logo-verde.png",
-    tag: `pedido-${pedido.id}`
-  }));
-}
-async function atualizarPedidosAutomaticamente() {
-  if (
-    atualizacaoPedidosEmAndamento ||
-    estado.guia !== "pedidos" ||
-    $("#aplicacao").classList.contains("oculto")
-  ) return;
-
-  atualizacaoPedidosEmAndamento = true;
-  try {
-    estado.dados = await api(`/api/painel/dados?_=${Date.now()}`, { cache: "no-store" });
-    avisarPedidosNovos(estado.dados.pedidos);
-    renderPedidos();
-  } catch {
-    // A verificação de sessão existente continua responsável por mostrar o
-    // login se ela expirar; uma falha momentânea não deve retirar o painel.
-  } finally {
-    atualizacaoPedidosEmAndamento = false;
-  }
+  document.querySelectorAll(".guia-principal").forEach(botao => { if (!['pedidos', 'historico'].includes(botao.dataset.guia)) botao.hidden = true; });
+  document.querySelectorAll(".secao-painel").forEach(secao => { if (!['pedidos', 'historico'].includes(secao.dataset.secao)) secao.hidden = true; });
+  const titulo = document.querySelector('.hero h1'); if (titulo) titulo.textContent = 'Olá, atendente 👋';
+  const texto = document.querySelector('.hero p'); if (texto) texto.textContent = 'Receba, acompanhe e atualize os pedidos da pizzaria.';
+  const loginTitulo = document.querySelector('#login .eyebrow'); if (loginTitulo) loginTitulo.textContent = 'PORTAL DO ATENDENTE';
+  const loginTexto = document.querySelector('#login .muted'); if (loginTexto) loginTexto.textContent = 'Entre com o código do atendimento para operar os pedidos.';
 }
 
 async function validarSessaoPainel({ atualizarDados = true } = {}) {
@@ -860,12 +801,12 @@ async function validarSessaoPainel({ atualizarDados = true } = {}) {
   validacaoSessaoEmAndamento = (async () => {
     try {
       const sessao = await api(`/api/painel/sessao?_=${Date.now()}`, { cache: "no-store" });
-      if (!sessao.autenticado || sessao.perfil !== portalPainel) {
+      if (!sessao.autenticado) {
         mostrarLoginPainel();
         return false;
       }
 
-      if ((atualizarDados && podeAtualizarDadosAutomaticamente()) || !estado.dados) await carregar();
+      if (atualizarDados || !estado.dados) await carregar();
       $("#login").classList.add("oculto");
       $("#aplicacao").classList.remove("oculto");
       return true;
@@ -880,11 +821,8 @@ async function validarSessaoPainel({ atualizarDados = true } = {}) {
   return validacaoSessaoEmAndamento;
 }
 
+aplicarPerfilPainel();
 validarSessaoPainel();
-if (portalPainel === "atendente") {
-  atualizarBotaoNotificacoes();
-  $("#ativarNotificacoes")?.addEventListener("click", ativarNotificacoes);
-}
 
 window.addEventListener("pagehide", () => {
   // Impede que o histórico rápido do celular fotografe pedidos e controles.
@@ -900,30 +838,31 @@ document.addEventListener("visibilitychange", () => {
     validarSessaoPainel();
   }
 });
-setInterval(() => { if (!$("#aplicacao").classList.contains("oculto") && podeAtualizarDadosAutomaticamente()) carregar().catch(() => {}); }, 30000);
-setInterval(atualizarPedidosAutomaticamente, 10000);
+
+const introducoesPainel = {
+  pedidos: "Acompanhe os pedidos em tempo real, confirme o recebimento e avance cada pedido pelas etapas de preparo e entrega.",
+  historico: "Consulte pedidos concluídos, cancelados e já entregues sempre que precisar.",
+  estoque: "Controle a disponibilidade dos itens do cardápio. Toque duas vezes no menos para excluir um item definitivamente.",
+  precos: "Atualize preços e crie promoções que aparecem automaticamente no cardápio digital.",
+  itens: "Cadastre pizzas e bebidas para que elas fiquem disponíveis no bot, no estoque e no cardápio.",
+  ingredientes: "Edite as descrições de pizzas e bebidas exibidas para os clientes no cardápio digital.",
+  imagens: "Envie ou substitua as imagens dos produtos que aparecem no cardápio.",
+  horario: "Defina os dias e horários em que a pizzaria recebe pedidos.",
+  taxa: "Configure a taxa de entrega, a localização da pizzaria e a área atendida.",
+  ajuda: "Veja orientações rápidas para aproveitar todas as áreas do painel."
+};
+document.querySelectorAll(".secao-painel").forEach(secao => {
+  const texto = introducoesPainel[secao.dataset.secao];
+  const titulo = secao.querySelector(".titulo-card, .titulo-secao");
+  if (!texto || !titulo || secao.querySelector(".introducao-painel")) return;
+  titulo.insertAdjacentHTML("afterend", `<p class="introducao-painel">${texto}</p>`);
+});
+setInterval(() => { if (!$("#aplicacao").classList.contains("oculto")) carregar().catch(() => {}); }, 30000);
 
 // Experiência operacional em guias e estoque por disponibilidade.
-estado.guia = portalPainel === "atendente" ? "pedidos" : "estoque";
+estado.guia = "pedidos";
 estado.fase = "confirmar";
 estado.modalidade = "entrega";
-
-function aplicarRestricoesDoPortal() {
-  document.querySelectorAll(".guia-principal").forEach(botao => {
-    botao.hidden = !guiasPermitidas.includes(botao.dataset.guia);
-  });
-  document.querySelectorAll(".secao-painel").forEach(secao => {
-    secao.hidden = !guiasPermitidas.includes(secao.dataset.secao);
-  });
-  const titulo = portalPainel === "atendente" ? "Portal do atendente" : "Portal administrativo";
-  document.querySelectorAll(".marca-login small").forEach(el => { el.textContent = titulo; });
-  const textoLogin = $("#login .muted");
-  if (textoLogin) textoLogin.textContent = portalPainel === "atendente"
-    ? "Entre com o código do atendente."
-    : "Entre com o código administrativo compartilhado pelo proprietário.";
-}
-
-aplicarRestricoesDoPortal();
 estado.buscaHistorico = "";
 estado.modalidadeHistorico = "todos";
 
@@ -947,7 +886,6 @@ function aplicarGuia(nome) {
   estado.guia = nome;
   document.querySelectorAll(".guia-principal").forEach(botao => botao.classList.toggle("ativa", botao.dataset.guia === nome));
   document.querySelectorAll(".secao-painel").forEach(secao => secao.classList.toggle("ativa", secao.dataset.secao === nome));
-  if (nome === "pedidos") atualizarPedidosAutomaticamente();
   if (nome === "historico") renderHistorico();
 }
 
@@ -1000,19 +938,13 @@ function formatarPizzaCompleta(item) {
   const quantidade = Math.max(1, Number(item?.quantidade) || 1);
   const saboresOriginais = Array.isArray(item?.sabores) && item.sabores.length ? item.sabores : [item?.sabor];
   const sabores = saboresOriginais.filter(Boolean).map(nomeProdutoCompleto).join(" e ") || "Sabor não informado";
-  const categoriaCatalogo = estado.catalogoPrecos?.categoriasProdutos?.[item?.sabor || saboresOriginais[0]];
-  const categoria = item?.categoria || categoriaCatalogo || "tradicionais";
-  const produto = categoria === "doces"
-    ? `Combo: ${sabores}`
-    : categoria === "especiais"
-      ? `Acompanhamento: ${sabores}`
-      : /^hambúrgueres?\b/i.test(sabores) ? sabores : `Hambúrguer de ${sabores}`;
-  return `${quantidade}× ${produto}`;
+  const produto = /^pizzas?\b/i.test(sabores) ? sabores : `${quantidade === 1 ? "Pizza" : "Pizzas"} de ${sabores}`;
+  return `${quantidade}× ${produto} — Tamanho ${tamanhoPizzaCompleto(item?.tamanho)}`;
 }
 
 function formatarBebidaCompleta(item) {
   const quantidade = Math.max(1, Number(item?.quantidade) || 1);
-  return `${quantidade}× Bebida: ${nomeProdutoCompleto(item?.nome || item?.chave) || "Bebida não informada"}`;
+  return `${quantidade}× ${nomeProdutoCompleto(item?.nome || item?.chave) || "Bebida não informada"}`;
 }
 
 function detalhesPagamento(pedido, recebimento) {
@@ -1181,24 +1113,12 @@ renderPedidos = function renderPedidosEmGuias() {
     </article>`;
   }).join("") : `<div class="vazio">Nenhum pedido nesta etapa.</div>`;
 };
-function nomeEstoquePadronizado(tipo, nome) {
-  const prefixos = { pizzas: "Hambúrguer", acompanhamentos: "Acompanhamento", combos: "Combo", bebidas: "Bebida" };
-  const variantes = { pizzas: "hamb[úu]rguer", acompanhamentos: "acompanhamento", combos: "combo", bebidas: "bebida" };
-  let base = String(nome || "").replaceAll("_", " ").trim();
-  const removerPrefixo = new RegExp(`^${variantes[tipo]}(?:\\s+de|\\s*:)?\\s*`, "i");
-  while (removerPrefixo.test(base)) base = base.replace(removerPrefixo, "").trim();
-  return `${prefixos[tipo]}: ${base || "Sem nome"}`;
-}
-
 renderEstoque = function renderEstoqueDisponibilidade() {
-  const tipos = estado.tipoEstoque === "todos" ? ["pizzas", "acompanhamentos", "combos", "bebidas"] : [estado.tipoEstoque];
-  const rotulos = { pizzas: "Hambúrguer", acompanhamentos: "Acompanhamento", combos: "Combo", bebidas: "Bebida" };
-  const busca = normalizarBuscaPainel(estado.busca);
-  const produtos = tipos.flatMap(tipo => Object.entries(estado.dados.estoque[tipo] || {}).map(([nome, quantidade]) => ({ tipo, nome, quantidade }))).filter(item => normalizarBuscaPainel(`${item.nome} ${rotulos[item.tipo]}`).includes(busca));
-  $("#estoque").innerHTML = produtos.map(({tipo, nome, quantidade}) => {
+  const produtos = Object.entries(estado.dados.estoque[estado.tipoEstoque] || {}).filter(([nome]) => nome.toLowerCase().includes(estado.busca));
+  $("#estoque").innerHTML = produtos.map(([nome, quantidade]) => {
     const disponivel = Number(quantidade) > 0;
-    return `<div class="produto ${disponivel ? "disponivel" : "esgotado"}"><div><div class="produto-nome">${escapar(nomeEstoquePadronizado(tipo, nome))}</div><small class="estado-produto ${disponivel ? "ok" : "off"}">${disponivel ? "Disponível" : "Esgotado"}</small></div><div class="quantidade"><button data-disponibilidade="esgotar" data-tipo="${tipo}" data-chave="${escapar(nome)}" title="Marcar como esgotado">−</button><button data-disponibilidade="liberar" data-tipo="${tipo}" data-chave="${escapar(nome)}" title="Voltar a disponibilizar">+</button></div></div>`;
-  }).join("") || '<div class="vazio">Nenhum produto encontrado.</div>';
+    return `<div class="produto ${disponivel ? "disponivel" : "esgotado"}"><div><div class="produto-nome">${escapar(nome.replaceAll("_", " "))}</div><small class="estado-produto ${disponivel ? "ok" : "off"}">${disponivel ? "Disponível" : "Esgotado"}</small></div><div class="quantidade"><button data-disponibilidade="esgotar" data-tipo="${estado.tipoEstoque}" data-chave="${escapar(nome)}" title="Marcar como esgotado">−</button><button data-disponibilidade="liberar" data-tipo="${estado.tipoEstoque}" data-chave="${escapar(nome)}" title="Voltar a disponibilizar">+</button></div></div>`;
+  }).join("");
 };
 
 document.querySelectorAll(".guia-principal").forEach(botao => botao.addEventListener("click", () => aplicarGuia(botao.dataset.guia)));
@@ -1224,17 +1144,6 @@ document.addEventListener("click", async evento => {
   evento.preventDefault();
   evento.stopImmediatePropagation();
   try {
-    const identificador = `${botao.dataset.tipo}|${botao.dataset.chave}`;
-    const agora = Date.now();
-    if (botao.dataset.disponibilidade === "esgotar" && window.ultimoCliqueMenosEstoque?.id === identificador && agora - window.ultimoCliqueMenosEstoque.tempo < 700) {
-      window.ultimoCliqueMenosEstoque = null;
-      if (!confirm("Excluir este item do estoque e do cardápio? Esta ação não pode ser desfeita.")) return;
-      await api("/api/painel/catalogo/item", { method: "DELETE", body: JSON.stringify({ tipo: botao.dataset.tipo, chave: botao.dataset.chave }) });
-      await carregar();
-      toast("Item excluído do estoque e do cardápio.");
-      return;
-    }
-    window.ultimoCliqueMenosEstoque = { id: identificador, tempo: agora };
     const quantidade = botao.dataset.disponibilidade === "esgotar" ? 0 : 10000;
     await atualizarEstoque(botao.dataset.tipo, botao.dataset.chave, quantidade);
     toast(quantidade ? "Produto disponível novamente." : "Produto marcado como esgotado.");
@@ -1615,100 +1524,28 @@ document.addEventListener("click", async evento => {
 estado.catalogoPrecoAtual="pizzas";
 estado.alteracoesPrecos={};
 const chavePreco=(tipo,chave,tamanho="")=>`${tipo}|${chave}|${tamanho}`;
-function nomePizzaPainel(nome){const sabor=String(nome||"").trim(),categoria=estado.catalogoPrecos?.categoriasProdutos?.[sabor];if(categoria==="especiais"||categoria==="doces")return sabor;return /^hambúrguer\s+de\s+/i.test(sabor)?sabor:`Hambúrguer de ${sabor}`}
+function nomePizzaPainel(nome){const sabor=String(nome||"").trim();return /^pizza\s+de\s+/i.test(sabor)?sabor:`Pizza de ${sabor}`}
 function normalizarBuscaPainel(texto){return String(texto||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLocaleLowerCase("pt-BR").replace(/[_-]+/g," ").replace(/\s+/g," ").trim()}
 function chaveEstoquePizza(nome){return String(nome||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim()}
-function dadosProdutosPromocao(){const c=estado.catalogoPrecos||{},estoque=estado.dados?.estoque||{},p=[],tipoEstoque=nome=>c.categoriasProdutos?.[nome]==="especiais"?"acompanhamentos":c.categoriasProdutos?.[nome]==="doces"?"combos":"pizzas";Object.entries(c.pizzas||{}).forEach(([nome,tamanhos])=>Object.entries(tamanhos).forEach(([tamanho,preco])=>{const tipo=tipoEstoque(nome);p.push({tipo:"pizza",chave:nome,tamanho,preco,indisponivel:Number(estoque[tipo]?.[chaveEstoquePizza(nome)]||0)<=0,nome:`${nomePizzaPainel(nome)}${tamanho==="U"?"":" · "+tamanho}`})}));Object.entries(c.bebidas||{}).forEach(([chave,preco])=>p.push({tipo:"bebida",chave,preco,nome:c.nomesBebidas?.[chave]?.nome||nomeProdutoCompleto(chave)}));return p}
-function renderPrecos(){const d=$("#precos"),c=estado.catalogoPrecos;if(!d||!c)return;if(estado.catalogoPrecoAtual==="adicionar"){d.innerHTML=`<form id="formNovoItem" class="linha-promocao"><strong>Novo item do cardápio</strong><label>Tipo<select id="novoTipo"><option value="pizza">Pizza</option><option value="bebida">Bebida</option></select></label><label>Categoria<select id="novaCategoria"><option value="tradicionais">Tradicionais</option><option value="especiais">Especiais</option><option value="doces">Doces</option></select></label><label>Nome<input id="novoNome" required maxlength="80" placeholder="Ex.: Frango com cheddar"></label><label>Preço inicial<input id="novoPreco" required type="number" step=".01" min=".01" placeholder="0,00"></label><button class="btn primario">Adicionar ao cardápio</button><small class="promo-resumo">O item ficará disponível no bot, estoque e cardápio.</small></form>`;return}if(estado.catalogoPrecoAtual==="promocoes"){const busca=(estado.buscaPromo||"").toLowerCase();d.innerHTML='<div class="acao-salvar busca-precos"><label class="campo-busca-precos"><span>⌕</span><input id="buscaPromocoes" type="search" value="'+escapar(estado.buscaPromo||'')+'" placeholder="Buscar promoção por nome"></label></div>'+dadosProdutosPromocao().filter(item=>normalizarBuscaPainel(item.nome+" "+(item.tipo==="pizza"?"pizza pizzas":"bebida bebidas")).includes(normalizarBuscaPainel(busca))).sort((a,b)=>{const pa=a.tipo==="pizza"?c.promocoes?.pizzas?.[a.chave]?.[a.tamanho]:c.promocoes?.bebidas?.[a.chave];const pb=b.tipo==="pizza"?c.promocoes?.pizzas?.[b.chave]?.[b.tamanho]:c.promocoes?.bebidas?.[b.chave];return Number(Boolean(pb))-Number(Boolean(pa))||a.nome.localeCompare(b.nome,"pt-BR")}).map(item=>{const promo=item.tipo==="pizza"?c.promocoes?.pizzas?.[item.chave]?.[item.tamanho]:c.promocoes?.bebidas?.[item.chave];const id=encodeURIComponent(JSON.stringify(item));if(item.indisponivel)return '<article class="linha-promocao indisponivel"><strong>'+escapar(item.nome)+' · Indisponível</strong><small class="promo-resumo">Este sabor está indisponível e não pode receber promoção.</small>'+(promo?'<button class="btn perigo" data-remover-promo="'+id+'">Remover</button>':'')+'</article>';return '<article class="linha-promocao"><strong>'+escapar(item.nome)+'</strong><label>Etiqueta<input data-promo-nome="'+id+'" maxlength="80" value="'+escapar(promo?.nome||"Oferta especial")+'"></label><label>De<input type="number" step=".01" min=".01" data-promo-de="'+id+'" value="'+Number(promo?.de??item.preco).toFixed(2)+'"></label><label>Por<input type="number" step=".01" min=".01" data-promo-por="'+id+'" value="'+(promo?.por??"")+'"></label><button class="btn primario" data-aplicar-promo="'+id+'">Aplicar</button>'+(promo?'<button class="btn perigo" data-remover-promo="'+id+'">Remover</button><small class="promo-resumo">🔥 Ativa: de '+moeda(promo.de)+' por '+moeda(promo.por)+'</small>':'')+'</article>'}).join("");return}const tipo=estado.catalogoPrecoAtual;const busca=(estado.buscaPreco||"").toLowerCase();const produtos=tipo==="pizzas"?Object.entries(c.pizzas||{}).flatMap(([nome,t])=>Object.entries(t).map(([tamanho,preco])=>({tipo:"pizza",chave:nome,tamanho,nome:`${nomePizzaPainel(nome)}${tamanho==="U"?"":" · "+tamanho}`,preco}))):Object.entries(c.bebidas||{}).map(([chave,preco])=>({tipo:"bebida",chave,nome:c.nomesBebidas?.[chave]?.nome||nomeProdutoCompleto(chave),preco})).filter(item=>item.nome.toLowerCase().includes(busca));d.innerHTML='<div class="acao-salvar busca-precos"><button id="salvarPrecos" class="btn primario">Salvar alterações</button><label class="campo-busca-precos"><span>⌕</span><input id="buscaPrecos" type="search" value="'+escapar(estado.buscaPreco||'')+'" placeholder="Buscar por nome"></label></div>'+produtos.map(item=>{const k=chavePreco(item.tipo,item.chave,item.tamanho),v=estado.alteracoesPrecos[k]??item.preco;return '<article class="linha-preco"><strong>'+escapar(item.nome)+'</strong><label>Novo preço <input class="campo-preco" type="number" step=".01" min=".01" value="'+Number(v).toFixed(2)+'" data-preco-pendente="'+encodeURIComponent(JSON.stringify(item))+'"></label></article>'}).join("")}
-estado.tipoDescricao="todos";
-function renderIngredientes(){const d=$("#listaIngredientes");if(!d)return;const busca=String($("#buscarIngredientes")?.value||"").toLocaleLowerCase("pt-BR").trim(),tipo=estado.tipoDescricao||"todos",rotulos={tradicionais:"hamburgueres",especiais:"acompanhamentos",doces:"combos",bebidas:"bebidas"};const itens=(estado.ingredientesPizzas||[]).filter(x=>{const tipoItem=rotulos[x.categoria]||"hamburgueres",nome=x.tipo==="bebida"?x.nome:nomePizzaPainel(x.nome),texto=`${nome} ${x.nome} ${tipoItem}`;return(tipo==="todos"||tipo===tipoItem)&&normalizarBuscaPainel(texto).includes(normalizarBuscaPainel(busca))});d.innerHTML=itens.length?itens.map(x=>{const id=encodeURIComponent(JSON.stringify({tipo:x.tipo||"pizza",chave:x.chave||x.nome})),nome=x.tipo==="bebida"?x.nome:nomePizzaPainel(x.nome);return '<article class="linha-preco ingrediente-item"><strong>'+escapar(nome)+'</strong><label class="ingredientes-campo">Descrição<textarea rows="3" maxlength="500" data-descricao-produto="'+id+'">'+escapar(x.ingredientes||"")+'</textarea></label><button class="btn primario" data-salvar-descricao="'+id+'">Salvar</button></article>'}).join(""):'<div class="vazio">Nenhum produto encontrado.</div>'}
-estado.tipoAdicional="todos";
-function renderAdicionais(){const d=$("#listaAdicionais");if(!d)return;const busca=normalizarBuscaPainel($("#buscarAdicionais")?.value||""),tipo=estado.tipoAdicional||"todos",rotulos={hamburgueres:"Hambúrguer",acompanhamentos:"Acompanhamento",combos:"Combo"},itens=(estado.adicionais||[]).filter(item=>(tipo==="todos"||item.tipo===tipo)&&normalizarBuscaPainel(`${item.nome} ${rotulos[item.tipo]||""}`).includes(busca));const linha=(produto,adicional,indice)=>'<div class="linha-preco adicional-linha"><label>Nome do adicional<input maxlength="80" value="'+escapar(adicional.nome||"")+'" data-adicional-nome="'+encodeURIComponent(produto.nome)+'" data-adicional-indice="'+indice+'" placeholder="Ex.: Bacon extra"></label><label>Valor<input type="number" step=".01" min=".01" value="'+escapar(adicional.preco??"")+'" data-adicional-preco="'+encodeURIComponent(produto.nome)+'" data-adicional-indice="'+indice+'" placeholder="0,00"></label><button class="btn perigo" type="button" data-remover-adicional="'+encodeURIComponent(produto.nome)+'" data-adicional-indice="'+indice+'">Remover</button></div>';d.innerHTML='<div class="acao-salvar"><button id="salvarAdicionais" class="btn primario">Salvar alterações</button></div>'+(itens.length?itens.map(produto=>'<article class="linha-preco"><strong>'+escapar(produto.nome)+'</strong><small>'+rotulos[produto.tipo]+'</small><div class="lista-adicionais-produto">'+(produto.adicionais||[]).map((adicional,indice)=>linha(produto,adicional,indice)).join("")+'</div><button type="button" class="btn secundario" data-adicionar-adicional="'+encodeURIComponent(produto.nome)+'">+ Adicionar mais</button></article>').join(""):'<div class="vazio">Nenhum produto encontrado.</div>')}
+function dadosProdutosPromocao(){const c=estado.catalogoPrecos||{},estoque=estado.dados?.estoque?.pizzas||{},p=[];Object.entries(c.pizzas||{}).forEach(([nome,tamanhos])=>Object.entries(tamanhos).forEach(([tamanho,preco])=>p.push({tipo:"pizza",chave:nome,tamanho,preco,indisponivel:Number(estoque[chaveEstoquePizza(nome)]||0)<=0,nome:`${nomePizzaPainel(nome)} · ${tamanho}`})));Object.entries(c.bebidas||{}).forEach(([chave,preco])=>p.push({tipo:"bebida",chave,preco,nome:c.nomesBebidas?.[chave]?.nome||nomeProdutoCompleto(chave)}));return p}
+function renderPrecos(){const d=$("#precos"),c=estado.catalogoPrecos;if(!d||!c)return;if(estado.catalogoPrecoAtual==="adicionar"){d.innerHTML=`<form id="formNovoItem" class="linha-promocao"><strong>Novo item do cardápio</strong><label>Tipo<select id="novoTipo"><option value="pizza">Pizza</option><option value="bebida">Bebida</option></select></label><label>Categoria<select id="novaCategoria"><option value="tradicionais">Tradicionais</option><option value="especiais">Especiais</option><option value="doces">Doces</option></select></label><label>Nome<input id="novoNome" required maxlength="80" placeholder="Ex.: Frango com cheddar"></label><label>Preço inicial<input id="novoPreco" required type="number" step=".01" min=".01" placeholder="0,00"></label><button class="btn primario">Adicionar ao cardápio</button><small class="promo-resumo">O item ficará disponível no bot, estoque e cardápio.</small></form>`;return}if(estado.catalogoPrecoAtual==="promocoes"){const busca=(estado.buscaPromo||"").toLowerCase();d.innerHTML='<div class="acao-salvar busca-precos"><label class="campo-busca-precos"><span>⌕</span><input id="buscaPromocoes" type="search" value="'+escapar(estado.buscaPromo||'')+'" placeholder="Buscar promoção por nome"></label></div>'+dadosProdutosPromocao().filter(item=>normalizarBuscaPainel(item.nome+" "+(item.tipo==="pizza"?"pizza pizzas":"bebida bebidas")).includes(normalizarBuscaPainel(busca))).sort((a,b)=>{const pa=a.tipo==="pizza"?c.promocoes?.pizzas?.[a.chave]?.[a.tamanho]:c.promocoes?.bebidas?.[a.chave];const pb=b.tipo==="pizza"?c.promocoes?.pizzas?.[b.chave]?.[b.tamanho]:c.promocoes?.bebidas?.[b.chave];return Number(Boolean(pb))-Number(Boolean(pa))||a.nome.localeCompare(b.nome,"pt-BR")}).map(item=>{const promo=item.tipo==="pizza"?c.promocoes?.pizzas?.[item.chave]?.[item.tamanho]:c.promocoes?.bebidas?.[item.chave];const id=encodeURIComponent(JSON.stringify(item));if(item.indisponivel)return '<article class="linha-promocao indisponivel"><strong>'+escapar(item.nome)+' · Indisponível</strong><small class="promo-resumo">Este sabor está indisponível e não pode receber promoção.</small>'+(promo?'<button class="btn perigo" data-remover-promo="'+id+'">Remover</button>':'')+'</article>';return '<article class="linha-promocao"><strong>'+escapar(item.nome)+'</strong><label>Etiqueta<input data-promo-nome="'+id+'" maxlength="80" value="'+escapar(promo?.nome||"Oferta especial")+'"></label><label>De<input type="number" step=".01" min=".01" data-promo-de="'+id+'" value="'+Number(promo?.de??item.preco).toFixed(2)+'"></label><label>Por<input type="number" step=".01" min=".01" data-promo-por="'+id+'" value="'+(promo?.por??"")+'"></label><button class="btn primario" data-aplicar-promo="'+id+'">Aplicar</button>'+(promo?'<button class="btn perigo" data-remover-promo="'+id+'">Remover</button><small class="promo-resumo">🔥 Ativa: de '+moeda(promo.de)+' por '+moeda(promo.por)+'</small>':'')+'</article>'}).join("");return}const tipo=estado.catalogoPrecoAtual;const busca=(estado.buscaPreco||"").toLowerCase();const produtos=tipo==="pizzas"?Object.entries(c.pizzas||{}).flatMap(([nome,t])=>Object.entries(t).map(([tamanho,preco])=>({tipo:"pizza",chave:nome,tamanho,nome:`${nomePizzaPainel(nome)} · ${tamanho}`,preco}))):Object.entries(c.bebidas||{}).map(([chave,preco])=>({tipo:"bebida",chave,nome:c.nomesBebidas?.[chave]?.nome||nomeProdutoCompleto(chave),preco})).filter(item=>item.nome.toLowerCase().includes(busca));d.innerHTML='<div class="acao-salvar busca-precos"><button id="salvarPrecos" class="btn primario">Salvar alterações</button><label class="campo-busca-precos"><span>⌕</span><input id="buscaPrecos" type="search" value="'+escapar(estado.buscaPreco||'')+'" placeholder="Buscar por nome"></label></div>'+produtos.map(item=>{const k=chavePreco(item.tipo,item.chave,item.tamanho),v=estado.alteracoesPrecos[k]??item.preco;return '<article class="linha-preco"><strong>'+escapar(item.nome)+'</strong><label>Novo preço <input class="campo-preco" type="number" step=".01" min=".01" value="'+Number(v).toFixed(2)+'" data-preco-pendente="'+encodeURIComponent(JSON.stringify(item))+'"></label></article>'}).join("")}
+function renderIngredientes(){const d=$("#listaIngredientes");if(!d)return;const busca=String($("#buscarIngredientes")?.value||"").toLocaleLowerCase("pt-BR").trim();const itens=(estado.ingredientesPizzas||[]).filter(x=>normalizarBuscaPainel(`${x.tipo==="pizza"?nomePizzaPainel(x.nome):x.nome} ${x.tipo}`).includes(normalizarBuscaPainel(busca)));d.innerHTML=itens.length?itens.map(x=>{const pizza=x.tipo==="pizza",id=encodeURIComponent(x.chave||x.nome),nome=pizza?nomePizzaPainel(x.nome):x.nome;return '<article class="linha-preco ingrediente-item"><strong>'+escapar(nome)+'</strong><label class="ingredientes-campo">'+(pizza?"Ingredientes":"Descrição")+'<textarea rows="3" maxlength="500" data-descricao-produto="'+id+'">'+escapar(x.ingredientes||"")+'</textarea></label><button class="btn primario" data-salvar-descricao="'+id+'" data-tipo-descricao="'+x.tipo+'">Salvar</button></article>'}).join(""):'<div class="vazio">Nenhum produto encontrado.</div>'}
 estado.tipoImagem="todos";
-function renderImagens(){const d=$("#listaImagens");if(!d)return;const busca=String($("#buscarImagens")?.value||"").toLocaleLowerCase("pt-BR").trim(),rotulos={pizzas:"Hambúrguer",acompanhamentos:"Acompanhamento",combos:"Combo",bebidas:"Bebida"};const itens=(estado.imagensProdutos||[]).filter(x=>{const nomeExibido=x.tipo==="pizzas"?nomePizzaPainel(x.nome):x.nome;const termos=`${nomeExibido} ${x.nome} ${rotulos[x.tipo]||""}`;return(estado.tipoImagem==="todos"||x.tipo===estado.tipoImagem)&&normalizarBuscaPainel(termos).includes(normalizarBuscaPainel(busca))});d.innerHTML=itens.length?itens.map(x=>{const id=encodeURIComponent(JSON.stringify({tipo:x.tipo,chave:x.chave,nome:x.nome})),rotulo=rotulos[x.tipo]||"Produto";return '<article class="imagem-item"><div class="imagem-preview '+(x.imagem?"tem-imagem":"")+'">'+(x.imagem?'<img src="'+escapar(x.imagem)+'" alt="'+escapar(x.nome)+'">':'<span>'+(x.tipo==="bebidas"?"🥤":x.tipo==="acompanhamentos"?"🍟":"🍔")+'</span><small>Sem foto</small>')+'</div><div class="imagem-info"><strong>'+escapar(x.tipo==="pizzas"?nomePizzaPainel(x.nome):x.nome)+'</strong><small>'+rotulo+'</small><input type="file" accept="image/jpeg,image/png,image/webp" data-arquivo-imagem="'+id+'"><div class="imagem-acoes"><button class="btn primario" data-publicar-imagem="'+id+'">Publicar imagem</button>'+(x.imagem?'<button class="btn perigo" data-remover-imagem="'+id+'">Remover</button>':'')+'</div></div></article>'}).join(""):'<div class="vazio">Nenhum produto encontrado.</div>'}
-const aplicarGuiaAntesPreco=aplicarGuia;aplicarGuia=function(nome){aplicarGuiaAntesPreco(nome);if(nome==="precos")renderPrecos();if(nome==="ingredientes")renderIngredientes();if(nome==="imagens")renderImagens();if(nome==="adicionais")renderAdicionais()};
-const renderPrecosCatalogoOriginal = renderPrecos;
-renderPrecos = function () {
-  const catalogoSelecionado = estado.catalogoPrecoAtual;
-  if (["pizzas", "acompanhamentos", "combos"].includes(catalogoSelecionado)) {
-    const categoria = catalogoSelecionado === "pizzas" ? "tradicionais" : catalogoSelecionado === "acompanhamentos" ? "especiais" : "doces";
-    const catalogoCompleto = estado.catalogoPrecos;
-    const produtos = Object.entries(catalogoCompleto?.pizzas || {}).filter(([nome]) => (catalogoCompleto.categoriasProdutos?.[nome] || "tradicionais") === categoria);
-    estado.catalogoPrecos = { ...catalogoCompleto, pizzas: Object.fromEntries(produtos) };
-    estado.catalogoPrecoAtual = "pizzas";
-    renderPrecosCatalogoOriginal();
-    estado.catalogoPrecos = catalogoCompleto;
-    estado.catalogoPrecoAtual = catalogoSelecionado;
-    if (!produtos.length) $("#precos").innerHTML = `<div class="vazio">Nenhum ${catalogoSelecionado === "pizzas" ? "hambúrguer" : catalogoSelecionado === "combos" ? "combo" : "acompanhamento"} cadastrado ainda.</div>`;
-    return;
-  }
-  renderPrecosCatalogoOriginal();
-};
+function renderImagens(){const d=$("#listaImagens");if(!d)return;const busca=String($("#buscarImagens")?.value||"").toLocaleLowerCase("pt-BR").trim();const itens=(estado.imagensProdutos||[]).filter(x=>{const nomeExibido=x.tipo==="pizzas"?nomePizzaPainel(x.nome):x.nome;const termos=nomeExibido+" "+x.nome+" "+(x.tipo==="pizzas"?"pizza pizzas":"bebida bebidas");return(estado.tipoImagem==="todos"||x.tipo===estado.tipoImagem)&&normalizarBuscaPainel(termos).includes(normalizarBuscaPainel(busca))});d.innerHTML=itens.length?itens.map(x=>{const id=encodeURIComponent(JSON.stringify({tipo:x.tipo,chave:x.chave,nome:x.nome}));return '<article class="imagem-item"><div class="imagem-preview '+(x.imagem?"tem-imagem":"")+'">'+(x.imagem?'<img src="'+escapar(x.imagem)+'" alt="'+escapar(x.nome)+'">':'<span>'+(x.tipo==="bebidas"?"🥤":"🍕")+'</span><small>Sem foto</small>')+'</div><div class="imagem-info"><strong>'+escapar(x.tipo==="pizzas"?nomePizzaPainel(x.nome):x.nome)+'</strong><small>'+(x.tipo==="pizzas"?"Pizza":"Bebida")+'</small><input type="file" accept="image/jpeg,image/png,image/webp" data-arquivo-imagem="'+id+'"><div class="imagem-acoes"><button class="btn primario" data-publicar-imagem="'+id+'">Publicar imagem</button>'+(x.imagem?'<button class="btn perigo" data-remover-imagem="'+id+'">Remover</button>':'')+'</div></div></article>'}).join(""):'<div class="vazio">Nenhum produto encontrado.</div>'}
+const aplicarGuiaAntesPreco=aplicarGuia;aplicarGuia=function(nome){aplicarGuiaAntesPreco(nome);if(nome==="precos")renderPrecos();if(nome==="ingredientes")renderIngredientes();if(nome==="imagens")renderImagens()};
 document.querySelectorAll(".aba-preco").forEach(x=>x.addEventListener("click",()=>{estado.catalogoPrecoAtual=x.dataset.catalogo;document.querySelectorAll(".aba-preco").forEach(y=>y.classList.toggle("ativa",y===x));renderPrecos()}));
 document.addEventListener("input",e=>{const campo=e.target.closest("[data-preco-pendente]");if(!campo)return;const x=JSON.parse(decodeURIComponent(campo.dataset.precoPendente));estado.alteracoesPrecos[chavePreco(x.tipo,x.chave,x.tamanho)]=campo.value});
 document.addEventListener("click",async e=>{const salvar=e.target.closest("#salvarPrecos");const aplicar=e.target.closest("[data-aplicar-promo]");const remover=e.target.closest("[data-remover-promo]");if(!salvar&&!aplicar&&!remover)return;try{if(salvar){const alteracoes=Object.entries(estado.alteracoesPrecos);if(!alteracoes.length)return toast("Nenhum preço foi alterado.");salvar.disabled=true;salvar.textContent="Salvando...";for(const [k,preco] of alteracoes){const [tipo,chave,tamanho]=k.split("|");await api(tipo==="pizza"?"/api/painel/precos/pizza":"/api/painel/precos/bebida",{method:"PATCH",body:JSON.stringify(tipo==="pizza"?{nome:chave,tamanho,preco}:{chave,preco})})}estado.alteracoesPrecos={};estado.catalogoPrecos=await api("/api/painel/precos");renderPrecos();return toast("Preços salvos no bot e no cardápio.")}const x=JSON.parse(decodeURIComponent((aplicar||remover).dataset[aplicar?"aplicarPromo":"removerPromo"]));if(remover){if(!confirm("Remover esta promoção?"))return;await api("/api/painel/promocoes",{method:"DELETE",body:JSON.stringify(x)});estado.catalogoPrecos=await api("/api/painel/precos");renderPrecos();return toast("Promoção removida.")}const id=encodeURIComponent(JSON.stringify(x)),nome=document.querySelector('[data-promo-nome="'+id+'"]')?.value,de=document.querySelector('[data-promo-de="'+id+'"]')?.value,por=document.querySelector('[data-promo-por="'+id+'"]')?.value;await api("/api/painel/promocoes",{method:"PUT",body:JSON.stringify({...x,nome,de:String(de).replace(",","."),por:String(por).replace(",","."),ativa:true})});estado.catalogoPrecos=await api("/api/painel/precos");renderPrecos();toast("Promoção aplicada e etiqueta publicada.")}catch(e){toast(e.message)}});
 
 
-document.addEventListener("submit",async e=>{if(e.target.id!=="formNovoItem")return;e.preventDefault();try{const tipo=$("#novoTipo").value,preco=tipo==="pizza"?$("#novoPrecoHamburguer").value:$("#novoPreco").value;await api("/api/painel/catalogo/item",{method:"POST",body:JSON.stringify({tipo,nome:$("#novoNome").value,ingredientes:$("#novoIngredientes").value,preco})});[estado.dados,estado.catalogoPrecos,estado.ingredientesPizzas,estado.imagensProdutos,estado.adicionais]=await Promise.all([api("/api/painel/dados"),api("/api/painel/precos"),api("/api/painel/ingredientes"),api("/api/painel/imagens"),api("/api/painel/adicionais")]);renderEstoque();renderPrecos();renderIngredientes();renderImagens();renderAdicionais();toast("Item adicionado ao cardápio.");e.target.reset();atualizarFormularioNovoItem()}catch(x){toast(x.message)}});document.addEventListener("input",e=>{if(!["buscaPrecos","buscaPromocoes"].includes(e.target.id))return;const busca=e.target.value.toLocaleLowerCase("pt-BR").trim();const seletor=e.target.id==="buscaPromocoes"?"#precos .linha-promocao":"#precos .linha-preco";document.querySelectorAll(seletor).forEach(card=>{card.hidden=busca!==""&&!normalizarBuscaPainel(card.textContent).includes(normalizarBuscaPainel(busca))})});
-function atualizarFormularioNovoItem(){const hamburguer=$("#novoTipo")?.value==="pizza",precoHamburguer=$("#precoHamburguer"),precoUnitario=$("#grupoPrecoBebida"),grupoDescricao=$("#grupoIngredientesNovo"),campoDescricao=$("#novoIngredientes");if(precoHamburguer){precoHamburguer.hidden=!hamburguer;precoHamburguer.querySelector("input").required=hamburguer}if(precoUnitario){precoUnitario.hidden=hamburguer;precoUnitario.querySelector("input").required=!hamburguer}if(grupoDescricao)grupoDescricao.hidden=false;if(campoDescricao)campoDescricao.required=true}
+document.addEventListener("submit",async e=>{if(e.target.id!=="formNovoItem")return;e.preventDefault();try{const tipo=$("#novoTipo").value,precos=tipo==="pizza"?{P:$("#novoPrecoP").value,M:$("#novoPrecoM").value,G:$("#novoPrecoG").value,F:$("#novoPrecoF").value}:null;await api("/api/painel/catalogo/item",{method:"POST",body:JSON.stringify({tipo,nome:$("#novoNome").value,ingredientes:$("#novoIngredientes").value,preco:$("#novoPreco").value,precos,categoria:$("#novaCategoria").value})});estado.catalogoPrecos=await api("/api/painel/precos");estado.ingredientesPizzas=await api("/api/painel/ingredientes");toast("Item adicionado ao cardápio.");e.target.reset();atualizarFormularioNovoItem()}catch(x){toast(x.message)}});document.addEventListener("input",e=>{if(!["buscaPrecos","buscaPromocoes"].includes(e.target.id))return;const busca=e.target.value.toLocaleLowerCase("pt-BR").trim();const seletor=e.target.id==="buscaPromocoes"?"#precos .linha-promocao":"#precos .linha-preco";document.querySelectorAll(seletor).forEach(card=>{card.hidden=busca!==""&&!normalizarBuscaPainel(card.textContent).includes(normalizarBuscaPainel(busca))})});
+function atualizarFormularioNovoItem(){const tipo=$("#novoTipo")?.value,bebida=tipo==="bebida",g=$("#grupoCategoria"),c=$("#novaCategoria"),aviso=$("#avisoCategoria"),precosPizza=$("#precosPizzaIniciais"),precoBebida=$("#grupoPrecoBebida"),grupoIngredientes=$("#grupoIngredientesNovo"),campoIngredientes=$("#novoIngredientes");if(!c)return;c.disabled=bebida;if(g)g.classList.toggle("indisponivel",bebida);if(aviso)aviso.hidden=!bebida;if(precosPizza){precosPizza.hidden=bebida;precosPizza.querySelectorAll("input").forEach(x=>x.required=!bebida)}if(precoBebida){precoBebida.hidden=!bebida;const campo=precoBebida.querySelector("input");if(campo)campo.required=bebida}if(grupoIngredientes)grupoIngredientes.hidden=false;if(campoIngredientes){campoIngredientes.required=true;campoIngredientes.placeholder=bebida?"Ex.: Refrigerante gelado, 2 litros.":"Ex.: Mussarela, calabresa e orégano."}if(bebida)c.value="tradicionais"}
 document.addEventListener("change",e=>{if(e.target.id==="novoTipo")atualizarFormularioNovoItem()});
 atualizarFormularioNovoItem();
+document.querySelector("#formNovoItem")?.addEventListener("invalid", e=>{const campo=e.target;if(campo.id==="novoPreco"||/^novoPreco[PMGF]$/.test(campo.id))toast("Informe um preço válido antes de cadastrar o item.");else if(campo.id==="novoIngredientes")toast("Informe a descrição do produto antes de cadastrar.");},true);
 document.addEventListener("input",e=>{if(e.target.id==="buscarIngredientes")renderIngredientes()});
-document.addEventListener("click",e=>{const aba=e.target.closest(".aba-descricao");if(!aba)return;estado.tipoDescricao=aba.dataset.tipoDescricao;document.querySelectorAll(".aba-descricao").forEach(x=>x.classList.toggle("ativa",x===aba));renderIngredientes()});
-document.addEventListener("input", e => {
-  if (e.target.id === "buscarAdicionais") return renderAdicionais();
-  const nomeCodificado = e.target.dataset.adicionalNome;
-  const precoCodificado = e.target.dataset.adicionalPreco;
-  if (!nomeCodificado && !precoCodificado) return;
-  const nomeProduto = decodeURIComponent(nomeCodificado || precoCodificado);
-  const produto = (estado.adicionais || []).find(item => item.nome === nomeProduto);
-  const indice = Number(e.target.dataset.adicionalIndice);
-  if (!produto || !produto.adicionais[indice]) return;
-  if (nomeCodificado) produto.adicionais[indice].nome = e.target.value;
-  if (precoCodificado) produto.adicionais[indice].preco = e.target.value;
-  estado.adicionaisAlterados = true;
-});
-document.addEventListener("click", async e => {
-  const aba = e.target.closest(".aba-adicional");
-  if (aba) {
-    estado.tipoAdicional = aba.dataset.tipoAdicional;
-    document.querySelectorAll(".aba-adicional").forEach(x => x.classList.toggle("ativa", x === aba));
-    return renderAdicionais();
-  }
-  const adicionar = e.target.closest("[data-adicionar-adicional]");
-  const remover = e.target.closest("[data-remover-adicional]");
-  const salvar = e.target.closest("#salvarAdicionais");
-  if (adicionar || remover) {
-    const nomeProduto = decodeURIComponent((adicionar || remover).dataset[adicionar ? "adicionarAdicional" : "removerAdicional"]);
-    const produto = (estado.adicionais || []).find(item => item.nome === nomeProduto);
-    if (!produto) return;
-    if (adicionar) produto.adicionais.push({ nome: "", preco: "" });
-    else produto.adicionais.splice(Number(remover.dataset.adicionalIndice), 1);
-    estado.adicionaisAlterados = true;
-    return renderAdicionais();
-  }
-  if (!salvar) return;
-  try {
-    salvar.disabled = true;
-    salvar.textContent = "Salvando...";
-    const adicionais = Object.fromEntries((estado.adicionais || []).map(item => [item.nome, (item.adicionais || []).map(adicional => ({
-      nome: String(adicional.nome || "").trim(),
-      preco: String(adicional.preco ?? "").replace(",", ".")
-    }))]));
-    await api("/api/painel/adicionais", { method: "PUT", body: JSON.stringify({ adicionais }) });
-    // Recarrega do servidor para mostrar apenas o que foi gravado de verdade.
-    estado.adicionais = await api(`/api/painel/adicionais?_=${Date.now()}`, { cache: "no-store" });
-    estado.adicionaisAlterados = false;
-    renderAdicionais();
-    toast("Adicionais salvos.");
-  } catch (erro) {
-    toast(erro.message);
-  } finally {
-    salvar.disabled = false;
-    salvar.textContent = "Salvar alterações";
-  }
-});
-document.addEventListener("click",async e=>{const botao=e.target.closest("[data-salvar-descricao]");if(!botao)return;const produto=JSON.parse(decodeURIComponent(botao.dataset.salvarDescricao)),id=encodeURIComponent(JSON.stringify(produto)),campo=document.querySelector('[data-descricao-produto="'+id+'"]');try{botao.disabled=true;await api(produto.tipo==="bebida"?"/api/painel/ingredientes/bebida":"/api/painel/ingredientes/pizza",{method:"PATCH",body:JSON.stringify(produto.tipo==="bebida"?{chave:produto.chave,ingredientes:campo?.value||""}:{nome:produto.chave,ingredientes:campo?.value||""})});estado.ingredientesPizzas=await api("/api/painel/ingredientes");renderIngredientes();toast("Descrição atualizada no cardápio.")}catch(x){toast(x.message)}finally{botao.disabled=false}});
+document.addEventListener("click",async e=>{const botao=e.target.closest("[data-salvar-ingredientes]");if(!botao)return;const nome=decodeURIComponent(botao.dataset.salvarIngredientes),campo=document.querySelector('[data-ingredientes-pizza="'+encodeURIComponent(nome)+'"]');try{botao.disabled=true;await api("/api/painel/ingredientes/pizza",{method:"PATCH",body:JSON.stringify({nome,ingredientes:campo?.value||""})});estado.ingredientesPizzas=await api("/api/painel/ingredientes");renderIngredientes();toast("Ingredientes atualizados no cardápio.")}catch(x){toast(x.message)}finally{botao.disabled=false}});
+document.addEventListener("click",async e=>{const botao=e.target.closest("[data-salvar-descricao]");if(!botao)return;const chave=decodeURIComponent(botao.dataset.salvarDescricao),campo=document.querySelector('[data-descricao-produto="'+encodeURIComponent(chave)+'"]');try{botao.disabled=true;const bebida=botao.dataset.tipoDescricao==="bebida";await api(bebida?"/api/painel/ingredientes/bebida":"/api/painel/ingredientes/pizza",{method:"PATCH",body:JSON.stringify(bebida?{chave,ingredientes:campo?.value||""}:{nome:chave,ingredientes:campo?.value||""})});estado.ingredientesPizzas=await api("/api/painel/ingredientes");renderIngredientes();toast("Descrição atualizada no cardápio.")}catch(x){toast(x.message)}finally{botao.disabled=false}});
 
 document.addEventListener("input",e=>{if(e.target.id==="buscarImagens")renderImagens()});
 document.querySelectorAll("[data-tipo-imagem]").forEach(b=>b.addEventListener("click",()=>{estado.tipoImagem=b.dataset.tipoImagem;document.querySelectorAll("[data-tipo-imagem]").forEach(x=>x.classList.toggle("ativa",x===b));renderImagens()}));

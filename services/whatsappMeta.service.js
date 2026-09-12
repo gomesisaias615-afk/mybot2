@@ -55,7 +55,7 @@ async function enviarBotoes(destinatario, texto, botoes = []) {
 
 async function enviarMenu(destinatario, texto) {
   const opcoes = [
-    { id: "menu_fazer_pedido", title: "🍔 Fazer pedido", description: "Veja o cardápio e monte seu pedido" },
+    { id: "menu_fazer_pedido", title: "🍕 Fazer pedido", description: "Veja o cardápio e monte seu pedido" },
     /^https?:\/\//i.test(String(process.env.INSTAGRAM_URL || "").trim()) ? { id: "menu_instagram", title: "📸 Instagram", description: "Acompanhe a pizzaria" } : null,
     /^https?:\/\//i.test(String(process.env.WHATSAPP_GROUP_URL || "").trim()) ? { id: "menu_promocoes", title: "📢 Ofertas", description: "Promoções e novidades" } : null,
     { id: "menu_contato_mybot", title: "✉️ Contato MyBot", description: "Fale com a equipe do sistema" }

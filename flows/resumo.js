@@ -1,54 +1,67 @@
-function moeda(valor) {
-  return `R$ ${Number(valor || 0).toFixed(2).replace(".", ",")}`;
-}
 
-function tipoDoProduto(produto) {
-  const categoria = String(produto?.categoria || "").toLowerCase();
-  const nome = String(produto?.sabor || produto?.sabores?.[0] || "").toLowerCase();
-  if (categoria === "doces" || nome.startsWith("combo")) return { icone: "🍱", rotulo: "Combo" };
-  if (categoria === "especiais" || nome.startsWith("acompanhamento")) return { icone: "🍟", rotulo: "Acompanhamento" };
-  return { icone: "🍔", rotulo: "Hambúrguer" };
-}
+function gerarResumo(user, carrinhoPizza, carrinhoBebida) {
 
-function gerarResumo(user, carrinhoPizza, carrinhoBebida, adicionais = {}) {
-  let texto = "🧾 RESUMO DO PEDIDO\n\n";
+  let txt = "🧾 RESUMO DO PEDIDO\n\n";
+
   let total = 0;
-  const pizzas = carrinhoPizza[user] || [];
-  const bebidas = carrinhoBebida[user] || [];
-  const extras = adicionais[user] || [];
 
-  if (pizzas.length) {
-    texto += "📦 *ITENS DO PEDIDO*\n\n";
-    for (const produto of pizzas) {
-      const subtotal = Number(produto.quantidade || 0) * Number(produto.valor || 0);
-      const tipo = tipoDoProduto(produto);
-      const nome = produto.sabor || produto.sabores?.join(" / ") || "Produto";
+  // ================= PIZZAS =================
+
+  if (Array.isArray(carrinhoPizza[user]) && carrinhoPizza[user].length > 0) {
+
+    txt += "🍕 PIZZAS\n\n";
+
+    carrinhoPizza[user].forEach(p => {
+
+      const subtotal =
+        p.quantidade * p.valor;
+
       total += subtotal;
-      texto += `${tipo.icone} *${produto.quantidade}x ${tipo.rotulo}: ${nome}*\n`;
-      texto += `   💰 ${moeda(subtotal)}\n\n`;
-    }
+
+      txt +=
+        `${p.quantidade}x ${p.sabor} ${p.tamanho}\n`;
+
+      txt +=
+        `💰 R$ ${subtotal.toFixed(2).replace(".", ",")}\n\n`;
+    });
+
   }
 
-  if (extras.length) {
-    texto += "➕ ADICIONAIS\n\n";
-    for (const adicional of extras) {
-      total += Number(adicional.valor) || 0;
-      texto += `➕ *${adicional.nome}*\n`;
-      texto += `   ↳ ${adicional.produto} · ${moeda(adicional.valor)}\n\n`;
-    }
-  }
+  // ================= BEBIDAS =================
 
-  if (bebidas.length) {
-    texto += "🥤 BEBIDAS\n\n";
-    for (const bebida of bebidas) {
-      const subtotal = Number(bebida.quantidade || 0) * Number(bebida.valor || 0);
+  if (Array.isArray(carrinhoBebida[user]) && carrinhoBebida[user].length > 0) {
+
+    txt += "🥤 BEBIDAS\n\n";
+
+    carrinhoBebida[user].forEach(b => {
+
+      const subtotal =
+        b.quantidade * b.valor;
+
       total += subtotal;
-      texto += `🥤 *${bebida.quantidade}x Bebida: ${bebida.nome}*\n`;
-      texto += `   💰 ${moeda(subtotal)}\n\n`;
-    }
+
+      txt +=
+        `${b.quantidade}x ${b.nome}\n`;
+
+      txt +=
+        `💰 R$ ${subtotal.toFixed(2).replace(".", ",")}\n\n`;
+
+    });
+
   }
 
-  return `${texto}────────────────────\n💵 *TOTAL: ${moeda(total)}*\n\nDeseja continuar?\n\n1️⃣ Sim\n2️⃣ Não`;
+  txt +=
+  `━━━━━━━━━━━━━━━━━━━━\n💰 *TOTAL DO PEDIDO: R$ ${total.toFixed(2).replace(".", ",")}*\n━━━━━━━━━━━━━━━━━━━━\n\n`;
+
+  txt +=
+    "Deseja continuar?\n\n" +
+    "1️⃣ Sim\n" +
+    "2️⃣ Não";
+
+  return txt;
+
 }
 
-module.exports = { gerarResumo };
+module.exports = {
+  gerarResumo
+};

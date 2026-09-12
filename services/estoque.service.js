@@ -2,17 +2,14 @@ const fs = require("fs");
 const path = require("path");
 
 const { garantirArquivo } = require("./dadosPersistentes.service");
-const estoquePath = garantirArquivo("estoque.json", "services/monitoramento/estoque.json", { pizzas: {}, bebidas: {}, acompanhamentos: {}, combos: {} });
+const estoquePath = garantirArquivo("estoque.json", "services/monitoramento/estoque.json", { pizzas: {}, bebidas: {} });
 const precosPizzasPath = garantirArquivo("precospizzas.json", "data/precospizzas.json", {});
 const precosBebidasPath = garantirArquivo("precosbebidas.json", "data/precosbebidas.json", {});
 const nomesBebidasPath = garantirArquivo("nomesbebidas.json", "data/nomesbebidas.json", {});
-const configuracaoCardapioPath = garantirArquivo("configuracaoCardapio.json", "data/configuracaoCardapio.json", {});
 
 const estoque = {
   pizzas: {},
-  bebidas: {},
-  acompanhamentos: {},
-  combos: {}
+  bebidas: {}
 };
 
 function lerJson(caminho, padrao = {}) {
@@ -24,29 +21,15 @@ function chavePizza(nome) {
     .replace(/[\u0300-\u036f]/g, "").replace(/-/g, " ").replace(/\s+/g, " ").trim();
 }
 
-// O projeto antigo chama os produtos de "pizzas" internamente. O painel novo
-// usa o Tipo como categoria e traduz essa estrutura sem expor a categoria antiga.
-function tipoEstoqueProduto(nome) {
-  const configuracao = lerJson(configuracaoCardapioPath, {});
-  const categoria = Object.entries(configuracao.pizzasPorCategoria || {})
-    .find(([, nomes]) => Array.isArray(nomes) && nomes.includes(nome))?.[0];
-  if (categoria === "especiais") return "acompanhamentos";
-  if (categoria === "doces") return "combos";
-  return "pizzas";
-}
-
 // Estoque é controle de disponibilidade: 1 = disponível e 0 = esgotado.
 // Assim, itens novos aparecem no painel sem inventar uma quantidade física.
 function sincronizarCatalogo(dados) {
   dados.pizzas = dados.pizzas || {};
   dados.bebidas = dados.bebidas || {};
-  dados.acompanhamentos = dados.acompanhamentos || {};
-  dados.combos = dados.combos || {};
   let mudou = false;
   for (const nome of Object.keys(lerJson(precosPizzasPath))) {
     const chave = chavePizza(nome);
-    const tipo = tipoEstoqueProduto(nome);
-    if (!Object.prototype.hasOwnProperty.call(dados[tipo], chave)) { dados[tipo][chave] = 1; mudou = true; }
+    if (!Object.prototype.hasOwnProperty.call(dados.pizzas, chave)) { dados.pizzas[chave] = 1; mudou = true; }
   }
   const bebidas = new Set([...Object.keys(lerJson(precosBebidasPath)), ...Object.keys(lerJson(nomesBebidasPath))]);
   for (const chave of bebidas) {
@@ -64,8 +47,6 @@ function recarregarEstoque() {
     if (sincronizarCatalogo(dados)) fs.writeFileSync(estoquePath, JSON.stringify(dados, null, 2), "utf8");
     estoque.pizzas = dados.pizzas || {};
     estoque.bebidas = dados.bebidas || {};
-    estoque.acompanhamentos = dados.acompanhamentos || {};
-    estoque.combos = dados.combos || {};
   } catch (err) {
     console.error("Erro ao carregar estoque:", err.message);
   }
@@ -94,12 +75,10 @@ function zerarProduto(nomeInformado) {
   const dados = JSON.parse(fs.readFileSync(estoquePath, "utf8"));
   dados.pizzas = dados.pizzas || {};
   dados.bebidas = dados.bebidas || {};
-  dados.acompanhamentos = dados.acompanhamentos || {};
-  dados.combos = dados.combos || {};
   const procurado = normalizar(nomeInformado);
   const encontrados = [];
 
-  for (const tipo of ["pizzas", "bebidas", "acompanhamentos", "combos"]) {
+  for (const tipo of ["pizzas", "bebidas"]) {
     for (const chave of Object.keys(dados[tipo])) {
       if (normalizar(chave) === procurado) encontrados.push({ tipo, chave });
     }
@@ -118,8 +97,6 @@ function atualizarProdutos(operacoes) {
   const dados = JSON.parse(fs.readFileSync(estoquePath, "utf8"));
   dados.pizzas = dados.pizzas || {};
   dados.bebidas = dados.bebidas || {};
-  dados.acompanhamentos = dados.acompanhamentos || {};
-  dados.combos = dados.combos || {};
   const aplicadas = [];
   for (const operacao of operacoes || []) {
     if (!Object.prototype.hasOwnProperty.call(dados[operacao.tipo] || {}, operacao.chave)) throw new Error("Item inexistente no estoque: " + operacao.chave);
@@ -134,7 +111,7 @@ function atualizarProdutos(operacoes) {
 }
 
 function definirQuantidadeProduto(tipo, chave, quantidade) {
-  if (!["pizzas", "bebidas", "acompanhamentos", "combos"].includes(tipo)) throw new Error("Tipo de produto inválido.");
+  if (!["pizzas", "bebidas"].includes(tipo)) throw new Error("Tipo de produto inválido.");
   const valor = Number(quantidade);
   if (!Number.isInteger(valor) || valor < 0 || valor > 10000) {
     throw new Error("A quantidade deve ser um número inteiro entre 0 e 10000.");
@@ -142,8 +119,6 @@ function definirQuantidadeProduto(tipo, chave, quantidade) {
   const dados = JSON.parse(fs.readFileSync(estoquePath, "utf8"));
   dados.pizzas = dados.pizzas || {};
   dados.bebidas = dados.bebidas || {};
-  dados.acompanhamentos = dados.acompanhamentos || {};
-  dados.combos = dados.combos || {};
   if (!Object.prototype.hasOwnProperty.call(dados[tipo], chave)) throw new Error("Produto não encontrado no estoque.");
   dados[tipo][chave] = valor;
   fs.writeFileSync(estoquePath, JSON.stringify(dados, null, 2), "utf8");

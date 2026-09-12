@@ -1,6 +1,6 @@
 const textos = require("../textosFlows");
 const { normalizar } = require("../../utils/texto");
-const { salvarContexto } = require("../contextoAtendimento");
+const { salvarContexto, resetarUsuario } = require("../contextoAtendimento");
 const temInstagram = /^https?:\/\//i.test(String(process.env.INSTAGRAM_URL || "").trim());
 const temGrupoPromocoes = /^https?:\/\//i.test(String(process.env.WHATSAPP_GROUP_URL || "").trim());
 
@@ -20,7 +20,7 @@ function identificarOpcaoMenu(msg, permitirNumeros = false) {
   const texto = normalizar(idBotao || msg.body)
     .replace(/^[^a-z0-9]+/i, "");
 
-  if (["fazer pedido", "pedido", "fazer pedido pizza"].includes(texto)) return "pedido";
+  if (["fazer pedido", "pedido"].includes(texto)) return "pedido";
   if (["instagram", "instagram da pizzaria"].includes(texto)) return "instagram";
   if (["ofertas", "oferta", "promocoes", "promocao", "grupo de promocoes"].includes(texto)) return "promocoes";
   if (["mybot", "contato mybot", "entrar em contato com a mybot"].includes(texto)) return "contato";
@@ -51,7 +51,7 @@ async function executarOpcaoMenu({
 
   if (opcao === "instagram") {
     if (!temInstagram) {
-      await msg.reply("📸 O Instagram da hamburgueria ainda não foi configurado.");
+      await msg.reply("📸 O Instagram da pizzaria ainda não foi configurado.");
       return true;
     }
     await msg.reply(textos.instagram, undefined, { linkPreview: true });
@@ -89,6 +89,13 @@ async function tratarMenu(parametros) {
 // Atalhos do menu são globais, mas os números continuam exclusivos do menu.
 // Assim "1 pizza" não é confundido com a opção "Fazer pedido" durante um pedido.
 async function tratarAtalhoMenu(parametros) {
+  const texto = normalizar(parametros.msg.body);
+  if (["menu", "reiniciar", "reiniciar menu", "voltar ao menu"].includes(texto)) {
+    resetarUsuario(parametros.user);
+    await parametros.msg.reply("🔄 Atendimento reiniciado. Voltamos ao menu principal.");
+    await mostrarMenu(parametros.msg, parametros.user, parametros.contexto);
+    return true;
+  }
   return executarOpcaoMenu(parametros, false);
 }
 

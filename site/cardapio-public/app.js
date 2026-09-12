@@ -8,10 +8,10 @@ const semResultado = document.querySelector("#semResultado");
 const sincronizacao = document.querySelector("#sincronizacao");
 
 const titulos = {
-  tradicionais: "Hambúrgueres",
-  especiais: "Acompanhamentos",
+  tradicionais: "Pizzas Tradicionais",
+  especiais: "Pizzas Especiais",
   bebidas: "Bebidas",
-  doces: "Combos"
+  doces: "Pizzas Doces"
 };
 
 let categoriaAtual = "";
@@ -49,11 +49,6 @@ function dinheiro(valor) {
 
 function precosPizza(precos, promocoes = {}) {
   const tamanhos = { P: "Pequena", M: "Média", G: "Grande", F: "Família" };
-  if (Object.prototype.hasOwnProperty.call(precos || {}, "U")) {
-    const valor = precos.U;
-    const promocao = promocoes.U;
-    return `<span><small>Preço</small>${promocao ? `<del>${dinheiro(promocao.de)}</del>` : ""}<strong>${dinheiro(valor)}</strong></span>`;
-  }
   return Object.entries(precos || {}).map(([tamanho, valor]) =>
     `<span><b>${tamanho}</b><small>${tamanhos[tamanho] || tamanho}</small>${promocoes[tamanho] ? `<del>${dinheiro(promocoes[tamanho].de)}</del>` : ""}<strong>${dinheiro(valor)}</strong></span>`
   ).join("");
@@ -135,3 +130,4 @@ fetch(caminhoApiCardapio(), { cache: "no-store" })
   .then(resposta => resposta.ok ? resposta.json() : Promise.reject())
   .then(aplicarCategoriasAtivas)
   .catch(() => {});
+

@@ -4,7 +4,7 @@ const { gerarResumo } = require("../resumo");
 async function seguirParaResumo(msg, user, contexto) {
   contexto.estados[user] = "confirmar_resumo";
   await msg.reply(
-    gerarResumo(user, contexto.carrinhoPizza, contexto.carrinhoBebida, contexto.adicionais)
+    gerarResumo(user, contexto.carrinhoPizza, contexto.carrinhoBebida)
   );
 }
 
@@ -15,9 +15,9 @@ async function tratarObservacaoPizza({ msg, user, contexto }) {
     if (respostaSim(msg.body)) {
       contexto.estados[user] = "digitar_observacao_pizza";
       await msg.reply(
-        `✍️ *Digite agora a observação do pedido.*
+        `✍️ *Digite agora a observação das suas pizzas.*
 
-Exemplos: “Sem cebola” ou “Carne mal passada”.
+Exemplo: "Retirar a cebola da pizza de Calabresa."
 
 Envie somente a observação em uma única mensagem.`
       );

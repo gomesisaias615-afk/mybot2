@@ -5,6 +5,7 @@
 
 /* Navegação operacional */
 #resumo,#filtroPedidos{display:none!important}.grade-principal{display:contents}.guias-principais{display:flex;gap:8px;margin:20px 0;overflow:auto;padding:4px}.guia-principal,.subguia{border:1px solid var(--line);background:#fff;border-radius:13px;padding:12px 18px;font-weight:900;cursor:pointer;white-space:nowrap}.guia-principal.ativa,.subguia.ativa{background:var(--dark);border-color:var(--dark);color:#fff}.secao-painel{display:none;margin-bottom:18px}.secao-painel.ativa{display:block}.subguias-pedidos{display:flex;gap:7px;overflow:auto;margin:-5px 0 18px;padding-bottom:4px}.subguia{padding:9px 13px;font-size:12px}.lista-pedidos{max-height:none}.pedido-detalhes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px 0}.detalhe{background:#f3f7f5;border-radius:11px;padding:10px}.detalhe span{display:block;color:var(--muted);font-size:11px;font-weight:800;margin-bottom:3px}.detalhe strong{font-size:13px;overflow-wrap:anywhere}.detalhe.largo{grid-column:1/-1}.observacao-destaque{border-left:4px solid var(--amber);background:#fff7e8;padding:11px;border-radius:10px;margin-top:10px}.produto.disponivel{border-color:#8bdcb1;background:#f1fcf6}.produto.esgotado{border-color:#efaaaa;background:#fff6f6}.quantidade input{display:none}.quantidade button{width:42px;height:38px}.estado-produto{font-weight:800}.estado-produto.ok{color:var(--green2)}.estado-produto.off{color:var(--red)}
+.introducao-painel{margin:8px 0 20px;color:var(--muted);font-size:15px;line-height:1.55;max-width:780px}
 @media(max-width:560px){.guias-principais{position:sticky;top:64px;z-index:8;background:var(--bg);margin:10px -2px 14px}.guia-principal{flex:1;padding:11px 13px}.pedido-detalhes{grid-template-columns:1fr}.detalhe.largo{grid-column:auto}.pedido{padding:15px}.subguias-pedidos{margin-right:-18px}.hero{display:none}}.btn-compartilhar{width:100%;border:0;border-radius:12px;background:#25d366;color:#073b1c;padding:12px 15px;font-weight:900;cursor:pointer;margin-top:9px}.badge.compartilhado{background:#dff6ff;color:#096782}
 .btn-etapa{width:100%;border:0;border-radius:12px;background:var(--dark);color:#fff;padding:12px 15px;font-weight:900;cursor:pointer;margin-top:9px}
 .horario-render{display:grid;gap:4px;background:#eff9f4;border:1px solid #c7ebd8;border-radius:14px;padding:14px;margin-bottom:15px}.horario-render strong{font-size:13px}.horario-render span{font-size:15px;font-weight:900;color:var(--green2)}.horario-render small{color:var(--muted);font-size:11px}
@@ -413,33 +414,3 @@ body.modal-local-aberto{overflow:hidden}
 
 /* Taxas apresentadas como categorias separadas, tal como pizzas e bebidas. */
 .taxas-separadas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:16px 0}.bloco-taxa{display:grid;gap:14px;padding:16px;border:1px solid #cfe9dc;border-radius:18px;background:#fff;transition:.18s opacity,.18s filter}.bloco-taxa.campo-inativo{opacity:.46;filter:grayscale(.3);background:#f5f8f6}.bloco-taxa-titulo{display:flex;align-items:flex-start;gap:10px}.bloco-taxa-titulo>span{display:grid;place-items:center;width:30px;height:30px;border-radius:10px;background:#e2f8ec;color:#117546;font-weight:900}.bloco-taxa-titulo strong,.bloco-taxa-titulo small{display:block}.bloco-taxa-titulo small{margin-top:3px;color:#66756e;line-height:1.35}.bloco-taxa>label{display:grid;gap:7px;font-weight:700;color:#20322a}.bloco-taxa input{width:100%;box-sizing:border-box}@media(max-width:680px){.taxas-separadas{grid-template-columns:1fr}}
-
-/* Painel de operação no celular: nenhum cartão pode ampliar a página. */
-@media (max-width: 680px) {
-  html,body{width:100%;max-width:100%;overflow-x:hidden}
-  #aplicacao,main,.secao-painel,.card,.titulo-card,.lista-precos,.grade-estoque,.grade-imagens{min-width:0;max-width:100%}
-  main{width:calc(100% - 24px);margin-inline:auto}
-  .topbar{padding-inline:12px;gap:10px}
-  .marca{min-width:0;gap:8px}
-  .marca>span{min-width:0;overflow:hidden}
-  .marca>span b,.marca>span small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .top-acoes{gap:6px;flex:0 0 auto}
-  .guias-principais,.abas,.filtros-historico,.subguias-pedidos{
-    width:100%;max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;
-    -webkit-overflow-scrolling:touch;scrollbar-width:none
-  }
-  .guias-principais::-webkit-scrollbar,.abas::-webkit-scrollbar,.filtros-historico::-webkit-scrollbar,.subguias-pedidos::-webkit-scrollbar{display:none}
-  .guias-principais{margin-inline:0;padding:3px 0}
-  .abas{padding:3px 0;margin-right:0}
-  .guias-principais>*,.abas>*,.filtros-historico>*,.subguias-pedidos>*{flex:0 0 auto;white-space:nowrap}
-  .guia-principal{flex:0 0 auto}
-  .titulo-card,.linha-preco,.linha-promocao,.produto{min-width:0}
-  .titulo-card input,.titulo-card select,.linha-preco input,.linha-promocao input,.linha-preco textarea{max-width:100%}
-  .linha-preco,.linha-promocao{align-items:stretch}
-  .linha-preco strong,.linha-promocao strong{min-width:0;overflow-wrap:anywhere}
-  .linha-preco label{min-width:0;max-width:100%}
-  .produto{align-items:flex-start}
-  .produto-nome{overflow-wrap:anywhere}
-}
-.receber-notificacoes { background: #22c55e !important; color: #052e16 !important; border: 2px solid #bbf7d0 !important; font-size: 14px !important; font-weight: 900 !important; padding: 13px 16px !important; box-shadow: 0 8px 20px #22c55e55; }
-.receber-notificacoes.ativo { background: #14532d !important; color: #dcfce7 !important; border-color: #4ade80 !important; }

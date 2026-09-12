@@ -54,8 +54,7 @@ async function tratarResumo({
       pizzas,
       bebidas,
       "online",
-      contexto.observacoesPizza[user] || "",
-      contexto.adicionais[user] || []
+      contexto.observacoesPizza[user] || ""
     );
 
     const linkCheckout = criarLinkCheckout(pedido.id);

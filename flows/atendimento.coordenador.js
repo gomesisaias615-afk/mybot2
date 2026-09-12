@@ -15,7 +15,6 @@ const {
 } = require("./handlers/menu.handler");
 const { tratarPizza } = require("./handlers/pizza.handler");
 const { tratarObservacaoPizza } = require("./handlers/observacaoPizza.handler");
-const { tratarAdicionais } = require("./handlers/adicionais.handler");
 const { tratarBebida } = require("./handlers/bebida.handler");
 const { tratarResumo } = require("./handlers/resumo.handler");
 const { tratarEndereco } = require("./handlers/endereco.handler");
@@ -29,7 +28,7 @@ function mostrarMenu(msg, user) {
 
 const ESTADOS_TEXTO_LIVRE = new Set([
   "pedido_pizza", "pedido_bebida", "digitar_observacao_pizza",
-  "confirmar_pizza", "perguntar_adicionais", "escolher_adicional", "confirmar_adicionais", "adicionar_outro_adicional", "perguntar_observacao_pizza", "confirmar_bebida",
+  "confirmar_pizza", "perguntar_observacao_pizza", "confirmar_bebida",
   "confirmar_resumo", "conf_contato", "conf_rua", "conf_numero", "conf_bairro",
   "complemento_pergunta", "referencia_pergunta", "confirmar_endereco",
   "endereco_contato", "endereco_rua", "endereco_numero", "endereco_bairro",
@@ -104,7 +103,6 @@ async function atendimento(msg, client) {
 
   if (await tratarMenu(parametros)) return;
   if (await tratarPizza(parametros)) return;
-  if (await tratarAdicionais(parametros)) return;
   if (await tratarObservacaoPizza(parametros)) return;
   if (await tratarBebida(parametros)) return;
   if (await tratarResumo(parametros)) return;

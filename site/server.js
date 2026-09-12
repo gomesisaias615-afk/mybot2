@@ -12,7 +12,6 @@ const { diretorioDados } = require("../services/dadosPersistentes.service");
 const { obterIdentidade, logo: logoIdentidade } = require("../services/identidade.service");
 const { estoque, recarregarEstoque, definirQuantidadeProduto } = require("../services/estoque.service");
 const { obterConfiguracaoPainel } = require("../services/painel.service");
-const adminRoutes = require("./admin.routes");
 
 const app = express();
 // Checkout, bot e painel devem ler o mesmo diretório persistente.
@@ -231,7 +230,6 @@ function formatarCep(cep) {
 
 app.use(cors());
 app.use(express.json({ limit: "3mb" }));
-app.use(adminRoutes);
 
 const cacheTilesMapa = new Map();
 const LIMITE_CACHE_TILES = 500;

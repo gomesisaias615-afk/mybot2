@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#121c18">
-  <title>MyBot | Painel da Nova hamburgueria</title>
+  <title>MyBot | Painel da Nova pizzaria</title>
   <link rel="icon" type="image/png" href="/cardapio/mascote-saborear.png">
   <link rel="apple-touch-icon" href="/cardapio/mascote-saborear.png">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
@@ -15,9 +15,9 @@
   <div id="mybotSplash" class="mybot-splash" role="status" aria-label="Carregando MyBot"><div><img src="/cardapio/mascote-saborear.png" alt=""><strong>MyBot</strong><span>Preparando seu atendimento...</span></div></div>
   <section id="login" class="login-shell oculto">
     <div class="login-card">
-      <div class="marca grande marca-login"><img class="marca-logo" data-logo-pizzaria src="/cardapio/mascote-saborear.png" alt="Logo da hamburgueria" onerror="this.onerror=null;this.removeAttribute('data-logo-pizzaria');this.src='/cardapio/mascote-saborear.png'"><span><b data-nome-pizzaria>Nova hamburgueria</b><small>Painel Administrativo MyBot</small></span></div>
+      <div class="marca grande marca-login"><img class="marca-logo" data-logo-pizzaria src="/cardapio/mascote-saborear.png" alt="Logo da pizzaria" onerror="this.onerror=null;this.removeAttribute('data-logo-pizzaria');this.src='/cardapio/mascote-saborear.png'"><span><b data-nome-pizzaria>Nova pizzaria</b><small>Painel Administrativo MyBot</small></span></div>
       <p class="eyebrow">PAINEL ADMINISTRATIVO</p>
-      <h1>Controle sua hamburgueria em um só lugar.</h1>
+      <h1>Controle sua pizzaria em um só lugar.</h1>
       <p class="muted">Entre com o código administrativo compartilhado pelo proprietário.</p>
       <form id="loginForm">
         <label for="token">Código de acesso</label>
@@ -30,9 +30,8 @@
 
   <div id="aplicacao" class="oculto">
     <header class="topbar">
-      <div class="marca"><img class="marca-logo" src="/cardapio/mascote-saborear.png" alt="Mascote da MyBot" onerror="this.onerror=null;this.style.visibility='hidden'"><span><b>MyBot</b><small data-nome-pizzaria>Nova hamburgueria</small></span></div>
+      <div class="marca"><img class="marca-logo" src="/cardapio/mascote-saborear.png" alt="Mascote da MyBot" onerror="this.onerror=null;this.style.visibility='hidden'"><span><b>MyBot</b><small data-nome-pizzaria>Nova pizzaria</small></span></div>
       <div class="top-acoes">
-        <button id="ativarNotificacoes" class="btn receber-notificacoes" type="button" hidden>🔔 RECEBER NOTIFICAÇÕES</button>
         <span id="estadoGeral" class="estado"><i></i> Carregando</span>
         <button id="atualizar" class="btn icone" title="Atualizar">↻</button>
         <button id="sair" class="btn discreto">Sair</button>
@@ -52,7 +51,7 @@
         <div class="hero-marca"><img src="/cardapio/mascote-saborear.png" alt="Assistente MyBot"><button id="alternarBot" class="btn status-grande">Carregando...</button></div>
       </section>
 
-      <nav class="guias-principais" aria-label="Áreas do painel"><button class="guia-principal ativa" data-guia="pedidos">Pedidos <b class="contador-pedidos contador-geral" data-contador="geral" hidden>0</b></button><button class="guia-principal" data-guia="historico">Histórico</button><button class="guia-principal" data-guia="estoque">Estoque</button><button class="guia-principal" data-guia="precos">Preços e promoções</button><button class="guia-principal" data-guia="itens">Adicionar itens</button><button class="guia-principal" data-guia="ingredientes">Descrição</button><button class="guia-principal" data-guia="imagens">Imagens</button><button class="guia-principal" data-guia="adicionais">Adicionais</button><button class="guia-principal" data-guia="horario">Horário</button><button class="guia-principal" data-guia="taxa">Taxa e localização</button><button class="guia-principal" data-guia="ajuda">Ajuda</button></nav><section id="resumo" class="metricas"></section>
+      <nav class="guias-principais" aria-label="Áreas do painel"><button class="guia-principal ativa" data-guia="pedidos">Pedidos <b class="contador-pedidos contador-geral" data-contador="geral" hidden>0</b></button><button class="guia-principal" data-guia="historico">Histórico</button><button class="guia-principal" data-guia="estoque">Estoque</button><button class="guia-principal" data-guia="precos">Preços e promoções</button><button class="guia-principal" data-guia="itens">Adicionar itens</button><button class="guia-principal" data-guia="ingredientes">Ingredientes</button><button class="guia-principal" data-guia="imagens">Imagens</button><button class="guia-principal" data-guia="horario">Horário</button><button class="guia-principal" data-guia="taxa">Taxa e localização</button><button class="guia-principal" data-guia="ajuda">Ajuda</button></nav><section id="resumo" class="metricas"></section>
 
       <section class="grade-principal">
         <article class="card controles secao-painel" data-secao="horario">
@@ -73,7 +72,6 @@
 
         <article class="card controles secao-painel" data-secao="taxa">
           <div class="titulo-card"><div><p class="eyebrow">TAXA DE ENTREGA</p><h2>Valores e localização</h2></div></div>
-          <p class="precos-ajuda">Configure a taxa de entrega, o endereço da hamburgueria e a área atendida.</p>
           <section class="config-entrega">
             <div class="config-entrega-cabecalho">
               <h3>Como a taxa será calculada?</h3>
@@ -81,7 +79,7 @@
             </div>
             <div class="modos-taxa" role="radiogroup" aria-label="Modo da taxa">
               <label class="modo-taxa"><input id="modoTaxaFixa" type="radio" name="modoTaxa" value="fixa"><span><strong>Valor fixo</strong><small>Uma taxa igual para toda entrega válida.</small></span></label>
-              <label class="modo-taxa"><input id="modoTaxaKm" type="radio" name="modoTaxa" value="por_km"><span><strong>Valor por km</strong><small>Calculado a partir da localização da hamburgueria.</small></span></label>
+              <label class="modo-taxa"><input id="modoTaxaKm" type="radio" name="modoTaxa" value="por_km"><span><strong>Valor por km</strong><small>Calculado a partir da localização da pizzaria.</small></span></label>
             </div>
             <div class="taxas-separadas">
               <section class="bloco-taxa" data-campo-modo="fixa">
@@ -102,25 +100,25 @@
             <div class="municipio-configurado">
               <span>Município configurado para esta empresa</span>
               <strong id="municipioAtendimentoResumo">Estância — Sergipe</strong>
-              <small>O atendente precisa apenas confirmar o endereço exato da hamburgueria.</small>
+              <small>O atendente precisa apenas confirmar o endereço exato da pizzaria.</small>
             </div>
 
             <div class="local-pizzaria-card">
               <div>
-                <p class="eyebrow">LOCALIZAÇÃO DA HAMBURGUERIA</p>
+                <p class="eyebrow">LOCALIZAÇÃO DA PIZZARIA</p>
                 <h3>Marque o ponto no mapa</h3>
-                <p>O mapa já abre no município configurado para esta empresa. Pesquise ou marque somente o endereço exato da hamburgueria.</p>
+                <p>O mapa já abre no município configurado para esta empresa. Pesquise ou marque somente o endereço exato da pizzaria.</p>
               </div>
               <div class="busca-local-mapa">
                 <span aria-hidden="true">⌕</span>
-                <input id="enderecoPizzaria" type="search" placeholder="Pesquise o endereço da hamburgueria" autocomplete="street-address" aria-label="Pesquisar endereço da hamburgueria">
+                <input id="enderecoPizzaria" type="search" placeholder="Pesquise o endereço da pizzaria" autocomplete="street-address" aria-label="Pesquisar endereço da pizzaria">
               </div>
               <div id="sugestoesLocalPizzaria" class="sugestoes-local hidden" role="listbox"></div>
               <div class="acoes-local">
                 <button id="abrirMapaPizzaria" class="btn primario largura" type="button">🗺️ Escolher no mapa</button>
               </div>
               <div id="localPizzariaSelecionado" class="local-selecionado">Nenhuma localização confirmada.</div>
-              <div class="aviso-endereco-obrigatorio"><strong>Endereço obrigatório</strong><span>O SitePag não aceitará pedidos enquanto a localização da hamburgueria não for confirmada e salva.</span></div>
+              <div class="aviso-endereco-obrigatorio"><strong>Endereço obrigatório</strong><span>O SitePag não aceitará pedidos enquanto a localização da pizzaria não for confirmada e salva.</span></div>
               <input id="latitudePizzaria" type="hidden">
               <input id="longitudePizzaria" type="hidden">
             </div>
@@ -128,8 +126,8 @@
             <div class="area-atendimento-card">
               <div>
                 <p class="eyebrow">ÁREA DE ATENDIMENTO</p>
-                <h3>Defina até onde a hamburgueria atende</h3>
-                <p>Esta etapa é separada da escolha do endereço. O círculo será centralizado na localização confirmada da hamburgueria.</p>
+                <h3>Defina até onde a pizzaria atende</h3>
+                <p>Esta etapa é separada da escolha do endereço. O círculo será centralizado na localização confirmada da pizzaria.</p>
               </div>
               <div id="resumoAreaEntrega" class="resumo-area-entrega">Raio atual: 1 km</div>
               <button id="abrirMapaAreaEntrega" class="btn primario largura" type="button" disabled>◯ Definir área no mapa</button>
@@ -155,7 +153,6 @@
             <button class="modalidade-pedido" data-modalidade="salao"><span>🍽️ Salão</span><b class="contador-pedidos" data-contador="salao" hidden>0</b></button>
             <button class="modalidade-pedido" data-modalidade="retirada"><span>🥡 Retirada</span><b class="contador-pedidos" data-contador="retirada" hidden>0</b></button>
           </div>
-          <p class="precos-ajuda">Acompanhe pedidos novos e atualize cada etapa para manter o cliente informado.</p>
           <div class="subguias-pedidos"><button class="subguia ativa" data-fase="confirmar">Confirmar <b class="contador-pedidos" data-contador-fase="confirmar" hidden>0</b></button><button class="subguia" data-fase="em_preparo">Em preparo <b class="contador-pedidos" data-contador-fase="em_preparo" hidden>0</b></button><button class="subguia" data-fase="pronto">Pronto <b class="contador-pedidos" data-contador-fase="pronto" hidden>0</b></button></div><div id="pedidos" class="lista-pedidos"></div>
         </article>
       </section>
@@ -165,7 +162,6 @@
           <div><p class="eyebrow">ARQUIVO DE PEDIDOS</p><h2>Histórico</h2></div>
           <input id="buscarHistorico" type="search" inputmode="numeric" placeholder="Buscar pelo código do pedido">
         </div>
-        <p class="precos-ajuda">Consulte pedidos anteriores, concluídos, cancelados ou entregues.</p>
         <div class="filtros-historico" aria-label="Filtrar histórico por modalidade">
           <button class="filtro-historico ativo" data-historico-modalidade="todos">Todos</button>
           <button class="filtro-historico entrega" data-historico-modalidade="entrega">🛵 Entrega</button>
@@ -178,43 +174,41 @@
       <section class="card estoque-card secao-painel" data-secao="estoque">
         <div class="titulo-card">
           <div><p class="eyebrow">CARDÁPIO SINCRONIZADO</p><h2>Estoque</h2></div>
-          <input id="buscarEstoque" type="search" placeholder="Buscar hambúrguer ou bebida">
+          <input id="buscarEstoque" type="search" placeholder="Buscar pizza ou bebida">
         </div>
-        <p class="precos-ajuda">Use − para marcar como esgotado e + para disponibilizar. Clique duas vezes em − para excluir o item do estoque e do cardápio.</p>
-        <div class="abas"><button class="aba aba-estoque ativa" data-tipo="todos">Todos</button><button class="aba aba-estoque" data-tipo="pizzas">Hambúrgueres</button><button class="aba aba-estoque" data-tipo="acompanhamentos">Acompanhamentos</button><button class="aba aba-estoque" data-tipo="combos">Combos</button><button class="aba aba-estoque" data-tipo="bebidas">Bebidas</button></div>
+        <div class="abas"><button class="aba ativa" data-tipo="pizzas">Pizzas</button><button class="aba" data-tipo="bebidas">Bebidas</button></div>
         <div id="estoque" class="grade-estoque"></div>
       </section>
 
-      <section class="card precos-card secao-painel" data-secao="precos"><div class="titulo-card"><div><p class="eyebrow">CARDÁPIO E OFERTAS</p><h2>Preços e promoções</h2></div></div><p class="precos-ajuda">Mantenha o cardápio sempre atualizado e destaque ofertas especiais para seus clientes.</p><div class="abas"><button class="aba-preco ativa" data-catalogo="pizzas">Preços de hambúrgueres</button><button class="aba-preco" data-catalogo="acompanhamentos">Preços de acompanhamentos</button><button class="aba-preco" data-catalogo="combos">Preços de combos</button><button class="aba-preco" data-catalogo="bebidas">Preços de bebidas</button><button class="aba-preco" data-catalogo="promocoes">Aplicar promoção</button></div><div id="precos" class="lista-precos"></div></section>
+      <section class="card precos-card secao-painel" data-secao="precos"><div class="titulo-card"><div><p class="eyebrow">CARDÁPIO E OFERTAS</p><h2>Preços e promoções</h2></div></div><p class="precos-ajuda">Mantenha o cardápio sempre atualizado e destaque ofertas especiais para seus clientes.</p><div class="abas"><button class="aba-preco ativa" data-catalogo="pizzas">Preços de pizzas</button><button class="aba-preco" data-catalogo="bebidas">Preços de bebidas</button><button class="aba-preco" data-catalogo="promocoes">Aplicar promoção</button></div><div id="precos" class="lista-precos"></div></section>
 
-      <section class="card precos-card secao-painel" data-secao="imagens"><div class="titulo-card"><div><p class="eyebrow">CARDÁPIO VISUAL</p><h2>Imagens dos produtos</h2></div><input id="buscarImagens" type="search" placeholder="Buscar produto"></div><p class="precos-ajuda">Selecione um produto e envie uma foto JPG, PNG ou WebP de até 3 MB. A imagem aparece automaticamente no cardápio.</p><div class="abas"><button class="aba-imagem ativa" data-tipo-imagem="todos">Todos</button><button class="aba-imagem" data-tipo-imagem="pizzas">Hambúrgueres</button><button class="aba-imagem" data-tipo-imagem="acompanhamentos">Acompanhamentos</button><button class="aba-imagem" data-tipo-imagem="combos">Combos</button><button class="aba-imagem" data-tipo-imagem="bebidas">Bebidas</button></div><div id="listaImagens" class="grade-imagens"></div></section>
+      <section class="card precos-card secao-painel" data-secao="imagens"><div class="titulo-card"><div><p class="eyebrow">CARDÁPIO VISUAL</p><h2>Imagens dos produtos</h2></div><input id="buscarImagens" type="search" placeholder="Buscar pizza ou bebida"></div><p class="precos-ajuda">Selecione um produto e envie uma foto JPG, PNG ou WebP de até 3 MB. A imagem aparece automaticamente no cardápio.</p><div class="abas"><button class="aba-imagem ativa" data-tipo-imagem="todos">Todos</button><button class="aba-imagem" data-tipo-imagem="pizzas">Pizzas</button><button class="aba-imagem" data-tipo-imagem="bebidas">Bebidas</button></div><div id="listaImagens" class="grade-imagens"></div></section>
 
-      <section class="card precos-card secao-painel" data-secao="ingredientes"><div class="titulo-card"><div><p class="eyebrow">CARDÁPIO</p><h2>Descrição dos produtos</h2></div><input id="buscarIngredientes" type="search" placeholder="Buscar produto"></div><p class="precos-ajuda">Edite a descrição exibida no cardápio digital.</p><div class="abas"><button class="aba aba-descricao ativa" data-tipo-descricao="todos">Todos</button><button class="aba aba-descricao" data-tipo-descricao="hamburgueres">Hambúrgueres</button><button class="aba aba-descricao" data-tipo-descricao="acompanhamentos">Acompanhamentos</button><button class="aba aba-descricao" data-tipo-descricao="combos">Combos</button><button class="aba aba-descricao" data-tipo-descricao="bebidas">Bebidas</button></div><div id="listaIngredientes" class="lista-precos"></div></section>
+      <section class="card precos-card secao-painel" data-secao="ingredientes"><div class="titulo-card"><div><p class="eyebrow">CARDÁPIO</p><h2>Descrição dos produtos</h2></div><input id="buscarIngredientes" type="search" placeholder="Buscar pizza ou bebida"></div><p class="precos-ajuda">Edite os ingredientes das pizzas e a descrição das bebidas exibida no cardápio digital.</p><div id="listaIngredientes" class="lista-precos"></div></section>
 
-      <section class="card precos-card secao-painel" data-secao="itens"><div class="titulo-card"><div><p class="eyebrow">CARDÁPIO</p><h2>Adicionar itens</h2></div></div><p class="precos-ajuda">Cadastre hambúrgueres, acompanhamentos, combos ou bebidas no cardápio.</p><form id="formNovoItem" class="linha-promocao"><strong>Novo item</strong><label>Tipo<select id="novoTipo"><option value="pizza">Hambúrguer</option><option value="acompanhamento">Acompanhamento</option><option value="combo">Combo</option><option value="bebida">Bebida</option></select></label><label>Nome<input id="novoNome" required maxlength="80" placeholder="Ex.: Frango com cheddar"></label><label id="grupoIngredientesNovo">Descrição<textarea id="novoIngredientes" required maxlength="500" rows="3" placeholder="Ex.: Hambúrguer artesanal com frango, cheddar e molho especial."></textarea></label><label id="precoHamburguer">Preço inicial<input id="novoPrecoHamburguer" required type="number" step=".01" min=".01" placeholder="0,00"></label><label id="grupoPrecoBebida" hidden>Preço inicial<input id="novoPreco" type="number" step=".01" min=".01" placeholder="0,00"></label><button class="btn primario">Adicionar ao cardápio</button></form></section>
+      <section class="card precos-card secao-painel" data-secao="itens"><div class="titulo-card"><div><p class="eyebrow">CARDÁPIO</p><h2>Adicionar itens</h2></div></div><p class="precos-ajuda">Cadastre pizzas por categoria ou bebidas no cardápio.</p><form id="formNovoItem" class="linha-promocao"><strong>Novo item</strong><label>Tipo<select id="novoTipo"><option value="pizza">Pizza</option><option value="bebida">Bebida</option></select></label><label id="grupoCategoria">Categoria<select id="novaCategoria"><option value="tradicionais">Tradicionais</option><option value="especiais">Especiais</option><option value="doces">Doces</option></select><small id="avisoCategoria" hidden>Indisponível para bebidas.</small></label><label>Nome<input id="novoNome" required maxlength="80" placeholder="Ex.: Frango com cheddar"></label><label id="grupoIngredientesNovo">Ingredientes<textarea id="novoIngredientes" required maxlength="500" rows="3" placeholder="Ex.: Mussarela, frango, cheddar e orégano."></textarea></label><div id="precosPizzaIniciais"><strong>Preços iniciais da pizza</strong><label>P<input id="novoPrecoP" required type="number" step=".01" min=".01" placeholder="0,00"></label><label>M<input id="novoPrecoM" required type="number" step=".01" min=".01" placeholder="0,00"></label><label>G<input id="novoPrecoG" required type="number" step=".01" min=".01" placeholder="0,00"></label><label>F<input id="novoPrecoF" required type="number" step=".01" min=".01" placeholder="0,00"></label></div><label id="grupoPrecoBebida" hidden>Preço inicial<input id="novoPreco" type="number" step=".01" min=".01" placeholder="0,00"></label><button class="btn primario">Adicionar ao cardápio</button></form></section>
       <section class="card secao-painel guia-ajuda" data-secao="ajuda">
         <div class="titulo-card"><div><p class="eyebrow">GUIA DO ATENDENTE</p><h2>Como usar o painel</h2></div></div>
-        <p class="ajuda-intro">Use este guia sempre que tiver dúvida. Alterações de estoque, preços, promoções, produtos e descrições são refletidas no bot e no cardápio digital após salvar.</p>
+        <p class="ajuda-intro">Use este guia sempre que tiver dúvida. Alterações de estoque, preços, promoções, produtos e ingredientes são refletidas no bot e no cardápio digital após salvar.</p>
         <div class="ajuda-detalhada">
           <article><span>1</span><div><h3>Pedidos</h3><p>Veja os pedidos que estão chegando em tempo real. Escolha o tipo de recebimento, confirme o pedido e mova pelas etapas: Em preparo, Pronto e Saiu para entrega.</p><small>O cliente recebe avisos conforme o status é alterado.</small></div></article>
           <article><span>2</span><div><h3>Histórico</h3><p>Encontre pedidos concluídos, cancelados ou já entregues. Use esta área para consultar informações de pedidos antigos.</p></div></article>
-          <article><span>3</span><div><h3>Estoque</h3><p>Use − para deixar um item indisponível e + para liberar novamente. Item indisponível não aparece como disponível no cardápio nem pode entrar em promoção.</p><small>Você pode ajustar hambúrgueres, acompanhamentos, combos e bebidas separadamente.</small></div></article>
+          <article><span>3</span><div><h3>Estoque</h3><p>Use − para deixar um item indisponível e + para liberar novamente. Item indisponível não aparece como disponível no cardápio nem pode entrar em promoção.</p><small>Você pode ajustar pizzas e bebidas separadamente.</small></div></article>
           <article><span>4</span><div><h3>Preços e promoções</h3><p>Em Preços, altere o valor e toque em Salvar alterações. Em Aplicar promoção, informe o preço original em “De” e o novo preço em “Por”.</p><small>Promoções aparecem primeiro no cardápio e recebem etiqueta.</small></div></article>
-          <article><span>5</span><div><h3>Adicionar itens</h3><p>Escolha o tipo: hambúrguer, acompanhamento, combo ou bebida. Para hambúrguer, informe nome, descrição e preço. Os demais itens usam nome e preço.</p><small>O item novo entra no painel, estoque, bot e cardápio.</small></div></article>
-          <article><span>6</span><div><h3>Imagens</h3><p>Pesquise um hambúrguer, acompanhamento, combo ou bebida, escolha a foto e toque em Publicar imagem. A foto aparece automaticamente no cardápio.</p><small>São aceitas imagens JPG, PNG e WebP de até 3 MB.</small></div></article>
-          <article><span>7</span><div><h3>Ingredientes</h3><p>Use a barra de pesquisa para encontrar um hambúrguer. Edite a descrição dos ingredientes e toque em Salvar.</p><small>A nova descrição aparece no cardápio digital e permanece salva mesmo após reiniciar o sistema.</small></div></article>
+          <article><span>5</span><div><h3>Adicionar itens</h3><p>Escolha primeiro o tipo do produto. Para pizza, informe categoria, nome, ingredientes e os preços P, M, G e F. Para bebida, informe somente nome e preço.</p><small>Ao selecionar Bebida, os campos exclusivos de pizza desaparecem. O item novo entra no painel, estoque, bot e cardápio.</small></div></article>
+          <article><span>6</span><div><h3>Imagens</h3><p>Pesquise uma pizza ou bebida, escolha a foto e toque em Publicar imagem. A foto aparece automaticamente no cardápio.</p><small>São aceitas imagens JPG, PNG e WebP de até 3 MB.</small></div></article>
+          <article><span>7</span><div><h3>Ingredientes</h3><p>Use a barra de pesquisa para encontrar uma pizza. Edite a descrição dos ingredientes e toque em Salvar.</p><small>A nova descrição aparece no cardápio digital e permanece salva mesmo após reiniciar o sistema.</small></div></article>
           <article><span>8</span><div><h3>Horário</h3><p>Defina os dias e os horários de abertura e fechamento. Fora do período configurado, o bot não inicia pedidos.</p><small>Quando estiver fechado, o bot informa automaticamente ao cliente os dias e horários de atendimento.</small></div></article>
-          <article><span>9</span><div><h3>Taxa e localização</h3><p>Primeiro confirme e salve a localização da hamburgueria. Depois escolha taxa fixa ou valor por quilômetro e defina a área atendida no mapa.</p><small>Na taxa por quilômetro, o SitePag calcula o valor conforme a localização informada pelo cliente. Na área, use − e + para mudar 500 metros ou digite o número desejado. Sem localização confirmada e salva, o SitePag permanece bloqueado.</small></div></article>
+          <article><span>9</span><div><h3>Taxa e localização</h3><p>Primeiro confirme e salve a localização da pizzaria. Depois escolha taxa fixa ou valor por quilômetro e defina a área atendida no mapa.</p><small>Na taxa por quilômetro, o SitePag calcula o valor conforme a localização informada pelo cliente. Na área, use − e + para mudar 500 metros ou digite o número desejado. Sem localização confirmada e salva, o SitePag permanece bloqueado.</small></div></article>
         </div>
       </section>
-      <section class="card secao-painel" data-secao="adicionais"><div class="titulo-card"><div><p class="eyebrow">EXTRAS POR PRODUTO</p><h2>Adicionais</h2></div><input id="buscarAdicionais" type="search" placeholder="Buscar produto ou adicional"></div><p class="precos-ajuda">Cadastre adicionais para hambúrgueres e combos. Bebidas e acompanhamentos não recebem adicionais.</p><div class="abas"><button class="aba aba-adicional ativa" data-tipo-adicional="todos">Todos</button><button class="aba aba-adicional" data-tipo-adicional="hamburgueres">Hambúrgueres</button><button class="aba aba-adicional" data-tipo-adicional="combos">Combos</button></div><div id="listaAdicionais" class="lista-precos"><div class="vazio">Nenhum adicional cadastrado.</div></div></section>
     </main>
     <div id="modalLocalPizzaria" class="modal-local-pizzaria hidden" role="dialog" aria-modal="true" aria-labelledby="tituloMapaPizzaria">
       <div class="modal-local-conteudo">
-        <div class="modal-local-topo"><div><p class="eyebrow">LOCALIZAÇÃO</p><h2 id="tituloMapaPizzaria">Confirmar hamburgueria no mapa</h2></div><button id="fecharMapaPizzaria" type="button" aria-label="Fechar">×</button></div>
+        <div class="modal-local-topo"><div><p class="eyebrow">LOCALIZAÇÃO</p><h2 id="tituloMapaPizzaria">Confirmar pizzaria no mapa</h2></div><button id="fecharMapaPizzaria" type="button" aria-label="Fechar">×</button></div>
         <p>Mova o mapa, toque em outro ponto ou arraste o marcador.</p>
         <div id="mapaPizzaria" class="mapa-pizzaria"></div>
-        <p id="statusMapaPizzaria" class="status-mapa-pizzaria">Posicione o marcador no endereço da hamburgueria.</p>
+        <p id="statusMapaPizzaria" class="status-mapa-pizzaria">Posicione o marcador no endereço da pizzaria.</p>
         <button id="confirmarMapaPizzaria" class="btn primario largura" type="button">Confirmar localização</button>
         <button id="cancelarMapaPizzaria" class="btn discreto largura" type="button">Voltar</button>
       </div>
@@ -222,7 +216,7 @@
     <div id="modalAreaEntrega" class="modal-local-pizzaria hidden" role="dialog" aria-modal="true" aria-labelledby="tituloMapaAreaEntrega">
       <div class="modal-local-conteudo">
         <div class="modal-local-topo"><div><p class="eyebrow">ÁREA DE ATENDIMENTO</p><h2 id="tituloMapaAreaEntrega">Definir área no mapa</h2></div><button id="fecharMapaAreaEntrega" type="button" aria-label="Fechar">×</button></div>
-        <p>O marcador mostra a hamburgueria. O número representa o raio real, medido do centro até a borda do círculo.</p>
+        <p>O marcador mostra a pizzaria. O número representa o raio real, medido do centro até a borda do círculo.</p>
         <div id="mapaAreaEntrega" class="mapa-pizzaria"></div>
         <section class="controle-area-mapa" aria-label="Raio da área de atendimento">
           <div><strong>Raio de atendimento</strong><small>Use − e + para mudar 500 metros ou digite o número desejado.</small></div>
@@ -240,7 +234,7 @@
     <div id="toast" class="toast" role="status"></div>
   </div>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin="" defer></script>
-    <script src="/painel/app.js?v=20260909-12" defer></script>
+  <script src="/painel/app.js" defer></script>
   <script>window.addEventListener("load",()=>setTimeout(()=>document.querySelector("#mybotSplash")?.classList.add("sair"),650));</script>
 </body>
 </html>

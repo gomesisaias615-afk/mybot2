@@ -189,7 +189,7 @@ async function abrirMapaLocalizacao(latitude, longitude) {
       mapaReservaAtivado = true;
       mapaLocalizacao.removeLayer(mapaPrincipal);
       L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
-        maxZoom: 20,
+        maxZoom: 19,
         subdomains: "abcd",
         attribution: "&copy; OpenStreetMap &copy; CARTO"
       }).addTo(mapaLocalizacao);

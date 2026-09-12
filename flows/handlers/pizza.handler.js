@@ -11,7 +11,6 @@ const {
 } = require("../../services/groqCardapio.service");
 const { normalizar, respostaSim, respostaNao } = require("../../utils/texto");
 const { catalogo, ativa } = require("../../services/precos.service");
-const { oferecerAdicionais } = require("./adicionais.handler");
 
 function moeda(valor) { return `R$ ${Number(valor || 0).toFixed(2).replace(".", ",")}`; }
 function riscar(valor) { return String(valor).split("").map(caractere => caractere + "\u0336").join(""); }
@@ -61,9 +60,9 @@ async function tratarPizza({ msg, user, contexto, estoque }) {
     const precosPizzas = obterPrecosPizzas();
     const nomesBebidas = obterNomesBebidas();
     const precosBebidas = obterPrecosBebidas();
-    await msg.reply("⏳ Processando seu pedido, aguarde um instante...");
+    await msg.reply("⏳ Processando seu pedido de pizza, aguarde um instante...");
 
-    const opcoes = pizzas.map(produto => ({ nome: produto.nome, categoria: produto.categoria }));
+    const opcoes = pizzas.map(pizza => ({ nome: pizza.nome }));
     const opcoesBebidas = Object.entries(nomesBebidas).map(([chave, bebida]) => ({
       chave,
       nome: bebida.nome,
@@ -76,7 +75,7 @@ async function tratarPizza({ msg, user, contexto, estoque }) {
       interpretacaoBebidas = interpretarLocalmente(msg.body, opcoesBebidas, "bebida");
       interpretacao = await interpretarComGroq(msg.body, opcoes, "pizza");
     } catch (erro) {
-      console.error(`Erro ao consultar a IA do cardápio: ${erro.message}`);
+      console.error(`Erro ao consultar Groq para pizzas: ${erro.message}`);
       await msg.reply(formatarRespostaIa(
         "❌ Não consegui processar seu pedido agora. " +
         "Aguarde um momento e tente novamente."
@@ -84,7 +83,8 @@ async function tratarPizza({ msg, user, contexto, estoque }) {
       return true;
     }
 
-    // Se algum produto foi mencionado, não montamos um carrinho parcial.
+    // Se uma pizza foi mencionada, não montamos um carrinho parcial:
+    // primeiro pedimos o tamanho que estiver faltando.
     const pizzaMencionada = interpretarLocalmente(msg.body, opcoes, "pizza").itens.length > 0;
     const erroPizzaObrigatorio = pizzaMencionada && interpretacao.erros.length > 0;
     if (
@@ -112,18 +112,18 @@ async function tratarPizza({ msg, user, contexto, estoque }) {
         const chave = normalizar(sabor);
         if (Object.prototype.hasOwnProperty.call(estoque.pizzas || {}, chave) && Number(estoque.pizzas[chave]) <= 0) {
           await msg.reply(formatarRespostaIa(
-            `❌ *O produto ${sabor} está indisponível no momento.*\n\nEscolha outro produto disponível no Cardápio Digital.`
+            `❌ *A pizza ${sabor} está indisponível no momento.*\n\nEscolha outro sabor disponível no Cardápio Digital.`
           ));
           return true;
         }
 
-        // Todo produto usa o preço unitário U interno e só pode ser vendido
-        // quando esse preço estiver cadastrado.
+        // Tamanho é obrigatório, mas só pode ser vendido quando tem preço
+        // cadastrado. Isso impede que P/F sem configuração apareça como R$ 0,00.
         const valor = Number(precosPizzas[sabor]?.[item.tamanho]);
         if (!Number.isFinite(valor) || valor <= 0) {
           await msg.reply(formatarRespostaIa(
-            `❌ *O produto ${sabor} ainda não está disponível no cardápio.*\n\n` +
-            "Escolha outro produto com preço exibido no Cardápio Digital."
+            `❌ *A pizza ${sabor} no tamanho ${item.tamanho} ainda não está disponível no cardápio.*\n\n` +
+            "Escolha um tamanho com preço exibido no Cardápio Digital."
           ));
           return true;
         }
@@ -140,17 +140,12 @@ async function tratarPizza({ msg, user, contexto, estoque }) {
     }
 
     const catalogoPromos = catalogo().promocoes || { pizzas: {}, bebidas: {} };
-    const categoriaPorProduto = new Map(opcoes.map(produto => [produto.nome, produto.categoria]));
     contexto.carrinhoPizza[user] ||= [];
     contexto.carrinhoBebida[user] ||= [];
 
     for (const item of interpretacao.itens) {
       contexto.carrinhoPizza[user].push({
         ...item,
-        // Mantemos o tipo verdadeiro no pedido. O nome interno ainda usa
-        // carrinhoPizza por compatibilidade, mas o painel não deve chamar um
-        // combo ou acompanhamento de hambúrguer.
-        categoria: categoriaPorProduto.get(item.sabor) || "tradicionais",
         valor: Math.max(...item.sabores.map(sabor => Number(precosPizzas[sabor][item.tamanho]))),
         promocao: item.sabores.map(sabor => catalogoPromos.pizzas?.[sabor]?.[item.tamanho]).find(ativa) || null
       });
@@ -174,7 +169,7 @@ async function tratarPizza({ msg, user, contexto, estoque }) {
     for (const pizza of contexto.carrinhoPizza[user]) {
       const subtotal = pizza.quantidade * pizza.valor;
       resumo +=
-        `🍔 ${pizza.quantidade}x ${pizza.sabor}` +
+        `🍕 ${pizza.quantidade}x ${pizza.sabor} ${pizza.tamanho}` +
         `${pizza.promocao ? `\n   R$ ${riscar(Number(pizza.promocao.de * pizza.quantidade).toFixed(2).replace(".", ","))} por ${moeda(pizza.promocao.por * pizza.quantidade)}` : ` - ${moeda(subtotal)}`}\n\n`;
     }
 
@@ -194,7 +189,15 @@ async function tratarPizza({ msg, user, contexto, estoque }) {
   }
 
   if (respostaSim(msg.body)) {
-    await oferecerAdicionais(msg, user, contexto);
+    contexto.estados[user] = "perguntar_observacao_pizza";
+    await msg.reply(
+      `📝 *Deseja adicionar alguma observação às suas pizzas?*
+
+Você pode informar detalhes importantes, como retirar um ingrediente ou solicitar alguma preferência no preparo.
+
+1️⃣ Sim
+2️⃣ Não`
+    );
     return true;
   }
 
@@ -208,9 +211,9 @@ async function tratarPizza({ msg, user, contexto, estoque }) {
   }
 
   await msg.reply(
-    `🛒 *Ainda preciso da confirmação do seu carrinho.*
+    `🛒 *Ainda preciso da confirmação do seu carrinho de pizzas.*
 
-1️⃣ Sim — confirmar o pedido
+1️⃣ Sim — confirmar as pizzas
 2️⃣ Não — refazer o pedido`
   );
   return true;
