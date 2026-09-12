@@ -170,6 +170,13 @@ router.get("/app/service-worker.js", (req, res) => {
 router.get("/service-worker.js", (req, res) => {
   res.sendFile(path.join(appPublicDir, "service-worker.js"));
 });
+router.get("/app/instalar.html", (req, res) => {
+  const arquivo = path.join(appPublicDir, "instalar.html");
+  try {
+    const html = fs.readFileSync(arquivo, "utf8").replace("</head>", "<script>if(matchMedia('(display-mode: standalone)').matches||navigator.standalone)location.replace('/app/');</script></head>");
+    res.set("Cache-Control", "no-store").type("html").send(html);
+  } catch { res.status(500).send("Não foi possível abrir a página de instalação."); }
+});
 router.use("/app", express.static(appPublicDir, { etag: false, lastModified: false }));
 // A instalação ocorre dentro do escopo do aplicativo, onde Chrome valida o PWA.
 router.get(["/instalar", "/instalar/"], (req, res) => res.redirect(302, "/app/instalar.html"));
