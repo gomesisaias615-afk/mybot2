@@ -18,6 +18,7 @@ const {
 const router = express.Router();
 const publicDir = path.join(__dirname, "admin-public");
 const appPublicDir = path.join(__dirname, "app-public");
+const installPublicDir = path.join(__dirname, "install-public");
 const DURACAO_SESSAO = 60 * 60 * 1000;
 const DURACAO_SESSAO_APP = 400 * 24 * 60 * 60 * 1000;
 const COOKIE_PAINEL_LEGADO = "mybot_painel_seguro";
@@ -158,7 +159,8 @@ function limparSessoes(res) {
 
 router.get(["/app", "/app/"], (req, res) => res.set("Cache-Control", "no-store").sendFile(path.join(appPublicDir, "index.html")));
 router.use("/app", express.static(appPublicDir, { etag: false, lastModified: false }));
-router.get(["/instalar", "/instalar/"], (req, res) => res.set("Cache-Control", "no-store").redirect(302, "/app/"));
+router.get(["/instalar", "/instalar/"], (req, res) => res.set("Cache-Control", "no-store").sendFile(path.join(installPublicDir, "index.html")));
+router.use("/instalar", express.static(installPublicDir, { etag: false, lastModified: false }));
 router.get("/api/app/sessao", (req, res) => res.set("Cache-Control", "no-store").json({ autenticado: appAutenticado(req), configurado: Boolean(tokenDoApp()) }));
 router.post("/api/app/entrar", (req, res) => {
   const esperado = tokenDoApp();

@@ -1,5 +1,6 @@
 const $ = seletor => document.querySelector(seletor);
 const portalPainel = window.MYBOT_PORTAL === "atendente" ? "atendente" : "administrador";
+document.querySelector('[data-guia="ingredientes"]')?.replaceChildren("Descrição");
 const estado = { dados: null, tipoEstoque: "pizzas", busca: "", filtro: "todos" };
 const ZOOM_INICIAL_PIZZARIA = 15;
 
