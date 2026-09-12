@@ -43,5 +43,5 @@ document.querySelector('#sair').addEventListener('click', async () => {
   form.hidden = false;
 });
 
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('/app/service-worker.js');
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/service-worker.js');
 verificarSessao();
