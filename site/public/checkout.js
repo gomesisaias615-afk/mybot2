@@ -179,10 +179,22 @@ async function abrirMapaLocalizacao(latitude, longitude) {
       attributionControl: true
     });
 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    const mapaPrincipal = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 19,
       attribution: "&copy; OpenStreetMap"
-    }).addTo(mapaLocalizacao);
+    });
+    let mapaReservaAtivado = false;
+    mapaPrincipal.on("tileerror", () => {
+      if (mapaReservaAtivado) return;
+      mapaReservaAtivado = true;
+      mapaLocalizacao.removeLayer(mapaPrincipal);
+      L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
+        maxZoom: 20,
+        subdomains: "abcd",
+        attribution: "&copy; OpenStreetMap &copy; CARTO"
+      }).addTo(mapaLocalizacao);
+    });
+    mapaPrincipal.addTo(mapaLocalizacao);
 
     marcadorLocalizacao = L.marker([latitude, longitude], {
       draggable: true,
@@ -745,4 +757,3 @@ async function iniciar() {
 }
 
 iniciar();
-
