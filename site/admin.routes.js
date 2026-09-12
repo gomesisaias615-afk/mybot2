@@ -173,10 +173,10 @@ router.get(["/instalar", "/instalar/"], (req, res) => {
   const scriptInstalacao = `<script>
     const botaoMyBot=document.querySelector('#instalar'); const ajudaMyBot=document.querySelector('#ajuda'); let promptMyBot;
     if('serviceWorker' in navigator) navigator.serviceWorker.register('/app/service-worker.js',{scope:'/'}).catch(()=>{});
-    if(matchMedia('(display-mode: standalone)').matches||navigator.standalone){botaoMyBot.disabled=true;botaoMyBot.textContent='✓ MYBOT JÁ ESTÁ INSTALADO';ajudaMyBot.textContent='Você já está usando o MyBot como aplicativo. Abra-o pelo ícone na tela inicial.';}
+    if(matchMedia('(display-mode: standalone)').matches||navigator.standalone){botaoMyBot.disabled=true;botaoMyBot.textContent='ABRINDO CENTRAL MYBOT...';ajudaMyBot.textContent='Abrindo Administrador e Atendente...';setTimeout(()=>location.replace('/app/'),500);}
     else ajudaMyBot.textContent='Aguarde alguns segundos para o Chrome liberar a instalação.';
     addEventListener('beforeinstallprompt',e=>{e.preventDefault();promptMyBot=e;ajudaMyBot.textContent='Pronto: toque em INSTALAR MYBOT para confirmar.';});
-    addEventListener('appinstalled',()=>{promptMyBot=null;botaoMyBot.disabled=true;botaoMyBot.textContent='✓ MYBOT INSTALADO';ajudaMyBot.textContent='Pronto! O ícone MyBot foi adicionado à tela inicial.';});
+    addEventListener('appinstalled',()=>{promptMyBot=null;botaoMyBot.disabled=true;botaoMyBot.textContent='✓ MYBOT INSTALADO';ajudaMyBot.textContent='Pronto! Abrindo a Central MyBot...';setTimeout(()=>location.replace('/app/'),700);});
     botaoMyBot.onclick=async()=>{if(matchMedia('(display-mode: standalone)').matches||navigator.standalone)return;if(!promptMyBot){ajudaMyBot.textContent='O Chrome ainda está preparando a instalação. Aguarde alguns segundos ou use o menu ⋮ e escolha Instalar app.';return;}promptMyBot.prompt();const escolha=await promptMyBot.userChoice;if(escolha.outcome==='dismissed')ajudaMyBot.textContent='Instalação cancelada. Toque no botão quando quiser tentar novamente.';promptMyBot=null;};
   </script>`;
   try {

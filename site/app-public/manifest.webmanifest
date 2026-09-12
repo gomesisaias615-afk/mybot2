@@ -6,5 +6,6 @@
   "display": "standalone",
   "background_color": "#063c25",
   "theme_color": "#08783f",
-  "icons": [{ "src": "/painel/mybot-logo-verde.png", "sizes": "any", "type": "image/png", "purpose": "any maskable" }]
+  "id": "/app/",
+  "icons": [{ "src": "/painel/mybot-logo-verde.png", "sizes": "1254x1254", "type": "image/png", "purpose": "any maskable" }]
 }
