@@ -1,0 +1,5 @@
+{
+  "combo_individual": { "nome": "Combo Individual", "aliases": ["individual", "combo um"] },
+  "combo_casal": { "nome": "Combo Casal", "aliases": ["casal", "combo para casal"] },
+  "combo_familia": { "nome": "Combo Família", "aliases": ["familia", "combo familia", "combo família"] }
+}

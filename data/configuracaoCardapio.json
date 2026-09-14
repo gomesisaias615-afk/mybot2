@@ -8,7 +8,8 @@
     "tradicionais": true,
     "especiais": true,
     "doces": true,
-    "bebidas": true
+    "bebidas": true,
+    "combos": true
   },
   "pizzasPorCategoria": {
     "tradicionais": ["Calabresa", "Marguerita", "Portuguesa", "Quatro Queijos", "Frango com Queijo", "Muçarela", "Napolitana", "Atum com Cebola"],

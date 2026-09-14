@@ -32,6 +32,7 @@ const LIMITE_CACHE_LOCALIZACAO = 300;
 const ARQUIVO_FICHAS_PUBLICAS = garantirArquivo("fichasEntregaCompartilhadas.json", "data/fichasEntregaCompartilhadas.json", {});
 const DURACAO_FICHA_PUBLICA = 7 * 24 * 60 * 60 * 1000;
 const ARQUIVO_DESCRICOES_BEBIDAS = garantirArquivo("descricoesbebidas.json", "data/descricoesbebidas.json", {});
+function lerJsonSeguro(arquivo, padrao = {}) { try { return JSON.parse(fs.readFileSync(arquivo, "utf8")); } catch { return padrao; } }
 
 function escaparSvg(valor) {
   return String(valor ?? "").replace(/[&<>\"']/g, caractere => ({
@@ -481,7 +482,8 @@ router.get("/api/painel/imagens", exigirAutenticacao, (req, res) => {
   const catalogo = precos.catalogo();
   const pizzas = Object.keys(catalogo.pizzas || {}).map(chave => ({ tipo: "pizzas", chave, nome: chave, imagem: imagensProdutos.urlImagem("pizzas", chave) }));
   const bebidas = Object.entries(catalogo.nomesBebidas || {}).map(([chave, dados]) => ({ tipo: "bebidas", chave, nome: dados.nome || chave, imagem: imagensProdutos.urlImagem("bebidas", chave) }));
-  res.json([...pizzas, ...bebidas]);
+  const combos = Object.entries(catalogo.nomesCombos || {}).map(([chave, dados]) => ({ tipo: "combos", chave, nome: dados.nome || chave, imagem: imagensProdutos.urlImagem("combos", chave) }));
+  res.json([...pizzas, ...bebidas, ...combos]);
 });
 router.put("/api/painel/imagens/:tipo/:chave", exigirAutenticacao, (req, res) => {
   try {
@@ -515,18 +517,20 @@ router.post("/api/painel/catalogo/item", exigirAutenticacao, (req,res)=>{try{
     for(const tamanho of ["P","M","G","F"]){const valor=Number(valores[tamanho]);if(!Number.isFinite(valor)||valor<=0)throw Error(`Informe um preço válido para o tamanho ${tamanho}.`);tamanhos[tamanho]=valor}
     const p=garantirArquivo("precospizzas.json","data/precospizzas.json",{}),c=garantirArquivo("configuracaoCardapio.json","data/configuracaoCardapio.json",{}),e=garantirArquivo("estoque.json","services/monitoramento/estoque.json",{pizzas:{},bebidas:{}}),pre=ler(p),conf=ler(c),est=ler(e);
     if(pre[nome])throw Error("Já existe uma pizza com esse nome.");pre[nome]=tamanhos;conf.pizzasPorCategoria[categoria]||=[];conf.pizzasPorCategoria[categoria].push(nome);est.pizzas=est.pizzas||{};est.pizzas[nome.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/-/g," ").replace(/\s+/g," ").trim()]=1;salvar(p,pre);salvar(c,conf);salvar(e,est);precos.atualizarIngredientesPizza(nome,ingredientes)
-  }else if(tipo==="bebida"){
+  }else if(tipo==="bebida" || tipo==="combo"){
     const preco=Number(req.body?.preco);if(!Number.isFinite(preco)||preco<=0)throw Error("Informe um preço válido.");
-    const k=nome.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"_"),p=garantirArquivo("precosbebidas.json","data/precosbebidas.json",{}),n=garantirArquivo("nomesbebidas.json","data/nomesbebidas.json",{}),e=garantirArquivo("estoque.json","services/monitoramento/estoque.json",{pizzas:{},bebidas:{}}),pre=ler(p),nom=ler(n),est=ler(e);
-    if(pre[k])throw Error("Já existe uma bebida com esse nome.");if(!ingredientes||ingredientes.length>500)throw Error("Informe a descrição da bebida (até 500 caracteres).");const descricoes=ler(ARQUIVO_DESCRICOES_BEBIDAS);pre[k]=preco;nom[k]={nome,aliases:[k.replaceAll("_"," ")]};descricoes[k]=ingredientes;est.bebidas=est.bebidas||{};est.bebidas[k]=1;salvar(p,pre);salvar(n,nom);salvar(ARQUIVO_DESCRICOES_BEBIDAS,descricoes);salvar(e,est)
+    const k=nome.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"_"),p=garantirArquivo(tipo==="combo"?"precoscombos.json":"precosbebidas.json",tipo==="combo"?"data/precoscombos.json":"data/precosbebidas.json",{}),n=garantirArquivo(tipo==="combo"?"nomescombos.json":"nomesbebidas.json",tipo==="combo"?"data/nomescombos.json":"data/nomesbebidas.json",{}),d=garantirArquivo(tipo==="combo"?"descricoescombos.json":"descricoesbebidas.json",tipo==="combo"?"data/descricoescombos.json":"data/descricoesbebidas.json",{}),e=garantirArquivo("estoque.json","services/monitoramento/estoque.json",{pizzas:{},bebidas:{},combos:{}}),pre=ler(p),nom=ler(n),est=ler(e);
+    if(pre[k])throw Error(`Já existe um ${tipo} com esse nome.`);if(!ingredientes||ingredientes.length>500)throw Error("Informe a descrição do item (até 500 caracteres).");const descricoes=ler(d);pre[k]=preco;nom[k]={nome,aliases:[k.replaceAll("_"," ")]};descricoes[k]=ingredientes;est[tipo==="combo"?"combos":"bebidas"]=(est[tipo==="combo"?"combos":"bebidas"]||{});est[tipo==="combo"?"combos":"bebidas"][k]=1;salvar(p,pre);salvar(n,nom);salvar(d,descricoes);salvar(e,est)
   }else throw Error("Tipo inválido.");res.json({ok:true})
 }catch(e){res.status(400).json({erro:e.message})}});
 router.get("/api/painel/precos", exigirAutenticacao, (req,res)=>res.json(precos.catalogo()));
-router.get("/api/painel/ingredientes", exigirAutenticacao, (req,res)=>{const bebidas=precos.catalogo().nomesBebidas||{},descricoes=JSON.parse(fs.readFileSync(ARQUIVO_DESCRICOES_BEBIDAS,"utf8"));res.json([...montarCardapio().pizzas.map(({nome,ingredientes})=>({nome,ingredientes,tipo:"pizza",chave:nome})),...Object.entries(bebidas).map(([chave,dados])=>({nome:dados.nome||chave,ingredientes:descricoes[chave]||"",tipo:"bebida",chave}))])});
+router.get("/api/painel/ingredientes", exigirAutenticacao, (req,res)=>{const catalogo=precos.catalogo(),bebidas=catalogo.nomesBebidas||{},combos=catalogo.nomesCombos||{},descricoes=JSON.parse(fs.readFileSync(ARQUIVO_DESCRICOES_BEBIDAS,"utf8")),descricoesCombos=lerJsonSeguro(garantirArquivo("descricoescombos.json","data/descricoescombos.json",{}),{});res.json([...montarCardapio().pizzas.map(({nome,ingredientes})=>({nome,ingredientes,tipo:"pizza",chave:nome})),...Object.entries(bebidas).map(([chave,dados])=>({nome:dados.nome||chave,ingredientes:descricoes[chave]||"",tipo:"bebida",chave})),...Object.entries(combos).map(([chave,dados])=>({nome:dados.nome||chave,ingredientes:descricoesCombos[chave]||"",tipo:"combo",chave}))])});
 router.patch("/api/painel/ingredientes/pizza", exigirAutenticacao, (req,res)=>{try{res.json({nome:String(req.body?.nome||""),ingredientes:precos.atualizarIngredientesPizza(String(req.body?.nome||""),req.body?.ingredientes)})}catch(e){res.status(400).json({erro:e.message})}});
 router.patch("/api/painel/ingredientes/bebida", exigirAutenticacao, (req,res)=>{try{const chave=String(req.body?.chave||""),texto=String(req.body?.ingredientes||"").trim();if(!precos.catalogo().bebidas?.[chave])throw Error("Bebida não encontrada.");if(!texto||texto.length>500)throw Error("Informe a descrição da bebida (até 500 caracteres).");const descricoes=JSON.parse(fs.readFileSync(ARQUIVO_DESCRICOES_BEBIDAS,"utf8"));descricoes[chave]=texto;fs.writeFileSync(ARQUIVO_DESCRICOES_BEBIDAS,JSON.stringify(descricoes,null,2),"utf8");res.json({chave,ingredientes:texto})}catch(e){res.status(400).json({erro:e.message})}});
+router.patch("/api/painel/ingredientes/combo", exigirAutenticacao, (req,res)=>{try{const chave=String(req.body?.chave||""),texto=String(req.body?.ingredientes||"").trim(),arquivo=garantirArquivo("descricoescombos.json","data/descricoescombos.json",{});if(!precos.catalogo().combos?.[chave])throw Error("Combo não encontrado.");if(!texto||texto.length>500)throw Error("Informe a descrição do combo (até 500 caracteres).");const descricoes=lerJsonSeguro(arquivo,{});descricoes[chave]=texto;fs.writeFileSync(arquivo,JSON.stringify(descricoes,null,2),"utf8");res.json({chave,ingredientes:texto})}catch(e){res.status(400).json({erro:e.message})}});
 router.patch("/api/painel/precos/pizza", exigirAutenticacao, (req,res)=>{try{res.json({preco:precos.atualizarPrecoPizza(String(req.body?.nome||""),String(req.body?.tamanho||""),req.body?.preco)})}catch(e){res.status(400).json({erro:e.message})}});
 router.patch("/api/painel/precos/bebida", exigirAutenticacao, (req,res)=>{try{res.json({preco:precos.atualizarPrecoBebida(String(req.body?.chave||""),req.body?.preco)})}catch(e){res.status(400).json({erro:e.message})}});
+router.patch("/api/painel/precos/combo", exigirAutenticacao, (req,res)=>{try{res.json({preco:precos.atualizarPrecoCombo(String(req.body?.chave||""),req.body?.preco)})}catch(e){res.status(400).json({erro:e.message})}});
 router.put("/api/painel/promocoes", exigirAutenticacao, (req,res)=>{try{const dados=req.body||{};if(String(dados.tipo)==="pizza"){const estoque=recarregarEstoque();const chave=String(dados.chave||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();if(Number(estoque.pizzas?.[chave]||0)<=0)throw Error("Não é possível aplicar promoção em uma pizza indisponível.");}res.json(precos.salvarPromocao(dados))}catch(e){res.status(400).json({erro:e.message})}});
 router.delete("/api/painel/promocoes", exigirAutenticacao, (req,res)=>{try{res.json(precos.removerPromocao(String(req.body?.tipo||""),String(req.body?.chave||""),String(req.body?.tamanho||"")))}catch(e){res.status(400).json({erro:e.message})}});
 router.patch("/api/painel/configuracao", exigirAutenticacao, (req, res) => {
@@ -538,7 +542,7 @@ router.patch("/api/painel/estoque", exigirAutenticacao, (req, res) => {
   const chave = String(req.body?.chave || "");
   const quantidade = Number(req.body?.quantidade);
   const estoque = recarregarEstoque();
-  if (!["pizzas", "bebidas"].includes(tipo) || !Object.prototype.hasOwnProperty.call(estoque[tipo], chave)) {
+  if (!["pizzas", "bebidas", "combos"].includes(tipo) || !Object.prototype.hasOwnProperty.call(estoque[tipo], chave)) {
     return res.status(404).json({ erro: "Produto não encontrado." });
   }
   if (!Number.isInteger(quantidade) || quantidade < 0 || quantidade > 10000) {

@@ -3,7 +3,9 @@ const {
   obterPizzas,
   obterPrecosPizzas,
   obterNomesBebidas,
-  obterPrecosBebidas
+  obterPrecosBebidas,
+  obterNomesCombos,
+  obterPrecosCombos
 } = require("../cardapio");
 const {
   interpretarComGroq,
@@ -60,6 +62,8 @@ async function tratarPizza({ msg, user, contexto, estoque }) {
     const precosPizzas = obterPrecosPizzas();
     const nomesBebidas = obterNomesBebidas();
     const precosBebidas = obterPrecosBebidas();
+    const nomesCombos = obterNomesCombos();
+    const precosCombos = obterPrecosCombos();
     await msg.reply("⏳ Processando seu pedido de pizza, aguarde um instante...");
 
     const opcoes = pizzas.map(pizza => ({ nome: pizza.nome }));
@@ -68,11 +72,14 @@ async function tratarPizza({ msg, user, contexto, estoque }) {
       nome: bebida.nome,
       aliases: bebida.aliases || []
     }));
+    const opcoesCombos = Object.entries(nomesCombos).map(([chave, combo]) => ({ chave, nome: combo.nome, aliases: combo.aliases || [] }));
     let interpretacao;
     let interpretacaoBebidas;
+    let interpretacaoCombos;
 
     try {
       interpretacaoBebidas = interpretarLocalmente(msg.body, opcoesBebidas, "bebida");
+      interpretacaoCombos = interpretarLocalmente(msg.body, opcoesCombos, "combo");
       interpretacao = await interpretarComGroq(msg.body, opcoes, "pizza");
     } catch (erro) {
       console.error(`Erro ao consultar Groq para pizzas: ${erro.message}`);
@@ -90,7 +97,7 @@ async function tratarPizza({ msg, user, contexto, estoque }) {
     if (
       erroPizzaObrigatorio ||
       (interpretacao.erros.length && interpretacao.itens.length) ||
-      (!interpretacao.itens.length && !interpretacaoBebidas.itens.length)
+      (!interpretacao.itens.length && !interpretacaoBebidas.itens.length && !interpretacaoCombos.itens.length)
     ) {
       const erros = erroPizzaObrigatorio || interpretacao.itens.length
         ? interpretacao.erros
@@ -139,6 +146,13 @@ async function tratarPizza({ msg, user, contexto, estoque }) {
       }
     }
 
+    for (const combo of interpretacaoCombos.itens) {
+      if (Object.prototype.hasOwnProperty.call(estoque.combos || {}, combo.chave) && Number(estoque.combos[combo.chave]) <= 0) {
+        await msg.reply(formatarRespostaIa(`❌ *O ${combo.nome} está indisponível no momento.*\n\nEscolha outro item disponível no Cardápio Digital.`));
+        return true;
+      }
+    }
+
     const catalogoPromos = catalogo().promocoes || { pizzas: {}, bebidas: {} };
     contexto.carrinhoPizza[user] ||= [];
     contexto.carrinhoBebida[user] ||= [];
@@ -159,6 +173,10 @@ async function tratarPizza({ msg, user, contexto, estoque }) {
       });
     }
 
+    for (const combo of interpretacaoCombos.itens) {
+      contexto.carrinhoBebida[user].push({ ...combo, tipo: "combo", valor: Number(precosCombos[combo.chave]), promocao: null });
+    }
+
     // A IA pode devolver o mesmo produto em linhas separadas. Unificamos o
     // carrinho antes de mostrar, cobrar e salvar o pedido.
     contexto.carrinhoPizza[user] = agruparCarrinhoPizzas(contexto.carrinhoPizza[user]);
@@ -175,7 +193,7 @@ async function tratarPizza({ msg, user, contexto, estoque }) {
 
     for (const bebida of contexto.carrinhoBebida[user]) {
       const subtotal = bebida.quantidade * bebida.valor;
-      resumo += `🥤 ${bebida.quantidade}x ${bebida.nome}` +
+      resumo += `${bebida.tipo === "combo" ? "🍽️" : "🥤"} ${bebida.quantidade}x ${bebida.nome}` +
         `${bebida.promocao ? `\n   R$ ${riscar(Number(bebida.promocao.de * bebida.quantidade).toFixed(2).replace(".", ","))} por ${moeda(bebida.promocao.por * bebida.quantidade)}` : ` - ${moeda(subtotal)}`}\n\n`;
     }
 

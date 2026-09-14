@@ -85,7 +85,13 @@ const imagensPadrao = {
   tradicionais: "/cardapio/produtos/pizza-tradicional.png",
   especiais: "/cardapio/produtos/pizza-especial.png",
   doces: "/cardapio/produtos/pizza-doce.png",
-  bebidas: "/cardapio/produtos/bebidas.png"
+  bebidas: "/cardapio/produtos/bebidas.png",
+  combos: "/cardapio/produtos/pizza-especial.png"
+};
+const imagensCombos = {
+  combo_individual: "/cardapio/produtos/combo-individual.png",
+  combo_casal: "/cardapio/produtos/combo-casal.png",
+  combo_familia: "/cardapio/produtos/combo-familia.png"
 };
 
 function montarCardapio() {
@@ -97,7 +103,7 @@ function montarCardapio() {
   recarregarEstoque();
   const estoqueAtual = estoque;
   const configuracao = lerJson(configuracaoCardapioPath, {
-    categorias: { tradicionais: true, especiais: true, doces: true, bebidas: true },
+    categorias: { tradicionais: true, especiais: true, doces: true, bebidas: true, combos: true },
     promocoes: {}
   });
   const categoriasAtivas = configuracao.categorias || {};
@@ -143,10 +149,23 @@ function montarCardapio() {
     promocaoDetalhe: precosService.ativa(catalogoPrecos.promocoes.bebidas?.[chave]) ? catalogoPrecos.promocoes.bebidas[chave] : null,
     preco: precosService.ativa(catalogoPrecos.promocoes.bebidas?.[chave]) ? Number(catalogoPrecos.promocoes.bebidas[chave].por) : Number(precosBebidas[chave] || 0)
   }));
+  const combos = Object.entries(catalogoPrecos.nomesCombos || {}).map(([chave, dados]) => ({
+    tipo: "combo",
+    chave,
+    nome: dados.nome || chave,
+    categoria: "combos",
+    ingredientes: lerJson(path.join(__dirname, "..", "data", "descricoescombos.json"), {})[chave] || "Combo especial para compartilhar.",
+    imagem: imagensProdutos.urlImagem("combos", chave) || imagensCombos[chave] || imagensPadrao.combos,
+    estoque: Object.prototype.hasOwnProperty.call(estoqueAtual.combos || {}, chave) ? Number(estoqueAtual.combos[chave]) : null,
+    disponivel: produtoDisponivel("combos", chave),
+    promocao: false,
+    preco: Number(catalogoPrecos.combos?.[chave] || 0)
+  }));
 
   return {
     pizzas: pizzas.filter(pizza => categoriasAtivas[pizza.categoria] !== false),
     bebidas: categoriasAtivas.bebidas === false ? [] : bebidas,
+    combos: categoriasAtivas.combos === false ? [] : combos,
     configuracao: {
       categorias: categoriasAtivas,
       pizzaria: configuracao.pizzaria || {

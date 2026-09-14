@@ -4,6 +4,7 @@ const { obterPrecosPizzas: precosPizzasPersistentes, obterPrecosBebidas: precosB
 
 const { garantirArquivo } = require("../services/dadosPersistentes.service");
 const caminhoNomesBebidas = garantirArquivo("nomesbebidas.json", "data/nomesbebidas.json", {});
+const caminhoNomesCombos = garantirArquivo("nomescombos.json", "data/nomescombos.json", {});
 const caminhoConfiguracao = garantirArquivo("configuracaoCardapio.json", "data/configuracaoCardapio.json", {});
 
 function lerJson(caminho) {
@@ -40,6 +41,15 @@ function obterNomesBebidas() {
 
 function obterPrecosBebidas() {
   return precosBebidasPersistentes();
+}
+
+function obterNomesCombos() {
+  const configuracao = obterConfiguracaoCardapio();
+  return configuracao.categorias?.combos === false ? {} : lerJson(caminhoNomesCombos);
+}
+
+function obterPrecosCombos() {
+  return require("../services/precos.service").catalogo().combos || {};
 }
 
 function montarCardapioPizzas(estoquePizzas) {
@@ -82,6 +92,8 @@ module.exports = {
   obterNomesBebidas,
   obterPrecosPizzas,
   obterPrecosBebidas,
+  obterNomesCombos,
+  obterPrecosCombos,
   obterConfiguracaoCardapio,
   montarCardapioPizzas,
   montarCardapioBebidas

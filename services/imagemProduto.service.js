@@ -3,23 +3,23 @@ const fs = require("fs");
 const path = require("path");
 const { diretorioDados, garantirArquivo } = require("./dadosPersistentes.service");
 
-const metadadosPath = garantirArquivo("imagensprodutos.json", null, { pizzas: {}, bebidas: {} });
+const metadadosPath = garantirArquivo("imagensprodutos.json", null, { pizzas: {}, bebidas: {}, combos: {} });
 const imagensDir = path.join(diretorioDados, "imagens-produtos");
 fs.mkdirSync(imagensDir, { recursive: true });
 
 function ler() {
   try {
     const dados = JSON.parse(fs.readFileSync(metadadosPath, "utf8"));
-    return { pizzas: dados.pizzas || {}, bebidas: dados.bebidas || {} };
+    return { pizzas: dados.pizzas || {}, bebidas: dados.bebidas || {}, combos: dados.combos || {} };
   } catch {
-    return { pizzas: {}, bebidas: {} };
+    return { pizzas: {}, bebidas: {}, combos: {} };
   }
 }
 function salvar(dados) {
   fs.writeFileSync(metadadosPath, JSON.stringify(dados, null, 2), "utf8");
 }
 function tipoValido(tipo) {
-  if (!["pizzas", "bebidas"].includes(tipo)) throw new Error("Tipo de produto inválido.");
+  if (!["pizzas", "bebidas", "combos"].includes(tipo)) throw new Error("Tipo de produto inválido.");
   return tipo;
 }
 function chaveArquivo(tipo, chave) {

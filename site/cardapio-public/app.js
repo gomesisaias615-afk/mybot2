@@ -11,7 +11,8 @@ const titulos = {
   tradicionais: "Pizzas Tradicionais",
   especiais: "Pizzas Especiais",
   bebidas: "Bebidas",
-  doces: "Pizzas Doces"
+  doces: "Pizzas Doces",
+  combos: "Combos"
 };
 
 let categoriaAtual = "";
@@ -35,7 +36,7 @@ function aplicarCategoriasAtivas(dados) {
     pizzaria.slogan || "";
 
   document.querySelectorAll("[data-categoria]").forEach(botao => {
-    const categoria=botao.dataset.categoria; const itens=categoria==="bebidas"?dados.bebidas:(dados.pizzas||[]).filter(p=>p.categoria===categoria); const temPromo=itens.some(item=>item.promocao); botao.classList.toggle("hidden",dados.configuracao?.categorias?.[categoria]===false); botao.classList.toggle("categoria-em-promocao",temPromo); let selo=botao.querySelector(".selo-categoria-promo"); if(temPromo&&!selo){selo=document.createElement("em");selo.className="selo-categoria-promo";selo.textContent="🔥 Promoções";botao.append(selo)} if(!temPromo&&selo)selo.remove();
+    const categoria=botao.dataset.categoria; const itens=categoria==="bebidas"?dados.bebidas:categoria==="combos"?(dados.combos||[]):(dados.pizzas||[]).filter(p=>p.categoria===categoria); const temPromo=itens.some(item=>item.promocao); botao.classList.toggle("hidden",dados.configuracao?.categorias?.[categoria]===false); botao.classList.toggle("categoria-em-promocao",temPromo); let selo=botao.querySelector(".selo-categoria-promo"); if(temPromo&&!selo){selo=document.createElement("em");selo.className="selo-categoria-promo";selo.textContent="🔥 Promoções";botao.append(selo)} if(!temPromo&&selo)selo.remove();
   });
 }
 
@@ -65,7 +66,7 @@ function cardProduto(produto) {
   const etiquetas = `${produto.promocao ? "<em class=\"promocao\">🔥 Promoção</em>" : ""}${produto.disponivel ? "" : "<em>Indisponível</em>"}`;
 
   return `<article class="produto${indisponivel}${produto.promocao ? " em-promocao" : ""}">
-    <div class="produto-imagem ${produto.imagem ? "com-foto" : "sem-foto"}">${produto.imagem ? `<img src="${produto.imagem}" alt="${escaparHtml(produto.nome)}" loading="lazy">` : `<span aria-hidden="true">${produto.tipo === "bebida" ? "🥤" : "🍕"}</span>`}</div>
+    <div class="produto-imagem ${produto.imagem ? "com-foto" : "sem-foto"}">${produto.imagem ? `<img src="${produto.imagem}" alt="${escaparHtml(produto.nome)}" loading="lazy">` : `<span aria-hidden="true">${produto.tipo === "bebida" ? "🥤" : produto.tipo === "combo" ? "🍽️" : "🍕"}</span>`}</div>
     <div class="produto-info">
       <div class="produto-topo"><h2>${produto.nome}</h2><div class="etiquetas">${etiquetas}</div></div>
       <p>${produto.ingredientes}</p>
@@ -103,6 +104,8 @@ async function abrirCategoria(categoria) {
     aplicarCategoriasAtivas(dados);
     produtosAtuais = (categoria === "bebidas"
       ? dados.bebidas
+      : categoria === "combos"
+        ? (dados.combos || [])
       : categoria === "doces"
         ? dados.pizzas.filter(pizza => pizza.categoria === "doces")
         : dados.pizzas.filter(pizza => pizza.categoria === categoria)).sort((a,b)=>Number(b.promocao)-Number(a.promocao)||a.nome.localeCompare(b.nome,"pt-BR"));
@@ -130,4 +133,3 @@ fetch(caminhoApiCardapio(), { cache: "no-store" })
   .then(resposta => resposta.ok ? resposta.json() : Promise.reject())
   .then(aplicarCategoriasAtivas)
   .catch(() => {});
-
