@@ -25,6 +25,7 @@ const {
 } = require("./services/whatsappMeta.service");
 const { definirClienteWhatsApp } = require("./services/whatsappRuntime.service");
 const { processarRespostaConviteGrupo } = require("./services/convitesCanal.service");
+const { criarPedidosDemonstracaoPersistentes } = require("./services/pedidosDemonstracaoPersistentes.service");
 definirClienteWhatsApp(clientMeta);
 
 process.on("unhandledRejection", erro => console.error("PROMESSA REJEITADA:", erro));
@@ -151,6 +152,7 @@ const servidor = app.listen(porta, "0.0.0.0", () => {
   console.log(`[META] Cloud API ativa na porta ${porta}`);
   console.log(`[META] Callback: ${(process.env.PUBLIC_URL || "").replace(/\/$/, "")}/webhook/whatsapp`);
   console.log(`[PAGAMENTO] Callback Mercado Pago: ${webhookUrlMercadoPago || "NAO CONFIGURADO"}`);
+  criarPedidosDemonstracaoPersistentes();
 });
 
 let funcionamentoAnterior = botDeveFuncionarHoje();

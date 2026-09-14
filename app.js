@@ -45,6 +45,7 @@ const {
   obterNumeroRemetente,
   ehNumeroAtendente
 } = require("./services/comandoEstoqueAtendente.service");
+const { criarPedidosDemonstracaoPersistentes } = require("./services/pedidosDemonstracaoPersistentes.service");
 
 const app = express();
 
@@ -403,6 +404,7 @@ app.get("/health", (req, res) => {
 const PORTA_BOT = Number(process.env.PORT || 3000);
 const servidor = app.listen(PORTA_BOT, "0.0.0.0", () => {
   console.log(`Webhooks rodando na porta ${PORTA_BOT}`);
+  criarPedidosDemonstracaoPersistentes();
 });
 
 let encerrando = false;

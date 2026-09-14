@@ -89,9 +89,6 @@ async function carregar() {
   estado.catalogoPrecos = await api("/api/painel/precos");
   estado.ingredientesPizzas = await api("/api/painel/ingredientes");
   estado.imagensProdutos = await api("/api/painel/imagens");
-  if (new URLSearchParams(location.search).get("demo") === "1") {
-    estado.dados.pedidos = [...pedidosDemonstracao(), ...(estado.dados.pedidos || [])];
-  }
   render();
 }
 
