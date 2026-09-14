@@ -28,8 +28,9 @@ const PADRAO = {
     valorPorKm: 0,
     taxaMinima: 0,
     distanciaMaximaKm: 0,
-    enderecoPizzaria: "",
-    // A localização deve ser definida no painel antes do uso em produção.
+    // Ponto inicial para o painel funcionar já na primeira abertura.
+    // Pode ser trocado pelo endereço real no painel administrativo.
+    enderecoPizzaria: "Centro, Estância - SE",
     latitudePizzaria: LOCALIDADE_EMPRESA.latitudeMapaInicial,
     longitudePizzaria: LOCALIDADE_EMPRESA.longitudeMapaInicial,
     estadoAtendido: LOCALIDADE_EMPRESA.estado,

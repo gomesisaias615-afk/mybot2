@@ -79,6 +79,15 @@ const detalhesPizzas = {
   "chocolate branco": { categoria: "doces", ingredientes: "Chocolate branco, creme de leite e raspas de chocolate." }
 };
 
+// Fotos padrão do cardápio. Uma imagem enviada no painel administrativo
+// continua tendo prioridade para que cada produto possa ser personalizado.
+const imagensPadrao = {
+  tradicionais: "/cardapio/produtos/pizza-tradicional.png",
+  especiais: "/cardapio/produtos/pizza-especial.png",
+  doces: "/cardapio/produtos/pizza-doce.png",
+  bebidas: "/cardapio/produtos/bebidas.png"
+};
+
 function montarCardapio() {
   const catalogoPrecos = precosService.catalogo();
   const precosPizzas = catalogoPrecos.pizzas;
@@ -105,13 +114,14 @@ function montarCardapio() {
     const categoriaConfigurada = Object.entries(configuracao.pizzasPorCategoria || {})
       .find(([, nomes]) => nomes.includes(nome))?.[0];
 
+    const categoria = categoriaConfigurada || detalhes.categoria;
     return {
       tipo: "pizza",
       chave,
       nome,
-      categoria: categoriaConfigurada || detalhes.categoria,
+      categoria,
       ingredientes: catalogoPrecos.ingredientesPizzas?.[nome] || detalhes.ingredientes,
-      imagem: imagensProdutos.urlImagem("pizzas", nome),
+      imagem: imagensProdutos.urlImagem("pizzas", nome) || imagensPadrao[categoria] || imagensPadrao.tradicionais,
       estoque: Object.prototype.hasOwnProperty.call(estoqueAtual.pizzas || {}, chave) ? Number(estoqueAtual.pizzas[chave]) : null,
       disponivel: produtoDisponivel("pizzas", chave),
       promocao: promocoesPizzas.has(chave) || Object.values(catalogoPrecos.promocoes.pizzas?.[nome] || {}).some(precosService.ativa),
@@ -126,7 +136,7 @@ function montarCardapio() {
     nome: dados.nome,
     categoria: "bebidas",
     ingredientes: descricoesBebidas[chave] || "Bebida gelada para acompanhar seu pedido.",
-    imagem: imagensProdutos.urlImagem("bebidas", chave),
+    imagem: imagensProdutos.urlImagem("bebidas", chave) || imagensPadrao.bebidas,
     estoque: Object.prototype.hasOwnProperty.call(estoqueAtual.bebidas || {}, chave) ? Number(estoqueAtual.bebidas[chave]) : null,
     disponivel: produtoDisponivel("bebidas", chave),
     promocao: promocoesBebidas.has(chave) || precosService.ativa(catalogoPrecos.promocoes.bebidas?.[chave]),
