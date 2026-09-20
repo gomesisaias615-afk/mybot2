@@ -490,6 +490,18 @@ app.get("/api/pedido/:pedidoId", (req, res) => {
   res.json(pedido);
 });
 
+function consultasAlternativasDeLogradouro(busca) {
+  const texto = expandirAbreviacoesEndereco(busca);
+  const semTipo = texto.replace(/^(rua|avenida|travessa|estrada|rodovia|praca)\s+/i, "").trim();
+  const alternativas = [texto];
+  if (semTipo && semTipo !== texto) {
+    alternativas.push(`Rua ${semTipo}`, `Avenida ${semTipo}`);
+  } else if (semTipo) {
+    alternativas.push(`Rua ${semTipo}`, `Avenida ${semTipo}`);
+  }
+  return [...new Set(alternativas.map(item => item.trim()).filter(Boolean))];
+}
+
 app.get("/api/enderecos/sugestoes", async (req, res) => {
   const buscaOriginal = String(req.query.q || "").trim();
   const busca = expandirAbreviacoesEndereco(buscaOriginal);
@@ -504,18 +516,22 @@ app.get("/api/enderecos/sugestoes", async (req, res) => {
   };
 
   try {
-    const url = new URL("https://nominatim.openstreetmap.org/search");
-    url.searchParams.set("q", `${busca}, ${cidade}, ${estado}, Brasil`);
-    url.searchParams.set("format", "jsonv2");
-    url.searchParams.set("addressdetails", "1");
-    url.searchParams.set("countrycodes", "br");
-    url.searchParams.set("limit", "8");
-    const dados = await consultarNominatim(url);
-    const resultados = dados.map(enderecoDoNominatim).filter(item =>
-      enderecoNaArea(item, areaConsultada) &&
-      Number.isFinite(item.latitude) &&
-      Number.isFinite(item.longitude)
-    );
+    let resultados = [];
+    for (const consulta of consultasAlternativasDeLogradouro(busca)) {
+      const url = new URL("https://nominatim.openstreetmap.org/search");
+      url.searchParams.set("q", `${consulta}, ${cidade}, ${estado}, Brasil`);
+      url.searchParams.set("format", "jsonv2");
+      url.searchParams.set("addressdetails", "1");
+      url.searchParams.set("countrycodes", "br");
+      url.searchParams.set("limit", "8");
+      const dados = await consultarNominatim(url);
+      resultados = dados.map(enderecoDoNominatim).filter(item =>
+        enderecoNaArea(item, areaConsultada) &&
+        Number.isFinite(item.latitude) &&
+        Number.isFinite(item.longitude)
+      );
+      if (resultados.length) break;
+    }
     res.set("Cache-Control", "private, max-age=300");
     return res.json(resultados);
   } catch (erro) {

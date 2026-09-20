@@ -8,6 +8,7 @@ const {
   recarregarEstoque
 } = require("../services/estoque.service");
 const { normalizar } = require("../utils/texto");
+const { registrarEVerificarInatividade } = require("../services/inatividadeAtendimento.service");
 const {
   mostrarMenu: mostrarMenuBase,
   tratarMenu,
@@ -54,6 +55,9 @@ async function tratarComandoGlobal(msg, client, user, texto) {
 async function atendimento(msg, client) {
   const user = msg.from;
   const texto = normalizar(msg.body);
+  if (registrarEVerificarInatividade(user)) {
+    resetarUsuario(user);
+  }
   const estadoAtual = contexto.estados[user];
 
   // "menu" sempre vence qualquer outro fluxo, inclusive pedido, endereço e pagamento.

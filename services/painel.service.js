@@ -27,12 +27,12 @@ const PADRAO = {
     taxaFixa: 0,
     valorPorKm: 0,
     taxaMinima: 0,
-    distanciaMaximaKm: 0,
+    distanciaMaximaKm: 10,
     // Ponto inicial para o painel funcionar já na primeira abertura.
     // Pode ser trocado pelo endereço real no painel administrativo.
-    enderecoPizzaria: "Centro, Estância - SE",
-    latitudePizzaria: LOCALIDADE_EMPRESA.latitudeMapaInicial,
-    longitudePizzaria: LOCALIDADE_EMPRESA.longitudeMapaInicial,
+    enderecoPizzaria: "Rua Capitão Salomão, 191, Centro, Estância - SE",
+    latitudePizzaria: -11.27146,
+    longitudePizzaria: -37.43963,
     estadoAtendido: LOCALIDADE_EMPRESA.estado,
     cidadeAtendida: LOCALIDADE_EMPRESA.municipio,
     latitudeMapaInicial: LOCALIDADE_EMPRESA.latitudeMapaInicial,

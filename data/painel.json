@@ -16,11 +16,12 @@
     "taxaFixa": 0,
     "valorPorKm": 0,
     "taxaMinima": 0,
-    "enderecoPizzaria": "",
-    "latitudePizzaria": null,
-    "longitudePizzaria": null,
-    "estadoAtendido": "",
-    "cidadeAtendida": ""
+    "distanciaMaximaKm": 10,
+    "enderecoPizzaria": "Rua Capitão Salomão, 191, Centro, Estância - SE",
+    "latitudePizzaria": -11.27146,
+    "longitudePizzaria": -37.43963,
+    "estadoAtendido": "SE",
+    "cidadeAtendida": "Estância"
   },
   "atualizadoEm": null
 }

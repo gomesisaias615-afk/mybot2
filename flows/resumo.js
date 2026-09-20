@@ -1,4 +1,21 @@
 
+function nomeBebidaNoResumo(bebida, bebidas) {
+  const nomeOriginal = String(bebida?.nome || "Bebida").trim();
+  const volume = nomeOriginal.match(/\b\d+(?:[.,]\d+)?\s*(?:ml|l|litro(?:s)?)\b/i)?.[0] || "";
+  const semVolume = nomeOriginal
+    .replace(/\b\d+(?:[.,]\d+)?\s*(?:ml|l|litro(?:s)?)\b/ig, " ")
+    .replace(/\b([a-zÀ-ÿ]+)(?:\s+\1\b)+/gi, "$1")
+    .replace(/\s+/g, " ")
+    .trim();
+  const mesmaBebida = item => String(item?.nome || "")
+    .replace(/\b\d+(?:[.,]\d+)?\s*(?:ml|l|litro(?:s)?)\b/ig, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLocaleLowerCase("pt-BR") === semVolume.toLocaleLowerCase("pt-BR");
+  const precisaVolume = bebidas.filter(mesmaBebida).length > 1;
+  return `${semVolume}${precisaVolume && volume ? ` ${volume}` : ""}`.trim();
+}
+
 function gerarResumo(user, carrinhoPizza, carrinhoBebida) {
 
   let txt = "🧾 RESUMO DO PEDIDO\n\n";
@@ -41,7 +58,7 @@ function gerarResumo(user, carrinhoPizza, carrinhoBebida) {
       total += subtotal;
 
       txt +=
-        `${b.quantidade}x ${b.nome}\n`;
+        `${b.quantidade}x ${nomeBebidaNoResumo(b, carrinhoBebida[user])}\n`;
 
       txt +=
         `💰 R$ ${subtotal.toFixed(2).replace(".", ",")}\n\n`;
