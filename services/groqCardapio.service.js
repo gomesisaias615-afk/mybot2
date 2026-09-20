@@ -56,7 +56,45 @@ function localizarOpcao(valor, opcoes) {
   ) || null;
 }
 
-function opcaoFoiMencionada(mensagem, opcao) {
+function qualificadoresDaBebida(valor) {
+  const texto = ` ${normalizar(valor)} `;
+  return ["zero", "diet", "light", "com gas", "sem gas", "leite"]
+    .filter(qualificador => texto.includes(` ${qualificador} `));
+}
+
+function qualificadoresSaoCompativeis(mensagem, opcao, opcoes = []) {
+  const qualificadoresDaMensagem = qualificadoresDaBebida(mensagem);
+  const qualificadoresDaOpcao = qualificadoresDaBebida(`${opcao.nome || ""} ${opcao.chave || ""}`);
+  if (qualificadoresDaOpcao.some(qualificador => !qualificadoresDaMensagem.includes(qualificador))) return false;
+  return !qualificadoresDaMensagem.some(qualificador =>
+    !qualificadoresDaOpcao.includes(qualificador) &&
+    opcoes.some(outra => qualificadoresDaBebida(`${outra.nome || ""} ${outra.chave || ""}`).includes(qualificador))
+  );
+}
+
+function palavrasDeVariante(valor) {
+  const ignoradas = new Set(["de", "da", "do", "com", "sem", "em", "lata", "garrafa", "refrigerante", "bebida", "suco", "agua", "mineral", "ml", "litro", "litros"]);
+  return [...new Set(normalizar(valor).split(" ").filter(palavra => palavra.length > 1 && !/^\d+$/.test(palavra) && !ignoradas.has(palavra)))];
+}
+
+function varianteDaBebidaECompativel(mensagem, opcao, opcoes = []) {
+  const palavrasMensagem = new Set(palavrasDeVariante(mensagem));
+  const palavrasOpcao = palavrasDeVariante(`${opcao.nome || ""} ${opcao.chave || ""}`);
+  return !opcoes.some(outra => {
+    if (outra === opcao) return false;
+    const palavrasOutra = palavrasDeVariante(`${outra.nome || ""} ${outra.chave || ""}`);
+    const compartilhadas = palavrasOpcao.filter(palavra => palavrasOutra.includes(palavra));
+    const exclusivasDaOpcao = palavrasOpcao.filter(palavra => !palavrasOutra.includes(palavra));
+    const exclusivasDaOutra = palavrasOutra.filter(palavra => !palavrasOpcao.includes(palavra));
+    return compartilhadas.length > 0 &&
+      exclusivasDaOutra.some(palavra => palavrasMensagem.has(palavra)) &&
+      !exclusivasDaOpcao.some(palavra => palavrasMensagem.has(palavra));
+  });
+}
+
+function opcaoFoiMencionada(mensagem, opcao, opcoes = []) {
+  if (!qualificadoresSaoCompativeis(mensagem, opcao, opcoes)) return false;
+  if (!varianteDaBebidaECompativel(mensagem, opcao, opcoes)) return false;
   const texto = normalizar(mensagem);
   const palavras = texto.split(" ");
 
@@ -330,7 +368,7 @@ async function interpretarComGroq(mensagem, opcoes, tipo) {
           erros.push(`Não reconheci o sabor "${saborRecebido || "informado"}" no cardápio.`);
           continue;
         }
-        if (!opcaoFoiMencionada(mensagem, opcao)) {
+        if (!opcaoFoiMencionada(mensagem, opcao, opcoes)) {
           console.warn(`Groq descartada por inventar sabor não mencionado: ${opcao.nome}`);
           continue;
         }
@@ -355,7 +393,7 @@ async function interpretarComGroq(mensagem, opcoes, tipo) {
         erros.push(`Não reconheci o item "${item.produto || "informado"}" no cardápio.`);
         continue;
       }
-      if (!opcaoFoiMencionada(mensagem, opcao)) {
+      if (!opcaoFoiMencionada(mensagem, opcao, opcoes)) {
         console.warn(`Groq descartada por inventar item não mencionado: ${opcao.nome}`);
         continue;
       }
@@ -369,7 +407,7 @@ async function interpretarComGroq(mensagem, opcoes, tipo) {
     const tamanhoPadrao = inferirTamanho(mensagem);
     const saboresIncluidos = new Set(itens.flatMap(item => item.sabores));
     for (const opcao of opcoes) {
-      if (!saboresIncluidos.has(opcao.nome) && opcaoFoiMencionada(mensagem, opcao) && tamanhoPadrao) {
+      if (!saboresIncluidos.has(opcao.nome) && opcaoFoiMencionada(mensagem, opcao, opcoes) && tamanhoPadrao) {
         itens.push({ sabores: [opcao.nome], sabor: opcao.nome, tamanho: tamanhoPadrao, quantidade: 1 });
       }
     }
