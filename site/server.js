@@ -826,17 +826,27 @@ app.post("/api/pedido/:pedidoId/endereco", async (req, res) => {
         url.searchParams.set("addressdetails", "1");
         localizado = enderecoDoNominatim(await consultarNominatim(url));
       } else {
-        const url = new URL("https://nominatim.openstreetmap.org/search");
-        url.searchParams.set("q", `${endereco.rua}, ${endereco.numero || ""}, ${bairro}, ${cidade}, ${estado}, Brasil`);
-        url.searchParams.set("format", "jsonv2");
-        url.searchParams.set("addressdetails", "1");
-        url.searchParams.set("countrycodes", "br");
-        url.searchParams.set("limit", "1");
-        const encontrados = await consultarNominatim(url);
-        if (!encontrados.length) throw new Error("Endereço não encontrado no mapa. Selecione uma sugestão ou use sua localização.");
-        localizado = enderecoDoNominatim(encontrados[0]);
-        latitudeEntrega = localizado.latitude;
-        longitudeEntrega = localizado.longitude;
+        // Endereço digitado também é aceito. Tentamos abreviações e tipos de
+        // logradouro equivalentes antes de pedir que o cliente use o mapa.
+        for (const ruaConsultada of consultasAlternativasDeLogradouro(endereco.rua)) {
+          const url = new URL("https://nominatim.openstreetmap.org/search");
+          url.searchParams.set("q", `${ruaConsultada}, ${endereco.numero || ""}, ${bairro}, ${cidade}, ${estado}, Brasil`);
+          url.searchParams.set("format", "jsonv2");
+          url.searchParams.set("addressdetails", "1");
+          url.searchParams.set("countrycodes", "br");
+          url.searchParams.set("limit", "5");
+          const encontrados = await consultarNominatim(url);
+          const candidato = encontrados.map(enderecoDoNominatim).find(item =>
+            enderecoNaArea(item, configEntrega) &&
+            Number.isFinite(item.latitude) && Number.isFinite(item.longitude)
+          );
+          if (!candidato) continue;
+          localizado = candidato;
+          latitudeEntrega = localizado.latitude;
+          longitudeEntrega = localizado.longitude;
+          break;
+        }
+        if (!localizado) throw new Error("Não encontrei esse endereço no mapa. Confira Rua/Avenida, bairro, cidade e número ou use sua localização.");
       }
       if (!enderecoNaArea(localizado, configEntrega)) {
         throw new Error(`O endereço está fora de ${configEntrega.cidadeAtendida} - ${configEntrega.estadoAtendido}.`);
