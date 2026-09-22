@@ -92,13 +92,19 @@ function varianteDaBebidaECompativel(mensagem, opcao, opcoes = []) {
   });
 }
 
+function termosSegurosDaOpcao(opcao) {
+  // Produtos são aceitos somente pelo nome oficial cadastrado. Atalhos podem
+  // confundir tamanhos, observações ou outros itens do pedido.
+  return [normalizar(opcao.nome)].filter(Boolean);
+}
+
 function opcaoFoiMencionada(mensagem, opcao, opcoes = []) {
   if (!qualificadoresSaoCompativeis(mensagem, opcao, opcoes)) return false;
   if (!varianteDaBebidaECompativel(mensagem, opcao, opcoes)) return false;
   const texto = normalizar(mensagem);
   const palavras = texto.split(" ");
 
-  return [opcao.nome, opcao.chave, ...(opcao.aliases || [])]
+  return termosSegurosDaOpcao(opcao)
     .filter(Boolean)
     .some(valor => {
       const termo = normalizar(valor);
@@ -129,8 +135,8 @@ function interpretarLocalmente(mensagem, opcoes, tipo) {
   const encontrados = [];
 
   for (const opcao of opcoes) {
-    const termos = [...new Set([opcao.nome, ...(opcao.aliases || [])]
-      .map(normalizar).filter(Boolean))].sort((a, b) => b.length - a.length);
+    const termos = termosSegurosDaOpcao(opcao)
+      .sort((a, b) => b.length - a.length);
     const encontradosDaOpcao = [];
 
     for (const termo of termos) {

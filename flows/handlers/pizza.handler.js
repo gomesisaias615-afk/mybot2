@@ -72,7 +72,14 @@ async function tratarPizza({ msg, user, contexto, estoque }) {
       nome: bebida.nome,
       aliases: bebida.aliases || []
     }));
-    const opcoesCombos = Object.entries(nomesCombos).map(([chave, combo]) => ({ chave, nome: combo.nome, aliases: combo.aliases || [] }));
+    const opcoesCombos = Object.entries(nomesCombos).map(([chave, combo]) => ({
+      chave,
+      nome: combo.nome,
+      // "família", "casal" e "individual" sozinhos podem descrever outras
+      // coisas do pedido. Para combo, somente expressões que contenham
+      // explicitamente a palavra "combo" podem servir como apelido.
+      aliases: (combo.aliases || []).filter(alias => /\bcombos?\b/.test(normalizar(alias)))
+    }));
     let interpretacao;
     let interpretacaoBebidas;
     let interpretacaoCombos;
