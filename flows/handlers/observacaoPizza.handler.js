@@ -2,10 +2,16 @@ const { respostaSim, respostaNao } = require("../../utils/texto");
 const { gerarResumo } = require("../resumo");
 
 async function seguirParaResumo(msg, user, contexto) {
+  let resumo;
+  try {
+    resumo = gerarResumo(user, contexto.carrinhoPizza, contexto.carrinhoBebida, contexto.observacoesPizza[user] || "");
+  } catch (erro) {
+    console.error("Falha ao montar o resumo final:", erro);
+    await msg.reply("Não consegui montar o resumo agora. Envie novamente sua resposta para tentar de novo.");
+    return;
+  }
   contexto.estados[user] = "confirmar_resumo";
-  await msg.reply(
-    gerarResumo(user, contexto.carrinhoPizza, contexto.carrinhoBebida)
-  );
+  await msg.reply(resumo);
 }
 
 async function tratarObservacaoPizza({ msg, user, contexto }) {
