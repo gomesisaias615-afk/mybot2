@@ -138,7 +138,13 @@ async function buscarSugestoesEndereco() {
   clearTimeout(buscaEnderecoTimer);
   buscaEnderecoTimer = setTimeout(buscarSugestoesEndereco, 750);
 }));
-["estadoEntrega","cidadeEntrega"].forEach(id => $(id).addEventListener("change", () => {
+
+function buscarSugestoesAoVoltarParaRua() {
+  const rua = $("rua").value.trim();
+  const bairro = $("bairro").value.trim();
+  if (Math.max(rua.length, bairro.length) >= 2) buscarSugestoesEndereco();
+}
+$("rua").addEventListener("focus", buscarSugestoesAoVoltarParaRua);["estadoEntrega","cidadeEntrega"].forEach(id => $(id).addEventListener("change", () => {
   enderecoSelecionado = {};
   esconderSugestoes();
 }));
@@ -346,6 +352,10 @@ function atualizarTotais() {
   const valorEntrega = modalidadeSelecionada === "entrega" ? taxaEntrega : 0;
   totalFinalAtual = Number((valorPedido + valorEntrega).toFixed(2));
   $("pedidoSubtotal").textContent = dinheiro(valorPedido);
+  const exibirTaxa = modalidadeSelecionada === "entrega";
+  $("rotuloTaxaEntrega").classList.toggle("hidden", !exibirTaxa);
+  $("pedidoTaxaEntrega").classList.toggle("hidden", !exibirTaxa);
+  $("statusTaxaEntrega").classList.toggle("hidden", !exibirTaxa);
   $("pedidoTaxaEntrega").textContent = dinheiro(valorEntrega);
   $("pedidoTotal").textContent = dinheiro(totalFinalAtual);
 }
