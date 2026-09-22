@@ -44,29 +44,28 @@ function gerarResumo(user, carrinhoPizza, carrinhoBebida) {
 
   }
 
-  // ================= BEBIDAS =================
+  const combos = bebidas.filter(item => item.tipo === "combo");
+  const bebidasNormais = bebidas.filter(item => item.tipo !== "combo");
 
-  if (Array.isArray(carrinhoBebida[user]) && carrinhoBebida[user].length > 0) {
-
-    txt += "🥤 BEBIDAS\n\n";
-
-    carrinhoBebida[user].forEach(b => {
-
-      const subtotal =
-        b.quantidade * b.valor;
-
+  if (combos.length) {
+    txt += "🍽️ COMBOS\n\n";
+    combos.forEach(combo => {
+      const subtotal = combo.quantidade * combo.valor;
       total += subtotal;
-
-      txt +=
-        `${b.quantidade}x ${nomeBebidaNoResumo(b, carrinhoBebida[user])}\n`;
-
-      txt +=
-        `💰 R$ ${subtotal.toFixed(2).replace(".", ",")}\n\n`;
-
+      txt += `${combo.quantidade}x ${combo.nome}\n`;
+      txt += `💰 R$ ${subtotal.toFixed(2).replace(".", ",")}\n\n`;
     });
-
   }
 
+  if (bebidasNormais.length) {
+    txt += "🥤 BEBIDAS\n\n";
+    bebidasNormais.forEach(bebida => {
+      const subtotal = bebida.quantidade * bebida.valor;
+      total += subtotal;
+      txt += `${bebida.quantidade}x ${nomeBebidaNoResumo(bebida, bebidasNormais)}\n`;
+      txt += `💰 R$ ${subtotal.toFixed(2).replace(".", ",")}\n\n`;
+    });
+  }
   txt +=
   `━━━━━━━━━━━━━━━━━━━━\n💰 *TOTAL DO PEDIDO: R$ ${total.toFixed(2).replace(".", ",")}*\n━━━━━━━━━━━━━━━━━━━━\n\n`;
 
