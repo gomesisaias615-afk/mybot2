@@ -21,6 +21,7 @@ function gerarResumo(user, carrinhoPizza, carrinhoBebida, observacao = "") {
   let txt = "🧾 RESUMO DO PEDIDO\n\n";
 
   let total = 0;
+  const bebidas = carrinhoBebida[user] || [];
 
   // ================= PIZZAS =================
 
@@ -67,7 +68,7 @@ function gerarResumo(user, carrinhoPizza, carrinhoBebida, observacao = "") {
     });
   }
   if (String(observacao || "").trim()) {
-    txt += "📝 OBSERVAÇÃO\n\n“${String(observacao).trim()}”\n\n";
+    txt += `📝 OBSERVAÇÃO\n\n“${String(observacao).trim()}”\n\n`;
   }
 
   txt +=

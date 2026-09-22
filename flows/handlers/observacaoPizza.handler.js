@@ -47,10 +47,6 @@ Envie somente a observação em uma única mensagem.`
     await msg.reply("A observação não pode ficar vazia. Digite a informação desejada.");
     return true;
   }
-  if (observacao.length > 300) {
-    await msg.reply("A observação deve ter no máximo 300 caracteres. Envie uma versão mais curta.");
-    return true;
-  }
 
   contexto.observacoesPizza[user] = observacao;
   await msg.reply(`✅ *Observação adicionada ao pedido:*
