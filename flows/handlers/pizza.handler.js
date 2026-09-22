@@ -79,7 +79,11 @@ async function tratarPizza({ msg, user, contexto, estoque }) {
 
     try {
       interpretacaoBebidas = interpretarLocalmente(msg.body, opcoesBebidas, "bebida");
-      interpretacaoCombos = interpretarLocalmente(msg.body, opcoesCombos, "combo");
+      // Tamanho "família" é uma característica da pizza, não um pedido de combo.
+      // Um combo só pode entrar no carrinho se a palavra "combo" foi escrita pelo cliente.
+      interpretacaoCombos = /\bcombos?\b/.test(normalizar(msg.body))
+        ? interpretarLocalmente(msg.body, opcoesCombos, "combo")
+        : { itens: [], erros: [] };
       interpretacao = await interpretarComGroq(msg.body, opcoes, "pizza");
     } catch (erro) {
       console.error(`Erro ao consultar Groq para pizzas: ${erro.message}`);
