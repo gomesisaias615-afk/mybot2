@@ -11,6 +11,9 @@ let taxaEntrega = 0;
 let configuracaoEntrega = {};
 let totalFinalAtual = 0;
 let buscaEnderecoTimer;
+let sugestoesEnderecoTimer;
+let sugestoesEnderecoAbertas = false;
+let sugestoesEnderecoScrollInicial = 0;
 let buscaEnderecoControle = 0;
 let pixTimerId;
 let enderecoSelecionado = {};
@@ -84,8 +87,15 @@ function atualizarMensagemTaxaEntregaInicial() {
 }
 
 function esconderSugestoes() {
+  clearTimeout(sugestoesEnderecoTimer);
   $("sugestoesEndereco").classList.add("hidden");
   $("sugestoesEndereco").innerHTML = "";
+  sugestoesEnderecoAbertas = false;
+}
+
+function manterSugestoesEnderecoPorTresMinutos() {
+  clearTimeout(sugestoesEnderecoTimer);
+  sugestoesEnderecoTimer = setTimeout(esconderSugestoes, 3 * 60 * 1000);
 }
 
 function selecionarSugestaoEndereco(item) {
@@ -109,7 +119,11 @@ async function buscarSugestoesEndereco() {
     $("sugestoesEndereco").innerHTML = itens.map((item,indice) =>
       `<button type="button" role="option" data-indice="${indice}"><strong>${item.logradouro || item.rua || "Endereço"}</strong><small>${item.texto || [item.bairro,item.cidade,item.estado].filter(Boolean).join(" — ")}</small></button>`
     ).join("");
-    $("sugestoesEndereco").classList.toggle("hidden", !itens.length);
+    if (!itens.length) return esconderSugestoes();
+    $("sugestoesEndereco").classList.remove("hidden");
+    sugestoesEnderecoAbertas = true;
+    sugestoesEnderecoScrollInicial = window.scrollY;
+    manterSugestoesEnderecoPorTresMinutos();
     $("sugestoesEndereco").querySelectorAll("button").forEach((botao,indice) => {
       botao.addEventListener("click", () => selecionarSugestaoEndereco(itens[indice]));
     });
@@ -120,6 +134,7 @@ async function buscarSugestoesEndereco() {
 
 ["rua","bairro"].forEach(id => $(id).addEventListener("input", () => {
   enderecoSelecionado = {};
+  esconderSugestoes();
   clearTimeout(buscaEnderecoTimer);
   buscaEnderecoTimer = setTimeout(buscarSugestoesEndereco, 750);
 }));
@@ -130,6 +145,11 @@ async function buscarSugestoesEndereco() {
 document.addEventListener("click", evento => {
   if (!evento.target.closest("#sugestoesEndereco") && !evento.target.closest("#rua") && !evento.target.closest("#bairro")) esconderSugestoes();
 });
+window.addEventListener("scroll", () => {
+  if (!sugestoesEnderecoAbertas) return;
+  if (Math.abs(window.scrollY - sugestoesEnderecoScrollInicial) < window.innerHeight * .75) return;
+  esconderSugestoes();
+}, { passive: true });
 
 let mapaLocalizacao;
 let marcadorLocalizacao;

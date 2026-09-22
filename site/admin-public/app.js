@@ -252,12 +252,26 @@ let marcadorPizzaria;
 let pontoMapaPizzaria = null;
 let enderecoMapaPizzaria = "";
 let buscaLocalControle = 0;
+let sugestoesLocalAbertas = false;
+let sugestoesLocalScrollInicial = 0;
+let sugestoesLocalTimer;
 let enderecoMapaPizzariaValido = false;
 let enderecoPizzariaConfirmado = "";
 let buscaLocalTimer;
 let consultaMapaAtual = 0;
 let consultaMapaTimer;
 let centroMapaConfigurado = null;
+
+function fecharSugestoesLocalPizzaria() {
+  clearTimeout(sugestoesLocalTimer);
+  $("#sugestoesLocalPizzaria").classList.add("hidden");
+  sugestoesLocalAbertas = false;
+}
+
+function manterSugestoesLocalPorTresMinutos() {
+  clearTimeout(sugestoesLocalTimer);
+  sugestoesLocalTimer = setTimeout(fecharSugestoesLocalPizzaria, 3 * 60 * 1000);
+}
 
 let mapaAreaEntrega;
 let marcadorCentroArea;
@@ -543,6 +557,9 @@ async function buscarEnderecoPizzaria() {
     caixa.innerHTML = itens.map((item, indice) =>
       '<button type="button" data-indice="' + indice + '"><strong>' + escapar(item.logradouro || item.rua || "Endereço") + '</strong><small>' + escapar(item.texto || [item.bairro,item.cidade,item.estado].filter(Boolean).join(" — ")) + '</small></button>'
     ).join("");
+    sugestoesLocalAbertas = true;
+    sugestoesLocalScrollInicial = window.scrollY;
+    manterSugestoesLocalPorTresMinutos();
     caixa.querySelectorAll("button").forEach((botao, indice) => botao.addEventListener("click", async () => {
       const item = itens[indice];
       const textoOriginal = botao.innerHTML;
@@ -550,7 +567,7 @@ async function buscarEnderecoPizzaria() {
         botao.disabled = true;
         botao.textContent = "Salvando endereço...";
         await confirmarLocalPizzaria(item.latitude, item.longitude, item.texto);
-        caixa.classList.add("hidden");
+        fecharSugestoesLocalPizzaria();
         toast("Endereço da pizzaria salvo.");
       } catch (erro) {
         botao.disabled = false;
@@ -566,10 +583,19 @@ async function buscarEnderecoPizzaria() {
 
 $("#enderecoPizzaria").addEventListener("input", () => {
   buscaLocalControle += 1;
+  fecharSugestoesLocalPizzaria();
   clearTimeout(buscaLocalTimer);
   buscaLocalTimer = setTimeout(buscarEnderecoPizzaria, 750);
 });
 
+window.addEventListener("scroll", () => {
+  if (!sugestoesLocalAbertas) return;
+  if (Math.abs(window.scrollY - sugestoesLocalScrollInicial) < window.innerHeight * .75) return;
+  fecharSugestoesLocalPizzaria();
+}, { passive: true });
+["numeroPizzaria", "bairroPizzaria", "cepPizzaria"].forEach(id => {
+  document.getElementById(id)?.addEventListener("focus", fecharSugestoesLocalPizzaria);
+});
 function normalizarRaioEntrega(valor) {
   const numero = Number(String(valor).replace(",", "."));
   return Math.min(200, Math.max(0.5, Math.round((Number.isFinite(numero) ? numero : 0.5) * 2) / 2));
