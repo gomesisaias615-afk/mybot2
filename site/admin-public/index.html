@@ -32,6 +32,7 @@
     <header class="topbar">
       <div class="marca"><img class="marca-logo" src="/cardapio/mascote-saborear.png" alt="Mascote da MyBot" onerror="this.onerror=null;this.style.visibility='hidden'"><span><b>MyBot</b><small data-nome-pizzaria>Nova pizzaria</small></span></div>
       <div class="top-acoes">
+        <button id="ativarNotificacoes" class="btn receber-notificacoes" type="button" hidden>🔔 RECEBER NOTIFICAÇÕES</button>
         <span id="estadoGeral" class="estado"><i></i> Carregando</span>
         <button id="atualizar" class="btn icone" title="Atualizar">↻</button>
         <button id="sair" class="btn discreto">Sair</button>
@@ -238,3 +239,4 @@
   <script>window.addEventListener("load",()=>setTimeout(()=>document.querySelector("#mybotSplash")?.classList.add("sair"),650));</script>
 </body>
 </html>
+

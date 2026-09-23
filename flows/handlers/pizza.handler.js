@@ -64,7 +64,7 @@ async function tratarPizza({ msg, user, contexto, estoque }) {
     const precosBebidas = obterPrecosBebidas();
     const nomesCombos = obterNomesCombos();
     const precosCombos = obterPrecosCombos();
-    await msg.reply("⏳ Processando seu pedido de pizza, aguarde um instante...");
+    await msg.reply("⏳ Processando seu pedido, aguarde um instante...");
 
     const opcoes = pizzas.map(pizza => ({ nome: pizza.nome }));
     const opcoesBebidas = Object.entries(nomesBebidas).map(([chave, bebida]) => ({

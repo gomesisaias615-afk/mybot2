@@ -2,6 +2,7 @@ const $ = seletor => document.querySelector(seletor);
 const portalPainel = window.MYBOT_PORTAL === "atendente" ? "atendente" : "administrador";
 document.querySelector('[data-guia="ingredientes"]')?.replaceChildren("Descrição");
 const estado = { dados: null, tipoEstoque: "pizzas", busca: "", filtro: "todos" };
+let pedidosJaVistos = null;
 const ZOOM_INICIAL_PIZZARIA = 15;
 
 async function api(url, opcoes = {}) {
@@ -86,6 +87,7 @@ function pedidosDemonstracao() {
 
 async function carregar() {
   estado.dados = await api("/api/painel/dados");
+  avisarPedidosNovos(estado.dados.pedidos);
   estado.catalogoPrecos = await api("/api/painel/precos");
   estado.ingredientesPizzas = await api("/api/painel/ingredientes");
   estado.imagensProdutos = await api("/api/painel/imagens");
@@ -814,9 +816,51 @@ function mostrarLoginPainel() {
   $("#login").classList.remove("oculto");
 }
 
+function configurarAjudaDoPortal() {
+  const secao = document.querySelector(".guia-ajuda");
+  const detalhes = secao?.querySelector(".ajuda-detalhada");
+  if (!secao || !detalhes) return;
+  const atendente = portalPainel === "atendente";
+  const etiqueta = secao.querySelector(".eyebrow");
+  const introducao = secao.querySelector(".ajuda-intro");
+  if (etiqueta) etiqueta.textContent = atendente ? "GUIA DO ATENDENTE" : "GUIA DO ADMINISTRADOR";
+  if (atendente) {
+    if (introducao) introducao.textContent = "Use este guia para receber pedidos, acompanhar o atendimento e manter o cliente informado.";
+    detalhes.innerHTML = `<article><span>1</span><div><h3>Pedidos</h3><p>Acompanhe os pedidos que chegam em tempo real. Confirme o recebimento e avance cada pedido pelas etapas de preparo, pronto e entrega.</p><small>O cliente recebe avisos conforme o status é atualizado.</small></div></article><article><span>2</span><div><h3>Histórico</h3><p>Consulte pedidos concluídos, cancelados ou já entregues. Esta área ajuda a localizar informações de atendimentos anteriores.</p></div></article><article><span>3</span><div><h3>Notificações</h3><p>Toque em “Receber notificações” no topo do painel e escolha Permitir no navegador. Assim, o painel avisa quando chegar um novo pedido.</p><small>Deixe o navegador com permissão para não perder nenhum aviso.</small></div></article>`;
+    return;
+  }
+  if (introducao) introducao.textContent = "Use este guia para configurar o cardápio e as funções do delivery. As alterações salvas aparecem no bot e no cardápio digital.";
+  detalhes.querySelectorAll("article").forEach((artigo, indice) => { if (indice < 2) artigo.remove(); });
+  detalhes.querySelectorAll("article").forEach((artigo, indice) => { const numero = artigo.querySelector("span"); if (numero) numero.textContent = String(indice + 1); });
+}
+function atualizarBotaoNotificacoes() {
+  const botao = $("#ativarNotificacoes");
+  if (!botao || portalPainel !== "atendente") return;
+  if (!("Notification" in window)) { botao.hidden = false; botao.disabled = true; botao.textContent = "🔔 NOTIFICAÇÕES INDISPONÍVEIS"; return; }
+  botao.hidden = false;
+  const ativo = Notification.permission === "granted";
+  botao.classList.toggle("ativo", ativo);
+  botao.textContent = ativo ? "🔔 NOTIFICAÇÕES ATIVADAS" : "🔔 RECEBER NOTIFICAÇÕES";
+}
+async function ativarNotificacoes() {
+  if (!("Notification" in window)) return toast("Este navegador não oferece notificações.");
+  const permissao = await Notification.requestPermission();
+  atualizarBotaoNotificacoes();
+  toast(permissao === "granted" ? "Você receberá avisos de novos pedidos." : "Permissão de notificações não concedida.");
+}
+function avisarPedidosNovos(pedidos) {
+  if (portalPainel !== "atendente") return;
+  const ids = new Set((pedidos || []).map(pedido => String(pedido.id)));
+  if (pedidosJaVistos === null) { pedidosJaVistos = ids; return; }
+  const novos = (pedidos || []).filter(pedido => !pedidosJaVistos.has(String(pedido.id)));
+  pedidosJaVistos = ids;
+  if (!novos.length || !("Notification" in window) || Notification.permission !== "granted") return;
+  novos.forEach(pedido => new Notification("Novo pedido MyBot", { body: `Pedido #${pedido.id} recebido. Abra o painel para atender.`, icon: "/painel/mascote-saborear.png", tag: `pedido-${pedido.id}` }));
+}
 function aplicarPerfilPainel() {
   const atendente = portalPainel === "atendente";
-  const permitidas = atendente ? ['pedidos', 'historico'] : ['estoque', 'precos', 'itens', 'ingredientes', 'imagens', 'horario', 'taxa', 'ajuda'];
+  configurarAjudaDoPortal();
+  const permitidas = atendente ? ['pedidos', 'historico', 'ajuda'] : ['estoque', 'precos', 'itens', 'ingredientes', 'imagens', 'horario', 'taxa', 'ajuda'];
   document.querySelectorAll(".guia-principal").forEach(botao => { if (!permitidas.includes(botao.dataset.guia)) botao.hidden = true; });
   document.querySelectorAll(".secao-painel").forEach(secao => { if (!permitidas.includes(secao.dataset.secao)) secao.hidden = true; });
   const titulo = document.querySelector('.hero h1'); if (titulo) titulo.textContent = atendente ? 'Olá, atendente 👋' : 'Olá, administrador 👋';
@@ -854,6 +898,7 @@ async function validarSessaoPainel({ atualizarDados = true } = {}) {
 
 aplicarPerfilPainel();
 validarSessaoPainel();
+if (portalPainel === "atendente") { atualizarBotaoNotificacoes(); $("#ativarNotificacoes")?.addEventListener("click", ativarNotificacoes); }
 
 window.addEventListener("pagehide", () => {
   // Impede que o histórico rápido do celular fotografe pedidos e controles.
@@ -862,11 +907,13 @@ window.addEventListener("pagehide", () => {
 
 window.addEventListener("pageshow", evento => {
   if (evento.persisted) validarSessaoPainel();
+if (portalPainel === "atendente") { atualizarBotaoNotificacoes(); $("#ativarNotificacoes")?.addEventListener("click", ativarNotificacoes); }
 });
 
 document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "visible" && !$("#aplicacao").classList.contains("oculto")) {
     validarSessaoPainel();
+if (portalPainel === "atendente") { atualizarBotaoNotificacoes(); $("#ativarNotificacoes")?.addEventListener("click", ativarNotificacoes); }
   }
 });
 
@@ -1603,3 +1650,5 @@ document.querySelectorAll("[data-tipo-imagem]").forEach(b=>b.addEventListener("c
 document.addEventListener("click", async e => { const botao=e.target.closest('[data-salvar-descricao][data-tipo-descricao="combo"]'); if(!botao)return; e.preventDefault(); e.stopImmediatePropagation(); const chave=decodeURIComponent(botao.dataset.salvarDescricao),campo=document.querySelector('[data-descricao-produto="'+encodeURIComponent(chave)+'"]'); try { botao.disabled=true; await api("/api/painel/ingredientes/combo",{method:"PATCH",body:JSON.stringify({chave,ingredientes:campo?.value||""})}); estado.ingredientesPizzas=await api("/api/painel/ingredientes"); renderIngredientes(); toast("Descrição do combo atualizada."); } catch(erro){toast(erro.message)} finally {botao.disabled=false;} }, true);
 function lerImagemArquivo(arquivo){return new Promise((resolve,reject)=>{if(!arquivo)return reject(new Error("Escolha uma imagem."));if(arquivo.size>3*1024*1024)return reject(new Error("A imagem deve ter no máximo 3 MB."));const leitor=new FileReader();leitor.onload=()=>resolve(leitor.result);leitor.onerror=()=>reject(new Error("Não foi possível ler a imagem."));leitor.readAsDataURL(arquivo)})}
 document.addEventListener("click",async e=>{const publicar=e.target.closest("[data-publicar-imagem]"),remover=e.target.closest("[data-remover-imagem]");if(!publicar&&!remover)return;const botao=publicar||remover,x=JSON.parse(decodeURIComponent(botao.dataset[publicar?"publicarImagem":"removerImagem"]));try{botao.disabled=true;if(remover){if(!confirm("Remover a imagem deste produto?"))return;await api("/api/painel/imagens/"+encodeURIComponent(x.tipo)+"/"+encodeURIComponent(x.chave),{method:"DELETE"});toast("Imagem removida do cardápio.")}else{const campo=document.querySelector('[data-arquivo-imagem="'+encodeURIComponent(JSON.stringify(x))+'"]'),imagem=await lerImagemArquivo(campo?.files?.[0]);await api("/api/painel/imagens/"+encodeURIComponent(x.tipo)+"/"+encodeURIComponent(x.chave),{method:"PUT",body:JSON.stringify({imagem})});toast("Imagem publicada no cardápio.")}estado.imagensProdutos=await api("/api/painel/imagens");renderImagens()}catch(erro){toast(erro.message)}finally{botao.disabled=false}});
+
+

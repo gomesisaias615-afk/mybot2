@@ -63,7 +63,7 @@ async function tratarBebida({ msg, user, contexto, estoque }) {
   if (estado === "pedido_bebida") {
     const nomesBebidas = obterNomesBebidas();
     const precosBebidas = obterPrecosBebidas();
-    await msg.reply("⏳ Processando seu pedido de bebida, aguarde um instante...");
+    await msg.reply("⏳ Processando seu pedido, aguarde um instante...");
 
     const opcoes = Object.entries(nomesBebidas).map(([chave, bebida]) => ({
       chave,
