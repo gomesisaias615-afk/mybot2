@@ -894,8 +894,12 @@ function atualizarBotaoNotificacoes() {
     botao.innerHTML = conteudoBotaoNotificacoes("indisponivel", "Abra no Chrome, Safari ou aplicativo instalado"); return;
   }
   if (Notification.permission === "granted") {
-    botao.classList.add("ativo");
-    botao.innerHTML = conteudoBotaoNotificacoes("ativo", "Notificações ativadas");
+    if (localStorage.getItem("mybot-notificacoes-ativas") === "0") {
+      botao.innerHTML = conteudoBotaoNotificacoes("padrao", "Notificações desativadas — toque para ativar");
+    } else {
+      botao.classList.add("ativo");
+      botao.innerHTML = conteudoBotaoNotificacoes("ativo", "Notificações ativadas — toque para desativar");
+    }
   } else if (Notification.permission === "denied") {
     botao.classList.add("bloqueado");
     botao.innerHTML = conteudoBotaoNotificacoes("bloqueado", "Bloqueadas — toque para liberar");
@@ -909,7 +913,12 @@ function conteudoBotaoNotificacoes(estado, detalhe) {
 async function ativarNotificacoes() {
   if (!window.isSecureContext) return toast("Para ativar os avisos, abra o portal pelo endereço HTTPS ou pelo aplicativo instalado.");
   if (!("Notification" in window)) return toast("Este navegador não permite notificações aqui. Abra o portal no Chrome, Safari ou pelo aplicativo instalado. No iPhone, adicione o MyBot à Tela de Início pelo Safari.");
-  if (Notification.permission === "granted") return toast("Os avisos de novos pedidos já estão ativados.");
+  if (Notification.permission === "granted") {
+    const ativadas = localStorage.getItem("mybot-notificacoes-ativas") !== "0";
+    localStorage.setItem("mybot-notificacoes-ativas", ativadas ? "0" : "1");
+    atualizarBotaoNotificacoes();
+    return toast(ativadas ? "Notificações desativadas neste aparelho." : "Notificações ativadas neste aparelho.");
+  }
   if (Notification.permission === "denied") return toast("Para liberar: entre em Configurações → Apps → MyBot → Notificações e ative Permitir notificações. Se MyBot não aparecer, faça o mesmo no Chrome ou Safari.");
   const botao = $("#ativarNotificacoes");
   botao.disabled = true;
@@ -917,7 +926,7 @@ async function ativarNotificacoes() {
   try {
     const permissao = await Notification.requestPermission();
     atualizarBotaoNotificacoes();
-    if (permissao === "granted") toast("Pronto! Você receberá avisos de novos pedidos.");
+    if (permissao === "granted") { localStorage.setItem("mybot-notificacoes-ativas", "1"); toast("Pronto! Você receberá avisos de novos pedidos."); }
     else if (permissao === "denied") toast("Para liberar: entre em Configurações → Apps → MyBot → Notificações e ative Permitir notificações. Se MyBot não aparecer, procure Chrome ou Safari.");
     else toast("Nenhuma escolha foi feita. Toque em Receber notificações quando quiser tentar novamente.");
   } catch {
@@ -945,7 +954,7 @@ function avisarPedidosNovos(pedidos) {
   if (pedidosJaVistos === null) { pedidosJaVistos = ids; return; }
   const novos = (pedidos || []).filter(pedido => !pedidosJaVistos.has(String(pedido.id)));
   pedidosJaVistos = ids;
-  if (!novos.length || !("Notification" in window) || Notification.permission !== "granted") return;
+  if (!novos.length || !("Notification" in window) || Notification.permission !== "granted" || localStorage.getItem("mybot-notificacoes-ativas") === "0") return;
   novos.forEach(pedido => new Notification("Novo pedido MyBot", { body: `Pedido #${pedido.id} recebido. Abra o painel para atender.`, icon: "/painel/mascote-saborear.png", tag: `pedido-${pedido.id}` }));
 }
 function aplicarPerfilPainel() {
@@ -988,6 +997,13 @@ async function validarSessaoPainel({ atualizarDados = true } = {}) {
 }
 
 aplicarPerfilPainel();
+// Mantém as abas administrativas clicáveis mesmo se uma função secundária falhar.
+document.addEventListener("click", evento => {
+  const guia = evento.target.closest?.(".guia-principal[data-guia]");
+  if (!guia || guia.hidden) return;
+  evento.preventDefault();
+  aplicarGuia(guia.dataset.guia);
+}, true);
 validarSessaoPainel();
 if (portalPainel === "atendente") { atualizarBotaoNotificacoes(); acompanharPermissaoNotificacoes(); $("#ativarNotificacoes")?.addEventListener("click", ativarNotificacoes); }
 
