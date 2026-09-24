@@ -9,7 +9,7 @@ const imagensProdutos = require("../services/imagemProduto.service");
 const { atualizarProdutos, recarregarEstoque, definirQuantidadeProduto } = require("../services/estoque.service");
 const { obterClienteWhatsApp } = require("../services/whatsappRuntime.service");
 const { buscarContatoCliente } = require("../services/marketing.service");
-const { chavePublica, salvarAssinatura, notificarNovoPedido } = require("../services/webPush.service");
+const { chavePublica, salvarAssinatura } = require("../services/webPush.service");
 const {
   obterConfiguracaoPainel,
   atualizarConfiguracaoPainel,
@@ -331,7 +331,7 @@ router.post("/api/painel/sair", exigirAutenticacao, (req, res) => {
 });
 
 router.use("/api/painel", autenticarPerfil, (req, res, next) => {
-  const rotaAtendimento = req.path === "/dados" || req.path.startsWith("/pedidos/") || req.path === "/ficha-entrega" || req.path === "/push/assinar" || req.path === "/push/teste";
+  const rotaAtendimento = req.path === "/dados" || req.path.startsWith("/pedidos/") || req.path === "/ficha-entrega" || req.path === "/push/assinar";
   if (req.perfilPainel === "atendente" && req.method !== "GET" && !rotaAtendimento) return res.status(403).json({ erro: "Esta área é exclusiva do portal administrativo." });
   if (req.perfilPainel === "administrador" && req.path.startsWith("/pedidos/")) return res.status(403).json({ erro: "Pedidos são atendidos somente no portal do atendente." });
   next();
@@ -544,13 +544,6 @@ router.get("/api/painel/push/chave", exigirAutenticacao, (req, res) => res.json(
 router.post("/api/painel/push/assinar", exigirAutenticacao, (req, res) => {
   try { salvarAssinatura(req.body); res.json({ assinada: true }); }
   catch (erro) { res.status(400).json({ erro: erro.message }); }
-});
-router.post("/api/painel/push/teste", exigirAutenticacao, async (req, res) => {
-  try {
-    const resultado = await notificarNovoPedido({ id: "TESTE" });
-    if (!resultado.enviadas) return res.status(502).json({ erro: `Web Push não enviado: ${resultado.cadastradas} aparelho(s) cadastrado(s), ${resultado.falhas} falha(s).` });
-    res.json(resultado);
-  } catch (erro) { res.status(500).json({ erro: erro.message }); }
 });
 
 router.post("/api/painel/catalogo/item", exigirAutenticacao, (req,res)=>{try{
