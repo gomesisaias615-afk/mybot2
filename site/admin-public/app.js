@@ -887,39 +887,39 @@ function atualizarBotaoNotificacoes() {
   botao.classList.remove("ativo", "bloqueado", "indisponivel");
   if (!window.isSecureContext) {
     botao.classList.add("indisponivel"); botao.disabled = true;
-    botao.innerHTML = conteudoBotaoNotificacoes("indisponivel", "Avisos indisponíveis", "Abra pelo HTTPS ou aplicativo"); return;
+    botao.innerHTML = conteudoBotaoNotificacoes("indisponivel", "Abra pelo HTTPS ou aplicativo"); return;
   }
   if (!("Notification" in window)) {
-    botao.classList.add("indisponivel"); botao.disabled = true;
-    botao.innerHTML = conteudoBotaoNotificacoes("indisponivel", "Avisos não compatíveis", "Este navegador não oferece suporte"); return;
+    botao.classList.add("indisponivel");
+    botao.innerHTML = conteudoBotaoNotificacoes("indisponivel", "Abra no Chrome, Safari ou aplicativo instalado"); return;
   }
   if (Notification.permission === "granted") {
     botao.classList.add("ativo");
-    botao.innerHTML = conteudoBotaoNotificacoes("ativo", "Avisos ativados", "Novos pedidos serão sinalizados");
+    botao.innerHTML = conteudoBotaoNotificacoes("ativo", "Ativadas neste aparelho");
   } else if (Notification.permission === "denied") {
     botao.classList.add("bloqueado");
-    botao.innerHTML = conteudoBotaoNotificacoes("bloqueado", "Avisos bloqueados", "Toque para saber como liberar");
+    botao.innerHTML = conteudoBotaoNotificacoes("bloqueado", "Bloqueadas — toque para liberar");
   } else {
-    botao.innerHTML = conteudoBotaoNotificacoes("padrao", "Ativar avisos", "Receba alertas de novos pedidos");
+    botao.innerHTML = conteudoBotaoNotificacoes("padrao", "Toque para permitir neste aparelho");
   }
 }
-function conteudoBotaoNotificacoes(estado, titulo, detalhe) {
-  return `<span class="notificacao-icone" aria-hidden="true">${estado === "ativo" ? "✓" : "♢"}</span><span class="notificacao-texto"><strong>${titulo}</strong><small>${detalhe}</small></span>`;
+function conteudoBotaoNotificacoes(estado, detalhe) {
+  return `<span class="notificacao-icone" aria-hidden="true">${estado === "ativo" ? "✓" : "🔔"}</span><span class="notificacao-texto"><strong>Receber notificações</strong><small>${detalhe}</small></span>`;
 }
 async function ativarNotificacoes() {
   if (!window.isSecureContext) return toast("Para ativar os avisos, abra o portal pelo endereço HTTPS ou pelo aplicativo instalado.");
-  if (!("Notification" in window)) return toast("Este navegador não oferece notificações.");
+  if (!("Notification" in window)) return toast("Este navegador não permite notificações aqui. Abra o portal no Chrome, Safari ou pelo aplicativo instalado. No iPhone, adicione o MyBot à Tela de Início pelo Safari.");
   if (Notification.permission === "granted") return toast("Os avisos de novos pedidos já estão ativados.");
-  if (Notification.permission === "denied") return toast("Os avisos estão bloqueados no navegador. Abra as configurações deste site, escolha Notificações e marque Permitir.");
+  if (Notification.permission === "denied") return toast("As notificações estão bloqueadas neste aparelho. Abra as configurações do navegador ou do MyBot, entre em Notificações e escolha Permitir. Se essa opção não existir, remova o bloqueio nas configurações do site e abra novamente.");
   const botao = $("#ativarNotificacoes");
   botao.disabled = true;
-  botao.innerHTML = conteudoBotaoNotificacoes("padrao", "Aguardando sua escolha", "Confirme na mensagem do navegador");
+  botao.innerHTML = conteudoBotaoNotificacoes("padrao", "Confirme em Permitir na mensagem do navegador");
   try {
     const permissao = await Notification.requestPermission();
     atualizarBotaoNotificacoes();
     if (permissao === "granted") toast("Pronto! Você receberá avisos de novos pedidos.");
-    else if (permissao === "denied") toast("Os avisos foram bloqueados. Você pode liberá-los nas configurações deste site.");
-    else toast("Nenhuma escolha foi feita. Toque em Ativar avisos quando quiser tentar novamente.");
+    else if (permissao === "denied") toast("As notificações foram bloqueadas. Para liberar, abra as configurações do navegador ou do MyBot, entre em Notificações e escolha Permitir.");
+    else toast("Nenhuma escolha foi feita. Toque em Receber notificações quando quiser tentar novamente.");
   } catch {
     atualizarBotaoNotificacoes();
     toast("O navegador não conseguiu abrir a permissão. Tente pelo aplicativo instalado ou pelas configurações do site.");
