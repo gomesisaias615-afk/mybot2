@@ -216,7 +216,53 @@ document.addEventListener("change", async evento => {
   } catch (erro) { toast(erro.message); }
 });
 
-$("#loginForm").addEventListener("submit", async evento => { evento.preventDefault(); try { await api("/api/painel/entrar", { method: "POST", body: JSON.stringify({ token: $("#token").value, perfil: portalPainel }) }); $("#login").classList.add("oculto"); $("#aplicacao").classList.remove("oculto"); await carregar(); } catch (erro) { $("#loginErro").textContent = erro.message; } });
+function mostrarAnimacaoAcesso() {
+  const splash = $("#mybotSplash");
+  if (!splash) return Promise.resolve();
+  const mensagem = splash.querySelector("span");
+  if (mensagem) mensagem.textContent = portalPainel === "atendente" ? "Acesso do atendente liberado!" : "Acesso administrativo liberado!";
+  splash.classList.remove("sair");
+  splash.classList.add("acesso-liberado");
+  return new Promise(resolve => setTimeout(() => {
+    splash.classList.add("sair");
+    splash.classList.remove("acesso-liberado");
+    resolve();
+  }, 1250));
+}
+
+$("#loginForm").addEventListener("submit", async evento => {
+  evento.preventDefault();
+  const formulario = evento.currentTarget;
+  const campo = $("#token");
+  const botao = formulario.querySelector('button[type="submit"]');
+  const erroEl = $("#loginErro");
+  erroEl.textContent = "";
+  formulario.classList.remove("login-invalido");
+  botao.disabled = true;
+  botao.textContent = "Verificando...";
+  try {
+    await api("/api/painel/entrar", {
+      method: "POST",
+      body: JSON.stringify({ token: campo.value, perfil: portalPainel })
+    });
+    campo.value = "";
+    await mostrarAnimacaoAcesso();
+    $("#login").classList.add("oculto");
+    $("#aplicacao").classList.remove("oculto");
+    await carregar();
+  } catch (erro) {
+    campo.value = "";
+    erroEl.textContent = "Código incorreto. Digite novamente e clique em entrar.";
+    formulario.classList.remove("login-invalido");
+    void formulario.offsetWidth;
+    formulario.classList.add("login-invalido");
+    campo.focus();
+    botao.textContent = "Tentar novamente";
+  } finally {
+    botao.disabled = false;
+    if (!formulario.classList.contains("login-invalido")) botao.textContent = "Entrar no painel";
+  }
+});
 $("#atualizar").addEventListener("click", () => carregar().then(() => toast("Painel atualizado.")).catch(e => toast(e.message)));
 // Indicador somente visual: o status do bot não é alterado pelo painel.
 $("#salvarHorario").addEventListener("click", async () => {
@@ -826,7 +872,7 @@ function configurarAjudaDoPortal() {
   if (etiqueta) etiqueta.textContent = atendente ? "GUIA DO ATENDENTE" : "GUIA DO ADMINISTRADOR";
   if (atendente) {
     if (introducao) introducao.textContent = "Use este guia para receber pedidos, acompanhar o atendimento e manter o cliente informado.";
-    detalhes.innerHTML = `<article><span>1</span><div><h3>Pedidos</h3><p>Acompanhe os pedidos que chegam em tempo real. Confirme o recebimento e avance cada pedido pelas etapas de preparo, pronto e entrega.</p><small>O cliente recebe avisos conforme o status é atualizado.</small></div></article><article><span>2</span><div><h3>Histórico</h3><p>Consulte pedidos concluídos, cancelados ou já entregues. Esta área ajuda a localizar informações de atendimentos anteriores.</p></div></article><article><span>3</span><div><h3>Notificações</h3><p>Toque em “Receber notificações” no topo do painel e escolha Permitir no navegador. Assim, o painel avisa quando chegar um novo pedido.</p><small>Deixe o navegador com permissão para não perder nenhum aviso.</small></div></article>`;
+    detalhes.innerHTML = `<article><span>1</span><div><h3>Pedidos</h3><p>Acompanhe os pedidos que chegam em tempo real. Confirme o recebimento e avance cada pedido pelas etapas de preparo, pronto e entrega.</p><small>Vários atendentes podem usar o portal ao mesmo tempo; as telas são sincronizadas automaticamente.</small></div></article><article><span>2</span><div><h3>Histórico</h3><p>Consulte pedidos concluídos, cancelados ou já entregues. Esta área ajuda a localizar informações de atendimentos anteriores.</p></div></article><article><span>3</span><div><h3>Avisos de novos pedidos</h3><p>No topo do portal, toque em “Ativar avisos” e depois em Permitir na pergunta do navegador. Quando aparecer “Avisos ativados”, este dispositivo está pronto para avisar sobre novos pedidos.</p><small>A permissão é individual para cada celular ou computador. Ative separadamente em cada aparelho usado pela equipe.</small></div></article><article><span>4</span><div><h3>Quando a permissão não aparece</h3><p>Se aparecer “Avisos bloqueados”, abra as configurações do site no navegador, entre em Notificações e escolha Permitir. Se aparecer “indisponível”, abra o portal pelo endereço HTTPS no Chrome ou pelo aplicativo instalado.</p><small>Navegadores internos do Instagram e WhatsApp podem impedir notificações. Nesses casos, use o Chrome ou o aplicativo do MyBot.</small></div></article>`;
     return;
   }
   if (introducao) introducao.textContent = "Use este guia para configurar o cardápio e as funções do delivery. As alterações salvas aparecem no bot e no cardápio digital.";
@@ -836,17 +882,48 @@ function configurarAjudaDoPortal() {
 function atualizarBotaoNotificacoes() {
   const botao = $("#ativarNotificacoes");
   if (!botao || portalPainel !== "atendente") return;
-  if (!("Notification" in window)) { botao.hidden = false; botao.disabled = true; botao.textContent = "🔔 NOTIFICAÇÕES INDISPONÍVEIS"; return; }
   botao.hidden = false;
-  const ativo = Notification.permission === "granted";
-  botao.classList.toggle("ativo", ativo);
-  botao.textContent = ativo ? "🔔 NOTIFICAÇÕES ATIVADAS" : "🔔 RECEBER NOTIFICAÇÕES";
+  botao.disabled = false;
+  botao.classList.remove("ativo", "bloqueado", "indisponivel");
+  if (!window.isSecureContext) {
+    botao.classList.add("indisponivel"); botao.disabled = true;
+    botao.innerHTML = conteudoBotaoNotificacoes("indisponivel", "Avisos indisponíveis", "Abra pelo HTTPS ou aplicativo"); return;
+  }
+  if (!("Notification" in window)) {
+    botao.classList.add("indisponivel"); botao.disabled = true;
+    botao.innerHTML = conteudoBotaoNotificacoes("indisponivel", "Avisos não compatíveis", "Este navegador não oferece suporte"); return;
+  }
+  if (Notification.permission === "granted") {
+    botao.classList.add("ativo");
+    botao.innerHTML = conteudoBotaoNotificacoes("ativo", "Avisos ativados", "Novos pedidos serão sinalizados");
+  } else if (Notification.permission === "denied") {
+    botao.classList.add("bloqueado");
+    botao.innerHTML = conteudoBotaoNotificacoes("bloqueado", "Avisos bloqueados", "Toque para saber como liberar");
+  } else {
+    botao.innerHTML = conteudoBotaoNotificacoes("padrao", "Ativar avisos", "Receba alertas de novos pedidos");
+  }
+}
+function conteudoBotaoNotificacoes(estado, titulo, detalhe) {
+  return `<span class="notificacao-icone" aria-hidden="true">${estado === "ativo" ? "✓" : "♢"}</span><span class="notificacao-texto"><strong>${titulo}</strong><small>${detalhe}</small></span>`;
 }
 async function ativarNotificacoes() {
+  if (!window.isSecureContext) return toast("Para ativar os avisos, abra o portal pelo endereço HTTPS ou pelo aplicativo instalado.");
   if (!("Notification" in window)) return toast("Este navegador não oferece notificações.");
-  const permissao = await Notification.requestPermission();
-  atualizarBotaoNotificacoes();
-  toast(permissao === "granted" ? "Você receberá avisos de novos pedidos." : "Permissão de notificações não concedida.");
+  if (Notification.permission === "granted") return toast("Os avisos de novos pedidos já estão ativados.");
+  if (Notification.permission === "denied") return toast("Os avisos estão bloqueados no navegador. Abra as configurações deste site, escolha Notificações e marque Permitir.");
+  const botao = $("#ativarNotificacoes");
+  botao.disabled = true;
+  botao.innerHTML = conteudoBotaoNotificacoes("padrao", "Aguardando sua escolha", "Confirme na mensagem do navegador");
+  try {
+    const permissao = await Notification.requestPermission();
+    atualizarBotaoNotificacoes();
+    if (permissao === "granted") toast("Pronto! Você receberá avisos de novos pedidos.");
+    else if (permissao === "denied") toast("Os avisos foram bloqueados. Você pode liberá-los nas configurações deste site.");
+    else toast("Nenhuma escolha foi feita. Toque em Ativar avisos quando quiser tentar novamente.");
+  } catch {
+    atualizarBotaoNotificacoes();
+    toast("O navegador não conseguiu abrir a permissão. Tente pelo aplicativo instalado ou pelas configurações do site.");
+  }
 }
 function avisarPedidosNovos(pedidos) {
   if (portalPainel !== "atendente") return;
@@ -936,6 +1013,20 @@ document.querySelectorAll(".secao-painel").forEach(secao => {
   titulo.insertAdjacentHTML("afterend", `<p class="introducao-painel">${texto}</p>`);
 });
 setInterval(() => { if (!$("#aplicacao").classList.contains("oculto")) carregar().catch(() => {}); }, 30000);
+
+let canalEventosPainel = null;
+function iniciarSincronizacaoEntreDispositivos() {
+  if (portalPainel !== "atendente" || canalEventosPainel || !("EventSource" in window)) return;
+  canalEventosPainel = new EventSource("/api/painel/eventos");
+  canalEventosPainel.addEventListener("pedidos", () => atualizarPedidosAutomaticamente());
+  canalEventosPainel.onerror = () => {
+    // O navegador reconecta automaticamente. A consulta periódica abaixo
+    // mantém o painel atualizado mesmo em redes que bloqueiam SSE.
+  };
+}
+iniciarSincronizacaoEntreDispositivos();
+setInterval(atualizarPedidosAutomaticamente, 3000);
+window.addEventListener("focus", atualizarPedidosAutomaticamente);
 
 // Experiência operacional em guias e estoque por disponibilidade.
 estado.guia = "pedidos";

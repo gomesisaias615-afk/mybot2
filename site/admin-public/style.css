@@ -173,6 +173,14 @@
 
 .mybot-splash img{filter:hue-rotate(95deg) saturate(1.35) contrast(1.05) drop-shadow(0 14px 18px rgba(0,34,21,.35));}
 
+/* Retorno visual seguro do acesso aos portais. */
+.login-invalido input{border-color:#d43d3d!important;background:#fff7f7;animation:loginSacudir .36s ease}
+.login-invalido .erro{font-weight:800}
+.mybot-splash.acesso-liberado{background:radial-gradient(circle at 50% 35%,#43e795 0,#16b96d 27%,#08784d 62%,#03291e 100%)}
+.mybot-splash.acesso-liberado>div::after{content:"✓";position:absolute;right:-12px;top:-8px;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:#fff;color:#08784d;font-size:23px;font-weight:1000;box-shadow:0 7px 18px rgba(0,0,0,.22);animation:mybotEntrada .35s ease both}
+@keyframes loginSacudir{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}100%{transform:none}}
+@media(prefers-reduced-motion:reduce){.login-invalido input{animation:none}}
+
 
 /* Guia detalhado */
 .ajuda-rapida button{width:100%;border:0;background:transparent;display:flex;align-items:center;gap:12px;padding:16px 18px;text-align:left;cursor:pointer;color:inherit;font:inherit}.ajuda-rapida button>span{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:#dff7e9;font-size:21px}.ajuda-rapida button div{display:grid;gap:2px;flex:1}.ajuda-rapida button small{color:#63766d}.ajuda-rapida button>b{color:#08784d;font-size:14px}.guia-ajuda{padding:25px}.ajuda-intro{max-width:780px;color:var(--muted);line-height:1.55}.ajuda-detalhada{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:22px}.ajuda-detalhada article{display:flex;gap:12px;padding:17px;border:1px solid #dcebe2;border-radius:14px;background:#fbfffc}.ajuda-detalhada article>span{flex:0 0 30px;height:30px;display:grid;place-items:center;border-radius:50%;background:#0c8a57;color:#fff;font-weight:900}.ajuda-detalhada h3{margin:0 0 7px;font-size:17px}.ajuda-detalhada p{margin:0;color:#53665d;line-height:1.5}.ajuda-detalhada small{display:block;margin-top:8px;color:#08784d;font-weight:700;line-height:1.35}@media(max-width:720px){.ajuda-rapida button{padding:14px}.ajuda-rapida button>b{display:none}.guia-ajuda{padding:18px}.ajuda-detalhada{grid-template-columns:1fr}.ajuda-detalhada article{padding:14px}}
@@ -411,6 +419,20 @@ body.modal-local-aberto{overflow:hidden}
 
 /* O mascote padrão do MyBot permanece verde; logos enviadas pelas empresas não recebem filtro. */
 .marca-logo[src*="mascote-saborear"],.hero-marca img[src*="mascote-saborear"]{filter:hue-rotate(95deg) saturate(1.35) contrast(1.05) drop-shadow(0 5px 10px rgba(0,0,0,.18));}
+
++/* Avisos do atendente integrados ao cabeçalho do portal. */
+.receber-notificacoes{min-width:210px;display:inline-flex!important;align-items:center;gap:10px;text-align:left;background:rgba(255,255,255,.08)!important;color:#edf8f2!important;border:1px solid rgba(255,255,255,.16)!important;border-radius:14px!important;padding:8px 12px!important;box-shadow:none!important;font-size:13px!important;font-weight:700!important}
+.receber-notificacoes:hover{background:rgba(255,255,255,.13)!important}
+.receber-notificacoes .notificacao-icone{width:30px;height:30px;flex:0 0 30px;display:grid;place-items:center;border-radius:10px;background:rgba(45,216,132,.16);color:#62e7a3;font-size:18px}
+.receber-notificacoes .notificacao-texto{display:grid;gap:1px;line-height:1.15}
+.receber-notificacoes .notificacao-texto strong{font-size:12px}
+.receber-notificacoes .notificacao-texto small{font-size:9px;color:#b9cbc2;font-weight:600}
+.receber-notificacoes.ativo{background:rgba(32,181,108,.13)!important;color:#e8fff2!important;border-color:rgba(82,226,153,.4)!important}
+.receber-notificacoes.ativo .notificacao-icone{background:#24bd72;color:#fff}
+.receber-notificacoes.bloqueado{background:rgba(231,155,48,.12)!important;border-color:rgba(239,178,91,.38)!important;color:#fff4df!important}
+.receber-notificacoes.bloqueado .notificacao-icone{background:rgba(239,178,91,.2);color:#ffc978}
+.receber-notificacoes.indisponivel{opacity:.65!important;background:rgba(255,255,255,.05)!important;border-color:rgba(255,255,255,.1)!important}
+@media(max-width:720px){.receber-notificacoes{min-width:0;width:42px;height:42px;padding:6px!important;justify-content:center}.receber-notificacoes .notificacao-texto{display:none}.receber-notificacoes .notificacao-icone{width:30px;height:30px}.top-acoes{gap:7px}}
 
 /* Taxas apresentadas como categorias separadas, tal como pizzas e bebidas. */
 .taxas-separadas{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:16px 0}.bloco-taxa{display:grid;gap:14px;padding:16px;border:1px solid #cfe9dc;border-radius:18px;background:#fff;transition:.18s opacity,.18s filter}.bloco-taxa.campo-inativo{opacity:.46;filter:grayscale(.3);background:#f5f8f6}.bloco-taxa-titulo{display:flex;align-items:flex-start;gap:10px}.bloco-taxa-titulo>span{display:grid;place-items:center;width:30px;height:30px;border-radius:10px;background:#e2f8ec;color:#117546;font-weight:900}.bloco-taxa-titulo strong,.bloco-taxa-titulo small{display:block}.bloco-taxa-titulo small{margin-top:3px;color:#66756e;line-height:1.35}.bloco-taxa>label{display:grid;gap:7px;font-weight:700;color:#20322a}.bloco-taxa input{width:100%;box-sizing:border-box}@media(max-width:680px){.taxas-separadas{grid-template-columns:1fr}}
