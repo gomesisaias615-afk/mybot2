@@ -917,6 +917,7 @@ async function ativarNotificacoes() {
     const ativadas = localStorage.getItem("mybot-notificacoes-ativas") !== "0";
     localStorage.setItem("mybot-notificacoes-ativas", ativadas ? "0" : "1");
     atualizarBotaoNotificacoes();
+    atualizarSeloApp(estado.dados?.pedidos || []);
     return toast(ativadas ? "Notificações desativadas neste aparelho." : "Notificações ativadas neste aparelho.");
   }
   if (Notification.permission === "denied") return toast("Para liberar: entre em Configurações → Apps → MyBot → Notificações e ative Permitir notificações. Se MyBot não aparecer, faça o mesmo no Chrome ou Safari.");
@@ -924,15 +925,41 @@ async function ativarNotificacoes() {
   botao.disabled = true;
   botao.innerHTML = conteudoBotaoNotificacoes("padrao", "Confirme em Permitir na mensagem do navegador");
   try {
+    if ("serviceWorker" in navigator) await navigator.serviceWorker.register("/service-worker.js", { scope: "/" });
     const permissao = await Notification.requestPermission();
     atualizarBotaoNotificacoes();
-    if (permissao === "granted") { localStorage.setItem("mybot-notificacoes-ativas", "1"); toast("Pronto! Você receberá avisos de novos pedidos."); }
+    if (permissao === "granted") { localStorage.setItem("mybot-notificacoes-ativas", "1"); atualizarSeloApp(estado.dados?.pedidos || []); toast("Pronto! Você receberá avisos de novos pedidos."); }
     else if (permissao === "denied") toast("Para liberar: entre em Configurações → Apps → MyBot → Notificações e ative Permitir notificações. Se MyBot não aparecer, procure Chrome ou Safari.");
     else toast("Nenhuma escolha foi feita. Toque em Receber notificações quando quiser tentar novamente.");
   } catch {
     atualizarBotaoNotificacoes();
     toast("O navegador não conseguiu abrir a permissão. Tente pelo aplicativo instalado ou pelas configurações do site.");
   }
+}
+async function mostrarNotificacaoPedido(pedido) {
+  const opcoes = {
+    body: `Pedido #${pedido.id} recebido. Abra o painel para atender.`,
+    icon: "/painel/mascote-saborear.png",
+    badge: "/painel/mascote-saborear.png",
+    tag: `pedido-${pedido.id}`,
+    renotify: true,
+    data: { url: "/atendente" }
+  };
+  try {
+    if ("serviceWorker" in navigator) {
+      const registro = await navigator.serviceWorker.register("/service-worker.js", { scope: "/" });
+      await registro.showNotification("Novo pedido MyBot", opcoes);
+      return;
+    }
+  } catch {}
+  try { new Notification("Novo pedido MyBot", opcoes); } catch {}
+}
+function atualizarSeloApp(pedidos = []) {
+  if (!("setAppBadge" in navigator)) return;
+  const habilitadas = "Notification" in window && Notification.permission === "granted" && localStorage.getItem("mybot-notificacoes-ativas") !== "0";
+  const quantidade = habilitadas ? pedidos.filter(pedido => !["aguardando_pagamento", "saiu_entrega", "concluido", "cancelado"].includes(pedido.status)).length : 0;
+  if (quantidade > 0) navigator.setAppBadge(quantidade).catch(() => {});
+  else navigator.clearAppBadge?.().catch(() => {});
 }
 let permissaoNotificacoesObservada = false;
 function acompanharPermissaoNotificacoes() {
@@ -950,12 +977,13 @@ function acompanharPermissaoNotificacoes() {
 }
 function avisarPedidosNovos(pedidos) {
   if (portalPainel !== "atendente") return;
+  atualizarSeloApp(pedidos);
   const ids = new Set((pedidos || []).map(pedido => String(pedido.id)));
   if (pedidosJaVistos === null) { pedidosJaVistos = ids; return; }
   const novos = (pedidos || []).filter(pedido => !pedidosJaVistos.has(String(pedido.id)));
   pedidosJaVistos = ids;
   if (!novos.length || !("Notification" in window) || Notification.permission !== "granted" || localStorage.getItem("mybot-notificacoes-ativas") === "0") return;
-  novos.forEach(pedido => new Notification("Novo pedido MyBot", { body: `Pedido #${pedido.id} recebido. Abra o painel para atender.`, icon: "/painel/mascote-saborear.png", tag: `pedido-${pedido.id}` }));
+  novos.forEach(mostrarNotificacaoPedido);
 }
 function aplicarPerfilPainel() {
   const atendente = portalPainel === "atendente";
