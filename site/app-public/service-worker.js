@@ -17,7 +17,7 @@ self.addEventListener('fetch', event => {
 });
 self.addEventListener('notificationclick', event => {
   event.notification.close();
-  const destino = event.notification.data?.url || '/painel/atendente';
+  const destino = event.notification.data?.url || '/app/painel/atendente';
   event.waitUntil(clients.matchAll({ type: 'window', includeUncontrolled: true }).then(janelas => {
     const aberta = janelas.find(janela => new URL(janela.url).pathname.includes('atendente'));
     if (aberta) return aberta.focus();
@@ -33,6 +33,6 @@ self.addEventListener('push', event => {
     badge: '/painel/mascote-saborear.png',
     tag: dados.tag || 'novo-pedido',
     renotify: true,
-    data: { url: dados.url || '/painel/atendente' }
+    data: { url: dados.url || '/app/painel/atendente' }
   }));
 });

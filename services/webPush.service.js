@@ -42,7 +42,7 @@ async function notificarNovoPedido(pedido) {
     title: "Novo pedido MyBot",
     body: `Pedido #${pedido.id} recebido. Abra o painel para atender.`,
     tag: `pedido-${pedido.id}`,
-    url: "/painel/atendente"
+    url: "/app/painel/atendente"
   });
   const invalidas = new Set();
   let enviadas = 0;

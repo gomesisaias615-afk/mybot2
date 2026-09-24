@@ -43,5 +43,5 @@ document.querySelector('#sair').addEventListener('click', async () => {
   form.hidden = false;
 });
 
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('/service-worker.js', { scope: '/' });
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/app/service-worker.js', { scope: '/app/' });
 verificarSessao();

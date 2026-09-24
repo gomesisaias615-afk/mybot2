@@ -297,6 +297,10 @@ function painelComPrevia(req, res, perfil = "administrador") {
 
 router.get(["/painel/", "/painel/index.html", "/painel/adm"], (req, res) => painelComPrevia(req, res, "administrador"));
 router.get("/painel/atendente", (req, res) => painelComPrevia(req, res, "atendente"));
+// Endereços internos do aplicativo instalado. Mantêm os portais dentro do
+// escopo /app/ sem capturar cardápio, checkout ou páginas de pagamento.
+router.get("/app/painel/adm", (req, res) => painelComPrevia(req, res, "administrador"));
+router.get("/app/painel/atendente", (req, res) => painelComPrevia(req, res, "atendente"));
 
 router.use("/painel", express.static(publicDir, {
   index: "index.html",
