@@ -1092,7 +1092,7 @@ if (portalPainel === "atendente") { atualizarBotaoNotificacoes(); $("#ativarNoti
 const introducoesPainel = {
   pedidos: "Acompanhe os pedidos em tempo real, confirme o recebimento e avance cada pedido pelas etapas de preparo e entrega.",
   historico: "Consulte pedidos concluídos, cancelados e já entregues sempre que precisar.",
-  estoque: "Controle a disponibilidade dos itens do cardápio. Toque duas vezes no menos para excluir um item definitivamente.",
+  estoque: portalPainel === "atendente" ? "Controle a disponibilidade dos itens do cardápio. O botão menos marca como esgotado e o botão mais libera novamente." : "Controle a disponibilidade dos itens do cardápio. No administrador, toque duas vezes no menos para excluir um item definitivamente.",
   precos: "Atualize preços e crie promoções que aparecem automaticamente no cardápio digital.",
   itens: "Cadastre pizzas e bebidas para que elas fiquem disponíveis no bot, no estoque e no cardápio.",
   ingredientes: "Edite as descrições de pizzas e bebidas exibidas para os clientes no cardápio digital.",
@@ -1147,7 +1147,7 @@ function iniciarSincronizacaoEntreDispositivos() {
   };
 }
 iniciarSincronizacaoEntreDispositivos();
-setInterval(atualizarPedidosAutomaticamente, 3000);
+setInterval(atualizarPedidosAutomaticamente, 10000);
 window.addEventListener("focus", atualizarPedidosAutomaticamente);
 
 // Experiência operacional em guias e estoque por disponibilidade.
@@ -1435,9 +1435,27 @@ document.addEventListener("click", async evento => {
   evento.preventDefault();
   evento.stopImmediatePropagation();
   try {
+    const identificador = `${botao.dataset.tipo}|${botao.dataset.chave}`;
+    const esgotar = botao.dataset.disponibilidade === "esgotar";
+    const estoqueAtual = Number(estado.dados?.estoque?.[botao.dataset.tipo]?.[botao.dataset.chave] || 0);
+    const agora = Date.now();
+    if (portalPainel === "administrador" && esgotar && window.ultimoCliqueMenosEstoque?.id === identificador && agora - window.ultimoCliqueMenosEstoque.tempo < 5000) {
+      window.ultimoCliqueMenosEstoque = null;
+      if (!confirm("Excluir este item do estoque e do cardápio? Esta ação não pode ser desfeita.")) return;
+      await api("/api/painel/catalogo/item", { method: "DELETE", body: JSON.stringify({ tipo: botao.dataset.tipo, chave: botao.dataset.chave }) });
+      await carregar();
+      toast("Item excluído do estoque e do cardápio.");
+      return;
+    }
+    if (portalPainel === "administrador" && esgotar) {
+      window.ultimoCliqueMenosEstoque = { id: identificador, tempo: agora };
+      if (estoqueAtual === 0) { toast("Toque novamente no menos para excluir este item."); return; }
+    } else {
+      window.ultimoCliqueMenosEstoque = null;
+    }
     const quantidade = botao.dataset.disponibilidade === "esgotar" ? 0 : 10000;
     await atualizarEstoque(botao.dataset.tipo, botao.dataset.chave, quantidade);
-    toast(quantidade ? "Produto disponível novamente." : "Produto marcado como esgotado.");
+    toast(quantidade ? "Produto disponível novamente." : portalPainel === "administrador" ? "Produto esgotado. Toque novamente no menos para excluir." : "Produto marcado como esgotado.");
   } catch (erro) { toast(erro.message); }
 }, true);
 

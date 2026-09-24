@@ -351,9 +351,17 @@ app.get(/^\/cardapio$/, (req, res) => {
   res.redirect(302, "/cardapio/");
 });
 
+const cacheCardapio = { dados: null, expiraEm: 0 };
+function obterCardapioOtimizado() {
+  const agora = Date.now();
+  if (cacheCardapio.dados && cacheCardapio.expiraEm > agora) return cacheCardapio.dados;
+  cacheCardapio.dados = montarCardapio();
+  cacheCardapio.expiraEm = agora + 2000;
+  return cacheCardapio.dados;
+}
 app.get("/cardapio/api/cardapio", (req, res) => {
-    res.set("Cache-Control", "no-store");
-    res.json(montarCardapio());
+  res.set("Cache-Control", "public, max-age=2, stale-while-revalidate=5");
+  res.json(obterCardapioOtimizado());
 });
 
 app.get("/cardapio/", (req, res) => {
@@ -371,7 +379,7 @@ app.get("/cardapio/", (req, res) => {
   res.set("Cache-Control", "no-store");
   res.type("html").send(pagina);
 });
-app.use("/cardapio", express.static(cardapioPublicPath, { index: false }));
+app.use("/cardapio", express.static(cardapioPublicPath, { index: false, etag: true, maxAge: "1h" }));
 
 function lerJson(caminho, padrao) {
   try {

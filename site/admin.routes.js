@@ -568,6 +568,19 @@ router.post("/api/painel/catalogo/item", exigirAutenticacao, (req,res)=>{try{
     if(pre[k])throw Error(`Já existe um ${tipo} com esse nome.`);if(!ingredientes||ingredientes.length>500)throw Error("Informe a descrição do item (até 500 caracteres).");const descricoes=ler(d);pre[k]=preco;nom[k]={nome,aliases:[k.replaceAll("_"," ")]};descricoes[k]=ingredientes;est[tipo==="combo"?"combos":"bebidas"]=(est[tipo==="combo"?"combos":"bebidas"]||{});est[tipo==="combo"?"combos":"bebidas"][k]=1;salvar(p,pre);salvar(n,nom);salvar(d,descricoes);salvar(e,est)
   }else throw Error("Tipo inválido.");res.json({ok:true})
 }catch(e){res.status(400).json({erro:e.message})}});
+router.delete("/api/painel/catalogo/item", exigirAutenticacao, (req,res)=>{try{
+  const tipo=String(req.body?.tipo||""),chave=String(req.body?.chave||""),normalizar=v=>String(v).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/-/g," ").replace(/\s+/g," ").trim(),ler=p=>JSON.parse(fs.readFileSync(p,"utf8")),salvar=(p,d)=>fs.writeFileSync(p,JSON.stringify(d,null,2));
+  if(!["pizzas","bebidas","combos"].includes(tipo))throw Error("Tipo inválido.");
+  const e=garantirArquivo("estoque.json","services/monitoramento/estoque.json",{pizzas:{},bebidas:{},combos:{}}),est=ler(e);
+  if(tipo==="pizzas"){
+    const p=garantirArquivo("precospizzas.json","data/precospizzas.json",{}),c=garantirArquivo("configuracaoCardapio.json","data/configuracaoCardapio.json",{}),i=garantirArquivo("ingredientespizzas.json",null,{}),pre=ler(p),conf=ler(c),ing=ler(i),nome=Object.keys(pre).find(item=>normalizar(item)===normalizar(chave));
+    if(!nome)throw Error("Pizza não encontrada.");delete pre[nome];delete ing[nome];for(const nomes of Object.values(conf.pizzasPorCategoria||{})){const indice=nomes.indexOf(nome);if(indice>=0)nomes.splice(indice,1)}delete est.pizzas?.[normalizar(nome)];salvar(p,pre);salvar(c,conf);salvar(i,ing);
+  }else{
+    const singular=tipo==="combos"?"combo":"bebida",p=garantirArquivo(singular==="combo"?"precoscombos.json":"precosbebidas.json",singular==="combo"?"data/precoscombos.json":"data/precosbebidas.json",{}),n=garantirArquivo(singular==="combo"?"nomescombos.json":"nomesbebidas.json",singular==="combo"?"data/nomescombos.json":"data/nomesbebidas.json",{}),d=garantirArquivo(singular==="combo"?"descricoescombos.json":"descricoesbebidas.json",singular==="combo"?"data/descricoescombos.json":"data/descricoesbebidas.json",{}),pre=ler(p),nom=ler(n),desc=ler(d);
+    if(!(chave in pre))throw Error("Produto não encontrado.");delete pre[chave];delete nom[chave];delete desc[chave];delete est[tipo]?.[chave];salvar(p,pre);salvar(n,nom);salvar(d,desc);
+  }
+  salvar(e,est);recarregarEstoque();emitirAtualizacaoEstoque(tipo,chave,null);res.json({ok:true});
+}catch(e){res.status(400).json({erro:e.message})}});
 router.get("/api/painel/precos", exigirAutenticacao, (req,res)=>res.json(precos.catalogo()));
 router.get("/api/painel/ingredientes", exigirAutenticacao, (req,res)=>{const catalogo=precos.catalogo(),bebidas=catalogo.nomesBebidas||{},combos=catalogo.nomesCombos||{},descricoes=JSON.parse(fs.readFileSync(ARQUIVO_DESCRICOES_BEBIDAS,"utf8")),descricoesCombos=lerJsonSeguro(garantirArquivo("descricoescombos.json","data/descricoescombos.json",{}),{});res.json([...montarCardapio().pizzas.map(({nome,ingredientes})=>({nome,ingredientes,tipo:"pizza",chave:nome})),...Object.entries(bebidas).map(([chave,dados])=>({nome:dados.nome||chave,ingredientes:descricoes[chave]||"",tipo:"bebida",chave})),...Object.entries(combos).map(([chave,dados])=>({nome:dados.nome||chave,ingredientes:descricoesCombos[chave]||"",tipo:"combo",chave}))])});
 router.patch("/api/painel/ingredientes/pizza", exigirAutenticacao, (req,res)=>{try{res.json({nome:String(req.body?.nome||""),ingredientes:precos.atualizarIngredientesPizza(String(req.body?.nome||""),req.body?.ingredientes)})}catch(e){res.status(400).json({erro:e.message})}});
