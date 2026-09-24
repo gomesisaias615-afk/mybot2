@@ -24,3 +24,15 @@ self.addEventListener('notificationclick', event => {
     return clients.openWindow(destino);
   }));
 });
+self.addEventListener('push', event => {
+  let dados = {};
+  try { dados = event.data?.json() || {}; } catch { dados = { body: event.data?.text() }; }
+  event.waitUntil(self.registration.showNotification(dados.title || 'Novo pedido MyBot', {
+    body: dados.body || 'Um novo pedido chegou.',
+    icon: '/painel/mascote-saborear.png',
+    badge: '/painel/mascote-saborear.png',
+    tag: dados.tag || 'novo-pedido',
+    renotify: true,
+    data: { url: dados.url || '/atendente' }
+  }));
+});
