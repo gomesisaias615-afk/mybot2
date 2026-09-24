@@ -1,4 +1,4 @@
-const CACHE = 'mybot-app-v5';
+const CACHE = 'mybot-app-v6';
 const ARQUIVOS = ['/app/', '/app/style.css', '/app/app.js', '/app/manifest.webmanifest', '/painel/mybot-logo-verde.png'];
 self.addEventListener('install', event => event.waitUntil(
   caches.open(CACHE).then(async cache => {
@@ -17,7 +17,7 @@ self.addEventListener('fetch', event => {
 });
 self.addEventListener('notificationclick', event => {
   event.notification.close();
-  const destino = event.notification.data?.url || '/atendente';
+  const destino = event.notification.data?.url || '/painel/atendente';
   event.waitUntil(clients.matchAll({ type: 'window', includeUncontrolled: true }).then(janelas => {
     const aberta = janelas.find(janela => new URL(janela.url).pathname.includes('atendente'));
     if (aberta) return aberta.focus();
@@ -33,6 +33,6 @@ self.addEventListener('push', event => {
     badge: '/painel/mascote-saborear.png',
     tag: dados.tag || 'novo-pedido',
     renotify: true,
-    data: { url: dados.url || '/atendente' }
+    data: { url: dados.url || '/painel/atendente' }
   }));
 });
