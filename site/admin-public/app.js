@@ -898,7 +898,7 @@ function atualizarBotaoNotificacoes() {
       botao.innerHTML = conteudoBotaoNotificacoes("padrao", "Notificações desativadas — toque para ativar");
     } else if (localStorage.getItem("mybot-push-registrado") === "0") {
       botao.classList.add("bloqueado");
-      botao.innerHTML = conteudoBotaoNotificacoes("bloqueado", "Falha ao conectar — toque para tentar novamente");
+      botao.innerHTML = conteudoBotaoNotificacoes("bloqueado", localStorage.getItem("mybot-push-erro") || "Falha ao conectar — toque para tentar novamente");
     } else {
       botao.classList.add("ativo");
       botao.innerHTML = conteudoBotaoNotificacoes("ativo", localStorage.getItem("mybot-push-registrado") === "1" ? "Web Push conectado — toque para desativar" : "Conectando ao Web Push...");
@@ -920,17 +920,29 @@ function chavePushEmBytes(chave) {
 }
 let registroPushEmAndamento = null;
 async function registrarPushServidor() {
-  if (!("serviceWorker" in navigator) || Notification.permission !== "granted") return false;
+  if (!("serviceWorker" in navigator)) throw new Error("Service Worker não disponível neste aplicativo.");
+  if (!("PushManager" in window)) throw new Error("Este Chrome não disponibilizou o PushManager.");
+  if (Notification.permission !== "granted") throw new Error("A permissão de notificações não está liberada.");
   if (registroPushEmAndamento) return registroPushEmAndamento;
   registroPushEmAndamento = (async () => {
-    const registro = await navigator.serviceWorker.register("/app/service-worker.js", { scope: "/app/" });
-    const { publicKey } = await api("/api/painel/push/chave");
+    let registro;
+    try { registro = await navigator.serviceWorker.register("/app/service-worker.js", { scope: "/app/" }); }
+    catch { throw new Error("Falha ao instalar o serviço do aplicativo. Reinstale o MyBot pelo Chrome."); }
+    let publicKey;
+    try { ({ publicKey } = await api("/api/painel/push/chave")); }
+    catch { throw new Error("O servidor Web Push não respondeu. Verifique se o novo deploy terminou."); }
+    if (!publicKey) throw new Error("O servidor não forneceu a chave Web Push.");
     let assinatura = await registro.pushManager.getSubscription();
-    if (!assinatura) assinatura = await registro.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: chavePushEmBytes(publicKey) });
-    await api("/api/painel/push/assinar", { method: "POST", body: JSON.stringify(assinatura.toJSON()) });
+    if (!assinatura) {
+      try { assinatura = await registro.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: chavePushEmBytes(publicKey) }); }
+      catch (erro) { throw new Error(`O celular recusou o cadastro Web Push (${erro?.name || "erro"}).`); }
+    }
+    try { await api("/api/painel/push/assinar", { method: "POST", body: JSON.stringify(assinatura.toJSON()) }); }
+    catch { throw new Error("O servidor não conseguiu salvar este celular."); }
     localStorage.setItem("mybot-push-registrado", "1");
+    localStorage.removeItem("mybot-push-erro");
     return true;
-  })().catch(erro => { localStorage.setItem("mybot-push-registrado", "0"); throw erro; }).finally(() => { registroPushEmAndamento = null; });
+  })().catch(erro => { localStorage.setItem("mybot-push-registrado", "0"); localStorage.setItem("mybot-push-erro", erro.message || "Falha ao conectar ao Web Push."); throw erro; }).finally(() => { registroPushEmAndamento = null; });
   return registroPushEmAndamento;
 }
 async function desativarPushServidor() {
@@ -949,7 +961,7 @@ async function ativarNotificacoes() {
     const desativar = ativadas && conectado;
     localStorage.setItem("mybot-notificacoes-ativas", desativar ? "0" : "1");
     if (desativar) await desativarPushServidor().catch(() => {});
-    else try { await registrarPushServidor(); } catch { atualizarBotaoNotificacoes(); return toast("Não foi possível conectar ao Web Push. Verifique a internet e tente novamente."); }
+    else try { await registrarPushServidor(); } catch (erro) { atualizarBotaoNotificacoes(); return toast(erro.message || "Não foi possível conectar ao Web Push."); }
     atualizarBotaoNotificacoes();
     atualizarSeloApp(estado.dados?.pedidos || []);
     return toast(desativar ? "Notificações desativadas neste aparelho." : "Web Push conectado neste aparelho.");
