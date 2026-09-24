@@ -939,6 +939,8 @@ async function registrarPushServidor() {
     }
     try { await api("/api/painel/push/assinar", { method: "POST", body: JSON.stringify(assinatura.toJSON()) }); }
     catch { throw new Error("O servidor não conseguiu salvar este celular."); }
+    try { await api("/api/painel/push/teste", { method: "POST", body: "{}" }); }
+    catch (erro) { throw new Error(erro.message || "O servidor não conseguiu enviar a notificação de teste."); }
     localStorage.setItem("mybot-push-registrado", "1");
     localStorage.removeItem("mybot-push-erro");
     return true;

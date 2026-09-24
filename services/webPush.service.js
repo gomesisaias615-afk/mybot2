@@ -46,12 +46,13 @@ async function notificarNovoPedido(pedido) {
   });
   const invalidas = new Set();
   let enviadas = 0;
+  let falhas = 0;
   await Promise.all(assinaturas.map(async assinatura => {
     try { await webpush.sendNotification(assinatura, payload); enviadas += 1; }
-    catch (erro) { if ([404, 410].includes(erro?.statusCode)) invalidas.add(assinatura.endpoint); }
+    catch (erro) { falhas += 1; if ([404, 410].includes(erro?.statusCode)) invalidas.add(assinatura.endpoint); else console.error("[web-push-envio]", erro?.statusCode || "erro", erro?.message); }
   }));
   if (invalidas.size) salvar(arquivoAssinaturas, assinaturas.filter(item => !invalidas.has(item.endpoint)));
-  return { enviadas };
+  return { enviadas, falhas, cadastradas: assinaturas.length };
 }
 
 module.exports = { chavePublica, salvarAssinatura, notificarNovoPedido };
