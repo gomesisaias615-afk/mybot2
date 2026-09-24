@@ -133,3 +133,26 @@ fetch(caminhoApiCardapio(), { cache: "no-store" })
   .then(resposta => resposta.ok ? resposta.json() : Promise.reject())
   .then(aplicarCategoriasAtivas)
   .catch(() => {});
+
+let atualizacaoCardapioEmAndamento = false;
+async function atualizarCardapioEmTempoReal() {
+  if (atualizacaoCardapioEmAndamento || document.visibilityState === "hidden") return;
+  atualizacaoCardapioEmAndamento = true;
+  try {
+    const resposta = await fetch(caminhoApiCardapio(), { cache: "no-store" });
+    if (!resposta.ok) return;
+    const dados = await resposta.json();
+    aplicarCategoriasAtivas(dados);
+    if (!categoriaAtual || telaCategoria.classList.contains("hidden")) return;
+    produtosAtuais = (categoriaAtual === "bebidas"
+      ? dados.bebidas
+      : categoriaAtual === "combos"
+        ? (dados.combos || [])
+        : dados.pizzas.filter(pizza => pizza.categoria === categoriaAtual))
+      .sort((a, b) => Number(b.promocao) - Number(a.promocao) || a.nome.localeCompare(b.nome, "pt-BR"));
+    renderizar();
+  } catch {}
+  finally { atualizacaoCardapioEmAndamento = false; }
+}
+setInterval(atualizarCardapioEmTempoReal, 3000);
+window.addEventListener("focus", atualizarCardapioEmTempoReal);

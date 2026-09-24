@@ -47,6 +47,11 @@ function emitirAtualizacaoPedidos(pedido) {
   for (const resposta of clientesEventosPainel) resposta.write(evento);
 }
 
+function emitirAtualizacaoEstoque(tipo, chave, quantidade) {
+  const evento = `event: estoque\ndata: ${JSON.stringify({ tipo, chave, quantidade, atualizadoEm: new Date().toISOString() })}\n\n`;
+  for (const resposta of clientesEventosPainel) resposta.write(evento);
+}
+
 async function serializarAtualizacaoPedido(req, res, next) {
   let liberar;
   const anterior = filaAtualizacaoPedidos;
@@ -331,7 +336,7 @@ router.post("/api/painel/sair", exigirAutenticacao, (req, res) => {
 });
 
 router.use("/api/painel", autenticarPerfil, (req, res, next) => {
-  const rotaAtendimento = req.path === "/dados" || req.path.startsWith("/pedidos/") || req.path === "/ficha-entrega" || req.path === "/push/assinar";
+  const rotaAtendimento = req.path === "/dados" || req.path.startsWith("/pedidos/") || req.path === "/ficha-entrega" || req.path === "/push/assinar" || req.path === "/estoque";
   if (req.perfilPainel === "atendente" && req.method !== "GET" && !rotaAtendimento) return res.status(403).json({ erro: "Esta área é exclusiva do portal administrativo." });
   if (req.perfilPainel === "administrador" && req.path.startsWith("/pedidos/")) return res.status(403).json({ erro: "Pedidos são atendidos somente no portal do atendente." });
   next();
@@ -595,6 +600,7 @@ router.patch("/api/painel/estoque", exigirAutenticacao, (req, res) => {
 
   // Sempre grava no mesmo arquivo persistente usado pelo bot e pelo cardápio.
   const atualizada = definirQuantidadeProduto(tipo, chave, quantidade);
+  emitirAtualizacaoEstoque(tipo, chave, atualizada);
   res.json({ tipo, chave, anterior: atual, atual: atualizada });
 });
 

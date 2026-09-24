@@ -982,12 +982,26 @@ async function ativarNotificacoes() {
     toast("O navegador não conseguiu abrir a permissão. Tente pelo aplicativo instalado ou pelas configurações do site.");
   }
 }
-function atualizarSeloApp(pedidos = []) {
-  if (!("setAppBadge" in navigator)) return;
+async function atualizarSeloApp(pedidos = []) {
   const habilitadas = "Notification" in window && Notification.permission === "granted" && localStorage.getItem("mybot-notificacoes-ativas") !== "0";
-  const quantidade = habilitadas ? pedidos.filter(pedido => !["aguardando_pagamento", "saiu_entrega", "concluido", "cancelado"].includes(pedido.status)).length : 0;
-  if (quantidade > 0) navigator.setAppBadge(quantidade).catch(() => {});
-  else navigator.clearAppBadge?.().catch(() => {});
+  const pendentes = habilitadas ? pedidos.filter(pedido => !pedido.demonstracao && !String(pedido.id || "").startsWith("DEMO-") && !["aguardando_pagamento", "saiu_entrega", "concluido", "cancelado"].includes(pedido.status)) : [];
+  const quantidade = pendentes.length;
+  if ("setAppBadge" in navigator) {
+    try { await navigator.setAppBadge(quantidade); } catch {}
+  }
+  if (quantidade === 0 && "clearAppBadge" in navigator) {
+    try { await navigator.clearAppBadge(); } catch {}
+  }
+  if ("serviceWorker" in navigator) {
+    try {
+      const registro = await navigator.serviceWorker.getRegistration("/app/");
+      const idsPendentes = new Set(pendentes.map(pedido => `pedido-${pedido.id}`));
+      const notificacoes = await registro?.getNotifications?.() || [];
+      notificacoes.forEach(notificacao => {
+        if (notificacao.tag?.startsWith("pedido-") && !idsPendentes.has(notificacao.tag)) notificacao.close();
+      });
+    } catch {}
+  }
 }
 let permissaoNotificacoesObservada = false;
 function acompanharPermissaoNotificacoes() {
@@ -1011,7 +1025,7 @@ function avisarPedidosNovos(pedidos) {
 }function aplicarPerfilPainel() {
   const atendente = portalPainel === "atendente";
   configurarAjudaDoPortal();
-  const permitidas = atendente ? ['pedidos', 'historico', 'ajuda'] : ['estoque', 'precos', 'itens', 'ingredientes', 'imagens', 'horario', 'taxa', 'ajuda'];
+  const permitidas = atendente ? ['pedidos', 'historico', 'estoque', 'ajuda'] : ['estoque', 'precos', 'itens', 'ingredientes', 'imagens', 'horario', 'taxa', 'ajuda'];
   document.querySelectorAll(".guia-principal").forEach(botao => { if (!permitidas.includes(botao.dataset.guia)) botao.hidden = true; });
   document.querySelectorAll(".secao-painel").forEach(secao => { if (!permitidas.includes(secao.dataset.secao)) secao.hidden = true; });
   const titulo = document.querySelector('.hero h1'); if (titulo) titulo.textContent = atendente ? 'Olá, atendente 👋' : 'Olá, administrador 👋';
@@ -1100,14 +1114,18 @@ let atualizacaoPedidosEmAndamento = false;
 function assinaturaPedidos(pedidos = []) {
   return JSON.stringify(pedidos.map(pedido => [pedido.id, pedido.status, pedido.atualizadoEm, pedido.pagamentoStatus, pedido.recebimento?.pagamentoStatus]));
 }
+function assinaturaEstoque(estoque = {}) {
+  return JSON.stringify(estoque);
+}
 async function atualizarPedidosAutomaticamente() {
   if (atualizacaoPedidosEmAndamento || document.visibilityState === "hidden" || $("#aplicacao")?.classList.contains("oculto")) return;
   atualizacaoPedidosEmAndamento = true;
   try {
     const dadosAtualizados = await api("/api/painel/dados");
-    const mudou = assinaturaPedidos(estado.dados?.pedidos) !== assinaturaPedidos(dadosAtualizados?.pedidos);
+    const pedidosMudaram = assinaturaPedidos(estado.dados?.pedidos) !== assinaturaPedidos(dadosAtualizados?.pedidos);
+    const estoqueMudou = assinaturaEstoque(estado.dados?.estoque) !== assinaturaEstoque(dadosAtualizados?.estoque);
     estado.dados = dadosAtualizados;
-    if (mudou) {
+    if (pedidosMudaram || estoqueMudou) {
       avisarPedidosNovos(dadosAtualizados.pedidos || []);
       render();
       aplicarGuia(estado.guia || (portalPainel === "atendente" ? "pedidos" : "estoque"));
@@ -1119,9 +1137,10 @@ async function atualizarPedidosAutomaticamente() {
   }
 }
 function iniciarSincronizacaoEntreDispositivos() {
-  if (portalPainel !== "atendente" || canalEventosPainel || !("EventSource" in window)) return;
+  if (canalEventosPainel || !("EventSource" in window)) return;
   canalEventosPainel = new EventSource("/api/painel/eventos");
   canalEventosPainel.addEventListener("pedidos", () => atualizarPedidosAutomaticamente());
+  canalEventosPainel.addEventListener("estoque", () => atualizarPedidosAutomaticamente());
   canalEventosPainel.onerror = () => {
     // O navegador reconecta automaticamente. A consulta periódica abaixo
     // mantém o painel atualizado mesmo em redes que bloqueiam SSE.
