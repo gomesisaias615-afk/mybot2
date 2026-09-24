@@ -331,7 +331,7 @@ router.post("/api/painel/sair", exigirAutenticacao, (req, res) => {
 });
 
 router.use("/api/painel", autenticarPerfil, (req, res, next) => {
-  const rotaAtendimento = req.path === "/dados" || req.path.startsWith("/pedidos/") || req.path === "/ficha-entrega";
+  const rotaAtendimento = req.path === "/dados" || req.path.startsWith("/pedidos/") || req.path === "/ficha-entrega" || req.path === "/push/assinar";
   if (req.perfilPainel === "atendente" && req.method !== "GET" && !rotaAtendimento) return res.status(403).json({ erro: "Esta área é exclusiva do portal administrativo." });
   if (req.perfilPainel === "administrador" && req.path.startsWith("/pedidos/")) return res.status(403).json({ erro: "Pedidos são atendidos somente no portal do atendente." });
   next();
