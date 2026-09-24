@@ -872,7 +872,7 @@ function configurarAjudaDoPortal() {
   if (etiqueta) etiqueta.textContent = atendente ? "GUIA DO ATENDENTE" : "GUIA DO ADMINISTRADOR";
   if (atendente) {
     if (introducao) introducao.textContent = "Use este guia para receber pedidos, acompanhar o atendimento e manter o cliente informado.";
-    detalhes.innerHTML = `<article><span>1</span><div><h3>Pedidos</h3><p>Acompanhe os pedidos que chegam em tempo real. Confirme o recebimento e avance cada pedido pelas etapas de preparo, pronto e entrega.</p><small>Vários atendentes podem usar o portal ao mesmo tempo; as telas são sincronizadas automaticamente.</small></div></article><article><span>2</span><div><h3>Histórico</h3><p>Consulte pedidos concluídos, cancelados ou já entregues. Esta área ajuda a localizar informações de atendimentos anteriores.</p></div></article><article><span>3</span><div><h3>Avisos de novos pedidos</h3><p>No topo do portal, toque em “Ativar avisos” e depois em Permitir na pergunta do navegador. Quando aparecer “Avisos ativados”, este dispositivo está pronto para avisar sobre novos pedidos.</p><small>A permissão é individual para cada celular ou computador. Ative separadamente em cada aparelho usado pela equipe.</small></div></article><article><span>4</span><div><h3>Quando a permissão não aparece</h3><p>Se aparecer “Avisos bloqueados”, abra as configurações do site no navegador, entre em Notificações e escolha Permitir. Se aparecer “indisponível”, abra o portal pelo endereço HTTPS no Chrome ou pelo aplicativo instalado.</p><small>Navegadores internos do Instagram e WhatsApp podem impedir notificações. Nesses casos, use o Chrome ou o aplicativo do MyBot.</small></div></article>`;
+    detalhes.innerHTML = `<article><span>1</span><div><h3>Pedidos</h3><p>Acompanhe os pedidos que chegam em tempo real. Confirme o recebimento e avance cada pedido pelas etapas de preparo, pronto e entrega.</p><small>Vários atendentes podem usar o portal ao mesmo tempo; as telas são sincronizadas automaticamente.</small></div></article><article><span>2</span><div><h3>Histórico</h3><p>Consulte pedidos concluídos, cancelados ou já entregues. Esta área ajuda a localizar informações de atendimentos anteriores.</p></div></article><article><span>3</span><div><h3>Avisos de novos pedidos</h3><p>No topo do portal, toque em “Receber notificações” e depois em Permitir na pergunta do navegador. Quando aparecer “Notificações ativadas”, este dispositivo está pronto para avisar sobre novos pedidos.</p><small>A permissão é individual para cada celular ou computador. Ative separadamente em cada aparelho usado pela equipe.</small></div></article><article><span>4</span><div><h3>Quando a permissão não aparece</h3><p>Se aparecer “Avisos bloqueados”, abra as configurações do site no navegador, entre em Notificações e escolha Permitir. Se aparecer “indisponível”, abra o portal pelo endereço HTTPS no Chrome ou pelo aplicativo instalado.</p><small>Navegadores internos do Instagram e WhatsApp podem impedir notificações. Nesses casos, use o Chrome ou o aplicativo do MyBot.</small></div></article>`;
     return;
   }
   if (introducao) introducao.textContent = "Use este guia para configurar o cardápio e as funções do delivery. As alterações salvas aparecem no bot e no cardápio digital.";
@@ -895,7 +895,7 @@ function atualizarBotaoNotificacoes() {
   }
   if (Notification.permission === "granted") {
     botao.classList.add("ativo");
-    botao.innerHTML = conteudoBotaoNotificacoes("ativo", "Ativadas neste aparelho");
+    botao.innerHTML = conteudoBotaoNotificacoes("ativo", "Notificações ativadas");
   } else if (Notification.permission === "denied") {
     botao.classList.add("bloqueado");
     botao.innerHTML = conteudoBotaoNotificacoes("bloqueado", "Bloqueadas — toque para liberar");
@@ -910,7 +910,7 @@ async function ativarNotificacoes() {
   if (!window.isSecureContext) return toast("Para ativar os avisos, abra o portal pelo endereço HTTPS ou pelo aplicativo instalado.");
   if (!("Notification" in window)) return toast("Este navegador não permite notificações aqui. Abra o portal no Chrome, Safari ou pelo aplicativo instalado. No iPhone, adicione o MyBot à Tela de Início pelo Safari.");
   if (Notification.permission === "granted") return toast("Os avisos de novos pedidos já estão ativados.");
-  if (Notification.permission === "denied") return toast("As notificações estão bloqueadas neste aparelho. Abra as configurações do navegador ou do MyBot, entre em Notificações e escolha Permitir. Se essa opção não existir, remova o bloqueio nas configurações do site e abra novamente.");
+  if (Notification.permission === "denied") return toast("Para liberar: entre em Configurações → Apps → MyBot → Notificações e ative Permitir notificações. Se MyBot não aparecer, faça o mesmo no Chrome ou Safari.");
   const botao = $("#ativarNotificacoes");
   botao.disabled = true;
   botao.innerHTML = conteudoBotaoNotificacoes("padrao", "Confirme em Permitir na mensagem do navegador");
@@ -918,11 +918,25 @@ async function ativarNotificacoes() {
     const permissao = await Notification.requestPermission();
     atualizarBotaoNotificacoes();
     if (permissao === "granted") toast("Pronto! Você receberá avisos de novos pedidos.");
-    else if (permissao === "denied") toast("As notificações foram bloqueadas. Para liberar, abra as configurações do navegador ou do MyBot, entre em Notificações e escolha Permitir.");
+    else if (permissao === "denied") toast("Para liberar: entre em Configurações → Apps → MyBot → Notificações e ative Permitir notificações. Se MyBot não aparecer, procure Chrome ou Safari.");
     else toast("Nenhuma escolha foi feita. Toque em Receber notificações quando quiser tentar novamente.");
   } catch {
     atualizarBotaoNotificacoes();
     toast("O navegador não conseguiu abrir a permissão. Tente pelo aplicativo instalado ou pelas configurações do site.");
+  }
+}
+let permissaoNotificacoesObservada = false;
+function acompanharPermissaoNotificacoes() {
+  if (permissaoNotificacoesObservada || portalPainel !== "atendente") return;
+  permissaoNotificacoesObservada = true;
+  window.addEventListener("focus", atualizarBotaoNotificacoes);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") atualizarBotaoNotificacoes();
+  });
+  if (navigator.permissions?.query) {
+    navigator.permissions.query({ name: "notifications" })
+      .then(permissao => permissao.addEventListener("change", atualizarBotaoNotificacoes))
+      .catch(() => {});
   }
 }
 function avisarPedidosNovos(pedidos) {
@@ -975,7 +989,7 @@ async function validarSessaoPainel({ atualizarDados = true } = {}) {
 
 aplicarPerfilPainel();
 validarSessaoPainel();
-if (portalPainel === "atendente") { atualizarBotaoNotificacoes(); $("#ativarNotificacoes")?.addEventListener("click", ativarNotificacoes); }
+if (portalPainel === "atendente") { atualizarBotaoNotificacoes(); acompanharPermissaoNotificacoes(); $("#ativarNotificacoes")?.addEventListener("click", ativarNotificacoes); }
 
 window.addEventListener("pagehide", () => {
   // Impede que o histórico rápido do celular fotografe pedidos e controles.
@@ -1012,9 +1026,31 @@ document.querySelectorAll(".secao-painel").forEach(secao => {
   if (!texto || !titulo || secao.querySelector(".introducao-painel")) return;
   titulo.insertAdjacentHTML("afterend", `<p class="introducao-painel">${texto}</p>`);
 });
-setInterval(() => { if (!$("#aplicacao").classList.contains("oculto")) carregar().catch(() => {}); }, 30000);
+// Os pedidos usam a sincronização leve abaixo; não recarregue o painel inteiro durante o uso.
 
 let canalEventosPainel = null;
+let atualizacaoPedidosEmAndamento = false;
+function assinaturaPedidos(pedidos = []) {
+  return JSON.stringify(pedidos.map(pedido => [pedido.id, pedido.status, pedido.atualizadoEm, pedido.pagamentoStatus, pedido.recebimento?.pagamentoStatus]));
+}
+async function atualizarPedidosAutomaticamente() {
+  if (atualizacaoPedidosEmAndamento || document.visibilityState === "hidden" || $("#aplicacao")?.classList.contains("oculto")) return;
+  atualizacaoPedidosEmAndamento = true;
+  try {
+    const dadosAtualizados = await api("/api/painel/dados");
+    const mudou = assinaturaPedidos(estado.dados?.pedidos) !== assinaturaPedidos(dadosAtualizados?.pedidos);
+    estado.dados = dadosAtualizados;
+    if (mudou) {
+      avisarPedidosNovos(dadosAtualizados.pedidos || []);
+      render();
+      aplicarGuia(estado.guia || (portalPainel === "atendente" ? "pedidos" : "estoque"));
+    }
+  } catch (erro) {
+    if (/sessão|acesso|autoriz/i.test(erro?.message || "")) validarSessaoPainel(false);
+  } finally {
+    atualizacaoPedidosEmAndamento = false;
+  }
+}
 function iniciarSincronizacaoEntreDispositivos() {
   if (portalPainel !== "atendente" || canalEventosPainel || !("EventSource" in window)) return;
   canalEventosPainel = new EventSource("/api/painel/eventos");
