@@ -3,42 +3,44 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#08783f">
-  <meta name="description" content="MyBot: central de operação para delivery.">
+  <meta name="theme-color" content="#071d13">
+  <meta name="description" content="MyBot: acesso seguro ao painel do delivery.">
   <link rel="manifest" href="/app/manifest.webmanifest?v=6">
   <link rel="icon" href="/painel/mybot-logo-verde.png" type="image/png">
   <link rel="apple-touch-icon" href="/app/icon-192.png">
   <link rel="stylesheet" href="/app/style.css">
   <link rel="stylesheet" href="/ios-fixes.css">
-  <title>MyBot</title>
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="MyBot">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>MyBot | Acesso</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="MyBot">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
 </head>
 <body>
+  <div class="orb orb-um" aria-hidden="true"></div><div class="orb orb-dois" aria-hidden="true"></div>
   <main class="shell">
     <section class="card" aria-labelledby="titulo">
+      <header class="marca"><span class="brand-mark" aria-hidden="true">m</span><strong>MyBot<span>.</span></strong><small>ACESSO SEGURO</small></header>
       <img class="logo" src="/painel/mybot-logo-verde.png" alt="MyBot">
-      <p class="tag">MYBOT DELIVERY</p>
-      <h1 id="titulo">Central MyBot</h1>
-      <p class="subtitulo">A central segura para administrar e atender os pedidos do seu delivery.</p>
-      <section class="apresentacao" aria-label="Como funciona o MyBot">
-        <div><b>1</b><span><strong>Entre</strong> com o token liberado pelo responsável.</span></div>
-        <div><b>2</b><span><strong>Escolha o painel</strong> de Administrador ou Atendente.</span></div>
+      <p class="tag"><i></i> DELIVERY INTELIGENTE</p>
+      <h1 id="titulo">Seu MyBot,<br><span>a um toque.</span></h1>
+      <p class="subtitulo">Informe seu token para escolher o painel de Administrador ou Atendente.</p>
+      <section class="apresentacao" aria-label="Como funciona o acesso">
+        <div><b>1</b><span><strong>Informe o token</strong><small>Use o código liberado pelo responsável.</small></span></div>
+        <div><b>2</b><span><strong>Escolha seu painel</strong><small>Administrador ou Atendente, conforme sua função.</small></span></div>
       </section>
       <form id="loginForm">
         <label for="token">Token de acesso</label>
         <input id="token" type="password" autocomplete="current-password" placeholder="Digite seu token" required>
-        <button class="botao primario" type="submit">Entrar</button>
+        <button class="botao primario" type="submit">Continuar <span aria-hidden="true">→</span></button>
         <p id="erro" role="alert"></p>
       </form>
       <section id="portais" hidden aria-label="Escolha do painel">
-        <p class="boas-vindas">Acesso liberado. Escolha seu painel:</p>
-        <a class="botao primario" href="/app/painel/adm">Administrador</a>
-        <a class="botao secundario" href="/app/painel/atendente">Atendente</a>
+        <p class="boas-vindas">✓ Acesso liberado. Escolha como deseja entrar:</p>
+        <a class="botao primario" href="/app/painel/adm"><span>⚙</span> Painel do Administrador</a>
+        <a class="botao secundario" href="/app/painel/atendente"><span>◉</span> Painel do Atendente</a>
         <button id="sair" class="sair" type="button">Sair deste dispositivo</button>
       </section>
-      <p class="instalar">O MyBot só solicita notificações quando o Atendente escolher ativá-las.</p>
+      <p class="instalar">🔔 As notificações são solicitadas somente no painel do Atendente.</p>
     </section>
   </main>
   <script src="/app/app.js"></script>
