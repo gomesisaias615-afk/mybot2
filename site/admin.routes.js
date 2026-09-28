@@ -17,6 +17,7 @@ const {
 } = require("../services/painel.service");
 
 const router = express.Router();
+router.use(require("./imagens-otimizadas"));
 const publicDir = path.join(__dirname, "admin-public");
 const appPublicDir = path.join(__dirname, "app-public");
 const installPublicDir = path.join(__dirname, "install-public");
@@ -207,32 +208,12 @@ router.get("/app/service-worker.js", (req, res) => {
 router.get("/service-worker.js", (req, res) => {
   res.sendFile(path.join(appPublicDir, "service-worker.js"));
 });
+// Um único instalador, dentro do escopo do aplicativo, para todas as plataformas.
+router.get(["/instalar", "/instalar/", "/instalar/index.html"], (req, res) => res.redirect(302, "/app/instalar.html"));
 router.get("/app/instalar.html", (req, res) => {
-  const arquivo = path.join(appPublicDir, "instalar.html");
-  try {
-    const html = fs.readFileSync(arquivo, "utf8").replace("</head>", "<script>if(matchMedia('(display-mode: standalone)').matches||navigator.standalone)location.replace('/app/');</script></head>");
-    res.set("Cache-Control", "no-store").type("html").send(html);
-  } catch { res.status(500).send("Não foi possível abrir a página de instalação."); }
+  res.set("Cache-Control", "no-store").sendFile(path.join(appPublicDir, "instalar.html"));
 });
 router.use("/app", express.static(appPublicDir, { etag: false, lastModified: false }));
-// A instalação ocorre dentro do escopo do aplicativo, onde Chrome valida o PWA.
-router.get(["/instalar", "/instalar/"], (req, res) => res.redirect(302, "/app/instalar.html"));
-router.get(["/instalar", "/instalar/"], (req, res) => {
-  const arquivo = path.join(installPublicDir, "index.html");
-  const scriptInstalacao = `<script>
-    const botaoMyBot=document.querySelector('#instalar'); const ajudaMyBot=document.querySelector('#ajuda'); let promptMyBot;
-    if('serviceWorker' in navigator) navigator.serviceWorker.register('/service-worker.js').then(()=>{if(!navigator.serviceWorker.controller&&!sessionStorage.getItem('mybot-instalador-pronto')){sessionStorage.setItem('mybot-instalador-pronto','1');location.reload();}}).catch(()=>{});
-    if(matchMedia('(display-mode: standalone)').matches||navigator.standalone){botaoMyBot.disabled=true;botaoMyBot.textContent='ABRINDO CENTRAL MYBOT...';ajudaMyBot.textContent='Abrindo Administrador e Atendente...';setTimeout(()=>location.replace('/app/'),500);}
-    else ajudaMyBot.textContent='Aguarde alguns segundos para o Chrome liberar a instalação.';
-    addEventListener('beforeinstallprompt',e=>{e.preventDefault();promptMyBot=e;ajudaMyBot.textContent='Pronto: toque em INSTALAR MYBOT para confirmar.';});
-    addEventListener('appinstalled',()=>{promptMyBot=null;botaoMyBot.disabled=true;botaoMyBot.textContent='✓ MYBOT INSTALADO';ajudaMyBot.textContent='Pronto! Abra o ícone MyBot para acessar a Central.';});
-    botaoMyBot.onclick=async()=>{if(matchMedia('(display-mode: standalone)').matches||navigator.standalone)return;if(!promptMyBot){ajudaMyBot.textContent='O Chrome ainda está preparando a instalação. Aguarde alguns segundos ou use o menu ⋮ e escolha Instalar app.';return;}promptMyBot.prompt();const escolha=await promptMyBot.userChoice;if(escolha.outcome==='dismissed')ajudaMyBot.textContent='Instalação cancelada. Toque no botão quando quiser tentar novamente.';promptMyBot=null;};
-  </script>`;
-  try {
-    const html = fs.readFileSync(arquivo, "utf8").replace("</body>", `${scriptInstalacao}</body>`);
-    res.set("Cache-Control", "no-store").type("html").send(html);
-  } catch { res.status(500).send("Não foi possível abrir a página de instalação."); }
-});
 router.use("/instalar", express.static(installPublicDir, { etag: false, lastModified: false }));
 router.get("/api/app/sessao", (req, res) => res.set("Cache-Control", "no-store").json({ autenticado: appAutenticado(req), configurado: Boolean(tokenDoApp()) }));
 router.post("/api/app/entrar", (req, res) => {

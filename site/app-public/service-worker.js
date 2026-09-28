@@ -1,4 +1,4 @@
-const CACHE = 'mybot-app-v6';
+const CACHE = 'mybot-app-v7-ios';
 const ARQUIVOS = ['/app/', '/app/style.css', '/app/app.js', '/app/manifest.webmanifest', '/painel/mybot-logo-verde.png'];
 self.addEventListener('install', event => event.waitUntil(
   caches.open(CACHE).then(async cache => {

@@ -341,6 +341,7 @@ app.patch("/admin/api/estoque", protegerPainelEstoque, (req, res) => {
 });
 app.get("/api/identidade",(q,s)=>s.json(obterIdentidade()));
 app.get("/api/identidade/logo",(q,s)=>{const marca=obterIdentidade().logo||"";const dado=/^data:(image\/(?:png|jpeg|webp));base64,([\w+/=]+)$/i.exec(marca);if(dado)return s.type(dado[1]).set("Cache-Control","no-store").send(Buffer.from(dado[2],"base64"));if(fs.existsSync(logoIdentidade))return s.set("Cache-Control","no-store").sendFile(logoIdentidade);if(/^\/cardapio\/[a-z0-9._-]+$/i.test(marca))return s.redirect(302,marca);return s.redirect(302,"/cardapio/mascote-saborear.png")});
+app.use(require("./imagens-otimizadas"));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (req, res) => {

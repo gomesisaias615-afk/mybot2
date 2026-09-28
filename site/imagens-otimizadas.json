@@ -1,0 +1,77 @@
+{
+  "/cardapio/borcelle-logo.png": {
+    "source": "cardapio-public/borcelle-logo.png",
+    "file": "cardapio-public/borcelle-logo.optimized.webp",
+    "sha256": "97ec1cba57afa7452b36083a2b35f6023f51e2df89b5254e1a9b34db8720d6b0"
+  },
+  "/cardapio/borcelle-pizza.png": {
+    "source": "cardapio-public/borcelle-pizza.png",
+    "file": "cardapio-public/borcelle-pizza.optimized.webp",
+    "sha256": "3a3b9a83485c4b06910538c2bb9f27b93d04c9a944e0624774ed3543c3615706"
+  },
+  "/cardapio/finalboss-banner.png": {
+    "source": "cardapio-public/finalboss-banner.png",
+    "file": "cardapio-public/finalboss-banner.optimized.webp",
+    "sha256": "fa145b768991d4f7e68385bb0cd582995043254963575b643d651bb1968b485c"
+  },
+  "/cardapio/mascote-saborear.png": {
+    "source": "cardapio-public/mascote-saborear.png",
+    "file": "cardapio-public/mascote-saborear.optimized.webp",
+    "sha256": "e7f6dff4fea4c7d7be1f89d8fe360e6834752bc34665e8dca25e922c7724fc2f"
+  },
+  "/cardapio/produtos/bebidas.png": {
+    "source": "cardapio-public/produtos/bebidas.png",
+    "file": "cardapio-public/produtos/bebidas.optimized.webp",
+    "sha256": "32765ffd70febb7b5871df16eda37c7c50d8269221fccc5a264fc7d9309665e8"
+  },
+  "/cardapio/produtos/combo-casal.png": {
+    "source": "cardapio-public/produtos/combo-casal.png",
+    "file": "cardapio-public/produtos/combo-casal.optimized.webp",
+    "sha256": "907effd02ab0764045c1a90cb2a554e49e736c0028807e0e80e7f6053d2a0cee"
+  },
+  "/cardapio/produtos/combo-familia.png": {
+    "source": "cardapio-public/produtos/combo-familia.png",
+    "file": "cardapio-public/produtos/combo-familia.optimized.webp",
+    "sha256": "de7e7622d998911abbda1ab1872e45eb854d37c62ca855db77f8209b6462a517"
+  },
+  "/cardapio/produtos/combo-individual.png": {
+    "source": "cardapio-public/produtos/combo-individual.png",
+    "file": "cardapio-public/produtos/combo-individual.optimized.webp",
+    "sha256": "0ae2f08d163b7efcca67898f8fa44175a3d71787d03b63c7d8e0ceeb2e427be3"
+  },
+  "/cardapio/produtos/pizza-doce.png": {
+    "source": "cardapio-public/produtos/pizza-doce.png",
+    "file": "cardapio-public/produtos/pizza-doce.optimized.webp",
+    "sha256": "fe49dcb325a823f632de7e818207baa9fc1a193b54a80f86ba71bd9b75ca9d2e"
+  },
+  "/cardapio/produtos/pizza-especial.png": {
+    "source": "cardapio-public/produtos/pizza-especial.png",
+    "file": "cardapio-public/produtos/pizza-especial.optimized.webp",
+    "sha256": "a671024d2e256643955b07c03c3f7518e1f6d064c38d52994fb296d658f34838"
+  },
+  "/cardapio/produtos/pizza-tradicional.png": {
+    "source": "cardapio-public/produtos/pizza-tradicional.png",
+    "file": "cardapio-public/produtos/pizza-tradicional.optimized.webp",
+    "sha256": "f231adb67fe549db1b33008e01b3d9bac36587be24f7ff3b9322171d451d8ea7"
+  },
+  "/painel/borcelle-pizza.png": {
+    "source": "admin-public/borcelle-pizza.png",
+    "file": "admin-public/borcelle-pizza.optimized.webp",
+    "sha256": "3a3b9a83485c4b06910538c2bb9f27b93d04c9a944e0624774ed3543c3615706"
+  },
+  "/painel/mybot-logo-verde.png": {
+    "source": "admin-public/mybot-logo-verde.png",
+    "file": "admin-public/mybot-logo-verde.optimized.webp",
+    "sha256": "0748b1de64b16deca56f220edf6adc0c50b7e94a7bf9d8aca05aec093b0dc1e0"
+  },
+  "/app/icon-192.png": {
+    "source": "app-public/icon-192.png",
+    "file": "app-public/icon-192.optimized.webp",
+    "sha256": "ca261b192aa6e138e89b50e6f9d97a5844e1fbd7ffc797bd9691c25b03307a05"
+  },
+  "/app/icon-512.png": {
+    "source": "app-public/icon-512.png",
+    "file": "app-public/icon-512.optimized.webp",
+    "sha256": "d7ac8adf334088ccaa57566c1b5e17af866d9c8d0930bd7acdb3151bcffd0020"
+  }
+}
