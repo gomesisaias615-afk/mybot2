@@ -55,16 +55,4 @@ async function notificarNovoPedido(pedido) {
   return { enviadas, falhas, cadastradas: assinaturas.length };
 }
 
-async function testarAssinatura(assinatura) {
-  if (!assinatura?.endpoint || !assinatura?.keys?.p256dh || !assinatura?.keys?.auth) throw new Error("Assinatura de notificações inválida.");
-  const payload = JSON.stringify({
-    title: "Teste de notificações MyBot",
-    body: "Este aparelho está pronto para receber novos pedidos.",
-    tag: `teste-${Date.now()}`,
-    url: "/app/painel/atendente"
-  });
-  await webpush.sendNotification(assinatura, payload);
-  return { enviada: true };
-}
-
-module.exports = { chavePublica, salvarAssinatura, notificarNovoPedido, testarAssinatura };
+module.exports = { chavePublica, salvarAssinatura, notificarNovoPedido };

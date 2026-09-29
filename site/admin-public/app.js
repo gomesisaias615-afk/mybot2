@@ -901,8 +901,7 @@ function atualizarBotaoNotificacoes() {
       botao.innerHTML = conteudoBotaoNotificacoes("bloqueado", localStorage.getItem("mybot-push-erro") || "Falha ao conectar — toque para tentar novamente");
     } else {
       botao.classList.add("ativo");
-      const iphoneOuIpad = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-      botao.innerHTML = conteudoBotaoNotificacoes("ativo", localStorage.getItem("mybot-push-registrado") === "1" ? (iphoneOuIpad ? "iPhone/iPad conectado — toque para testar" : "Web Push conectado") : "Conectando ao Web Push...");
+      botao.innerHTML = conteudoBotaoNotificacoes("ativo", localStorage.getItem("mybot-push-registrado") === "1" ? "Web Push conectado" : "Conectando ao Web Push...");
       registrarPushServidor().catch(() => { atualizarBotaoNotificacoes(); });
     }
   } else if (Notification.permission === "denied") {
@@ -953,13 +952,6 @@ async function desativarPushServidor() {
   await assinatura?.unsubscribe();
   localStorage.removeItem("mybot-push-registrado");
 }
-async function testarNotificacaoNesteAparelho() {
-  if (!("serviceWorker" in navigator)) throw new Error("O serviço de notificações não está disponível neste aparelho.");
-  const registro = await navigator.serviceWorker.ready;
-  const assinatura = await registro.pushManager.getSubscription();
-  if (!assinatura) throw new Error("Este aparelho ainda não foi conectado ao Web Push.");
-  await api("/api/painel/push/testar", { method: "POST", body: JSON.stringify(assinatura.toJSON()) });
-}
 async function ativarNotificacoes() {
   if (!window.isSecureContext) return toast("Para ativar os avisos, abra o portal pelo endereço HTTPS ou pelo aplicativo instalado.");
   if (!("Notification" in window)) return toast("Este navegador não permite notificações aqui. Abra o portal no Chrome, Safari ou pelo aplicativo instalado. No iPhone, adicione o MyBot à Tela de Início pelo Safari.");
@@ -978,11 +970,9 @@ async function ativarNotificacoes() {
     }
     localStorage.setItem("mybot-notificacoes-ativas", "1");
     await registrarPushServidor();
-    const iphoneOuIpad = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-    if (iphoneOuIpad) await testarNotificacaoNesteAparelho();
     atualizarBotaoNotificacoes();
     atualizarSeloApp(estado.dados?.pedidos || []);
-    toast(iphoneOuIpad ? "Teste enviado. Feche o MyBot por alguns segundos e confira se o aviso aparece." : "Web Push conectado neste aparelho.");
+    toast("Web Push conectado neste aparelho.");
   } catch (erro) {
     atualizarBotaoNotificacoes();
     toast(erro.message || "Não foi possível conectar ou testar as notificações.");
