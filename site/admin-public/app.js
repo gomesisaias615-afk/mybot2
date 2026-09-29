@@ -901,7 +901,7 @@ function atualizarBotaoNotificacoes() {
       botao.innerHTML = conteudoBotaoNotificacoes("bloqueado", localStorage.getItem("mybot-push-erro") || "Falha ao conectar — toque para tentar novamente");
     } else {
       botao.classList.add("ativo");
-      botao.innerHTML = conteudoBotaoNotificacoes("ativo", localStorage.getItem("mybot-push-registrado") === "1" ? "Web Push conectado" : "Conectando ao Web Push...");
+      botao.innerHTML = conteudoBotaoNotificacoes("ativo", localStorage.getItem("mybot-push-registrado") === "1" ? "Web Push conectado — toque para desativar" : "Conectando ao Web Push...");
       registrarPushServidor().catch(() => { atualizarBotaoNotificacoes(); });
     }
   } else if (Notification.permission === "denied") {
@@ -949,8 +949,13 @@ async function desativarPushServidor() {
   if (!("serviceWorker" in navigator)) return;
   const registro = await navigator.serviceWorker.getRegistration("/app/");
   const assinatura = await registro?.pushManager.getSubscription();
-  await assinatura?.unsubscribe();
+  if (assinatura) {
+    await api("/api/painel/push/desassinar", { method: "POST", body: JSON.stringify(assinatura.toJSON()) }).catch(() => {});
+    await assinatura.unsubscribe();
+  }
+  localStorage.setItem("mybot-notificacoes-ativas", "0");
   localStorage.removeItem("mybot-push-registrado");
+  localStorage.removeItem("mybot-push-erro");
 }
 async function ativarNotificacoes() {
   if (!window.isSecureContext) return toast("Para ativar os avisos, abra o portal pelo endereço HTTPS ou pelo aplicativo instalado.");
@@ -958,6 +963,14 @@ async function ativarNotificacoes() {
   if (Notification.permission === "denied") return toast("Para liberar: entre em Configurações → Apps → MyBot → Notificações e ative Permitir notificações. Se MyBot não aparecer, faça o mesmo no Chrome ou Safari.");
   const botao = $("#ativarNotificacoes");
   try {
+    const conectado = localStorage.getItem("mybot-push-registrado") === "1";
+    const ativo = localStorage.getItem("mybot-notificacoes-ativas") !== "0";
+    if (Notification.permission === "granted" && ativo && conectado) {
+      await desativarPushServidor();
+      atualizarBotaoNotificacoes();
+      atualizarSeloApp(estado.dados?.pedidos || []);
+      return toast("Notificações desativadas somente neste aparelho.");
+    }
     if (Notification.permission !== "granted") {
       botao.disabled = true;
       botao.innerHTML = conteudoBotaoNotificacoes("padrao", "Confirme em Permitir na mensagem do navegador");
@@ -975,7 +988,7 @@ async function ativarNotificacoes() {
     toast("Web Push conectado neste aparelho.");
   } catch (erro) {
     atualizarBotaoNotificacoes();
-    toast(erro.message || "Não foi possível conectar ou testar as notificações.");
+    toast(erro.message || "Não foi possível atualizar as notificações.");
   }
 }
 async function atualizarSeloApp(pedidos = []) {

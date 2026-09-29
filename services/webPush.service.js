@@ -35,6 +35,16 @@ function salvarAssinatura(assinatura) {
   return true;
 }
 
+function removerAssinatura(assinatura) {
+  const endpoint = String(assinatura?.endpoint || assinatura || "").trim();
+  if (!endpoint) return false;
+  const assinaturas = ler(arquivoAssinaturas, []);
+  const restantes = assinaturas.filter(item => item.endpoint !== endpoint);
+  if (restantes.length === assinaturas.length) return false;
+  salvar(arquivoAssinaturas, restantes);
+  return true;
+}
+
 async function notificarNovoPedido(pedido) {
   const assinaturas = ler(arquivoAssinaturas, []);
   if (!assinaturas.length) return { enviadas: 0 };
@@ -55,4 +65,4 @@ async function notificarNovoPedido(pedido) {
   return { enviadas, falhas, cadastradas: assinaturas.length };
 }
 
-module.exports = { chavePublica, salvarAssinatura, notificarNovoPedido };
+module.exports = { chavePublica, salvarAssinatura, removerAssinatura, notificarNovoPedido };

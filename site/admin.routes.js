@@ -9,7 +9,7 @@ const imagensProdutos = require("../services/imagemProduto.service");
 const { atualizarProdutos, recarregarEstoque, definirQuantidadeProduto } = require("../services/estoque.service");
 const { obterClienteWhatsApp } = require("../services/whatsappRuntime.service");
 const { buscarContatoCliente } = require("../services/marketing.service");
-const { chavePublica, salvarAssinatura } = require("../services/webPush.service");
+const { chavePublica, salvarAssinatura, removerAssinatura } = require("../services/webPush.service");
 const {
   obterConfiguracaoPainel,
   atualizarConfiguracaoPainel,
@@ -529,6 +529,10 @@ router.get("/api/painel/dados", exigirAutenticacao, (req, res) => {
 router.get("/api/painel/push/chave", exigirAutenticacao, (req, res) => res.json({ publicKey: chavePublica() }));
 router.post("/api/painel/push/assinar", exigirAutenticacao, (req, res) => {
   try { salvarAssinatura(req.body); res.json({ assinada: true }); }
+  catch (erro) { res.status(400).json({ erro: erro.message }); }
+});
+router.post("/api/painel/push/desassinar", exigirAutenticacao, (req, res) => {
+  try { res.json({ removida: removerAssinatura(req.body) }); }
   catch (erro) { res.status(400).json({ erro: erro.message }); }
 });
 
