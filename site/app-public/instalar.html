@@ -33,7 +33,7 @@
   const standalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
   if(standalone()){location.replace('/app/');return;}
   const guides={
-    ios:{title:'No iPhone ou iPad, instale pelo Safari.',steps:[['Toque em Compartilhar','Use o botão abaixo para abrir o menu Compartilhar do Safari.'],['Escolha Adicionar à Tela de Início','No menu que abrir, toque em Adicionar à Tela de Início.'],['Confirme em Adicionar','Mantenha Abrir como App da Web ativado, se esta opção aparecer.']],status:'Toque em Compartilhar para abrir o menu do Safari.',button:'Compartilhar'},
+    ios:{title:'No iPhone ou iPad, instale pelo Safari.',steps:[['Toque em Compartilhar','Use o botão abaixo para abrir o menu Compartilhar do Safari.'],['Escolha Adicionar à Tela de Início','No menu que abrir, toque em Adicionar à Tela de Início.'],['Confirme em Adicionar','Mantenha Abrir como App da Web ativado, se esta opção aparecer.']],status:'Toque em Compartilhar para abrir o menu do Safari.',button:'📤 Use o botão Compartilhar do Safari'},
     android:{title:'No Android, abra pelo Chrome.',steps:[['Abra no navegador','Use o Chrome fora do WhatsApp ou Instagram.'],['Escolha Instalar app','Toque no botão abaixo, se disponível, ou abra o menu ⋮ do Chrome e procure Instalar app ou Adicionar à tela inicial.'],['Confirme e abra o MyBot','Conclua a instalação e encontre o ícone na tela inicial.']],status:'Se a instalação não abrir, use a opção no menu do navegador.',button:'Instalar MyBot'},
     desktop:{title:'No computador, use seu navegador.',steps:[['Abra no Chrome ou Edge','Acesse este endereço diretamente no navegador.'],['Procure a opção de instalação','Use o botão abaixo ou o ícone de instalar na barra de endereço. No Safari do Mac, use Arquivo → Adicionar ao Dock, quando disponível.'],['Deixe o MyBot sempre por perto','Confirme a instalação e abra o MyBot pelo ícone do aplicativo.']],status:'As opções de instalação variam conforme o navegador e sua versão.',button:'Instalar MyBot'}
   };
@@ -57,8 +57,9 @@
     if(standalone()){location.replace('/app/');return;}
     if(installed||busy)return;
     if(selected==='ios'){
-      if(navigator.share){try{await navigator.share({title:'Instalar MyBot',text:'Abra este link no Safari para instalar o MyBot.',url:location.href});ajuda.textContent='No menu Compartilhar, toque em Adicionar à Tela de Início.';}catch{ajuda.textContent='Quando o menu Compartilhar abrir, toque em Adicionar à Tela de Início.';}return;}
-      highlight();ajuda.textContent='No Safari, toque em Compartilhar e escolha Adicionar à Tela de Início.';return;
+      highlight();
+      ajuda.innerHTML='<strong>Não use este botão para compartilhar.</strong><br>Abra este link no <strong>Safari</strong> e toque no ícone <strong>Compartilhar</strong> do próprio Safari — o quadrado com uma seta para cima. Depois escolha <strong>Adicionar à Tela de Início</strong>.';
+      return;
     }
     if(!evento||selected!==detected){highlight();ajuda.textContent=selected!==detected?'Abra este mesmo link no aparelho escolhido para concluir a instalação.':guides[selected].status;return;}
     const prompt=evento;evento=null;busy=true;render();
