@@ -45,3 +45,12 @@ document.querySelector('#sair').addEventListener('click', async () => {
 
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('/app/service-worker.js', { scope: '/app/' });
 verificarSessao();
+
+window.addEventListener('load', () => {
+  const splash = document.querySelector('#splashMyBot');
+  if (!splash) return;
+  setTimeout(() => {
+    splash.classList.add('sumir');
+    setTimeout(() => splash.remove(), 450);
+  }, 650);
+});
