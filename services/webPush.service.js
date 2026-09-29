@@ -21,7 +21,7 @@ if (!chaves.publicKey || !chaves.privateKey) {
   chaves = webpush.generateVAPIDKeys();
   salvar(arquivoChaves, chaves);
 }
-webpush.setVapidDetails(process.env.VAPID_SUBJECT || "mailto:mybot@localhost", chaves.publicKey, chaves.privateKey);
+webpush.setVapidDetails(process.env.VAPID_SUBJECT || "mailto:mybot563@gmail.com", chaves.publicKey, chaves.privateKey);
 
 function chavePublica() { return chaves.publicKey; }
 
@@ -55,4 +55,16 @@ async function notificarNovoPedido(pedido) {
   return { enviadas, falhas, cadastradas: assinaturas.length };
 }
 
-module.exports = { chavePublica, salvarAssinatura, notificarNovoPedido };
+async function testarAssinatura(assinatura) {
+  if (!assinatura?.endpoint || !assinatura?.keys?.p256dh || !assinatura?.keys?.auth) throw new Error("Assinatura de notificações inválida.");
+  const payload = JSON.stringify({
+    title: "Teste de notificações MyBot",
+    body: "Este aparelho está pronto para receber novos pedidos.",
+    tag: `teste-${Date.now()}`,
+    url: "/app/painel/atendente"
+  });
+  await webpush.sendNotification(assinatura, payload);
+  return { enviada: true };
+}
+
+module.exports = { chavePublica, salvarAssinatura, notificarNovoPedido, testarAssinatura };

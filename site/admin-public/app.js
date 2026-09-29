@@ -901,7 +901,8 @@ function atualizarBotaoNotificacoes() {
       botao.innerHTML = conteudoBotaoNotificacoes("bloqueado", localStorage.getItem("mybot-push-erro") || "Falha ao conectar — toque para tentar novamente");
     } else {
       botao.classList.add("ativo");
-      botao.innerHTML = conteudoBotaoNotificacoes("ativo", localStorage.getItem("mybot-push-registrado") === "1" ? "Web Push conectado — toque para desativar" : "Conectando ao Web Push...");
+      const iphoneOuIpad = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+      botao.innerHTML = conteudoBotaoNotificacoes("ativo", localStorage.getItem("mybot-push-registrado") === "1" ? (iphoneOuIpad ? "iPhone/iPad conectado — toque para testar" : "Web Push conectado") : "Conectando ao Web Push...");
       registrarPushServidor().catch(() => { atualizarBotaoNotificacoes(); });
     }
   } else if (Notification.permission === "denied") {
@@ -952,34 +953,39 @@ async function desativarPushServidor() {
   await assinatura?.unsubscribe();
   localStorage.removeItem("mybot-push-registrado");
 }
+async function testarNotificacaoNesteAparelho() {
+  if (!("serviceWorker" in navigator)) throw new Error("O serviço de notificações não está disponível neste aparelho.");
+  const registro = await navigator.serviceWorker.ready;
+  const assinatura = await registro.pushManager.getSubscription();
+  if (!assinatura) throw new Error("Este aparelho ainda não foi conectado ao Web Push.");
+  await api("/api/painel/push/testar", { method: "POST", body: JSON.stringify(assinatura.toJSON()) });
+}
 async function ativarNotificacoes() {
   if (!window.isSecureContext) return toast("Para ativar os avisos, abra o portal pelo endereço HTTPS ou pelo aplicativo instalado.");
   if (!("Notification" in window)) return toast("Este navegador não permite notificações aqui. Abra o portal no Chrome, Safari ou pelo aplicativo instalado. No iPhone, adicione o MyBot à Tela de Início pelo Safari.");
-  if (Notification.permission === "granted") {
-    const ativadas = localStorage.getItem("mybot-notificacoes-ativas") !== "0";
-    const conectado = localStorage.getItem("mybot-push-registrado") === "1";
-    const desativar = ativadas && conectado;
-    localStorage.setItem("mybot-notificacoes-ativas", desativar ? "0" : "1");
-    if (desativar) await desativarPushServidor().catch(() => {});
-    else try { await registrarPushServidor(); } catch (erro) { atualizarBotaoNotificacoes(); return toast(erro.message || "Não foi possível conectar ao Web Push."); }
-    atualizarBotaoNotificacoes();
-    atualizarSeloApp(estado.dados?.pedidos || []);
-    return toast(desativar ? "Notificações desativadas neste aparelho." : "Web Push conectado neste aparelho.");
-  }
   if (Notification.permission === "denied") return toast("Para liberar: entre em Configurações → Apps → MyBot → Notificações e ative Permitir notificações. Se MyBot não aparecer, faça o mesmo no Chrome ou Safari.");
   const botao = $("#ativarNotificacoes");
-  botao.disabled = true;
-  botao.innerHTML = conteudoBotaoNotificacoes("padrao", "Confirme em Permitir na mensagem do navegador");
   try {
-    if ("serviceWorker" in navigator) await navigator.serviceWorker.register("/app/service-worker.js", { scope: "/app/" });
-    const permissao = await Notification.requestPermission();
+    if (Notification.permission !== "granted") {
+      botao.disabled = true;
+      botao.innerHTML = conteudoBotaoNotificacoes("padrao", "Confirme em Permitir na mensagem do navegador");
+      if ("serviceWorker" in navigator) await navigator.serviceWorker.register("/app/service-worker.js", { scope: "/app/" });
+      const permissao = await Notification.requestPermission();
+      if (permissao !== "granted") {
+        atualizarBotaoNotificacoes();
+        return toast(permissao === "denied" ? "A permissão foi bloqueada. Libere-a nas configurações do MyBot." : "Nenhuma escolha foi feita. Tente novamente quando quiser.");
+      }
+    }
+    localStorage.setItem("mybot-notificacoes-ativas", "1");
+    await registrarPushServidor();
+    const iphoneOuIpad = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    if (iphoneOuIpad) await testarNotificacaoNesteAparelho();
     atualizarBotaoNotificacoes();
-    if (permissao === "granted") { localStorage.setItem("mybot-notificacoes-ativas", "1"); await registrarPushServidor(); atualizarSeloApp(estado.dados?.pedidos || []); toast("Pronto! Você receberá avisos de novos pedidos."); }
-    else if (permissao === "denied") toast("Para liberar: entre em Configurações → Apps → MyBot → Notificações e ative Permitir notificações. Se MyBot não aparecer, procure Chrome ou Safari.");
-    else toast("Nenhuma escolha foi feita. Toque em Receber notificações quando quiser tentar novamente.");
-  } catch {
+    atualizarSeloApp(estado.dados?.pedidos || []);
+    toast(iphoneOuIpad ? "Teste enviado. Feche o MyBot por alguns segundos e confira se o aviso aparece." : "Web Push conectado neste aparelho.");
+  } catch (erro) {
     atualizarBotaoNotificacoes();
-    toast("O navegador não conseguiu abrir a permissão. Tente pelo aplicativo instalado ou pelas configurações do site.");
+    toast(erro.message || "Não foi possível conectar ou testar as notificações.");
   }
 }
 async function atualizarSeloApp(pedidos = []) {
