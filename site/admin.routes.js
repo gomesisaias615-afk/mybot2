@@ -17,6 +17,11 @@ const {
 } = require("../services/painel.service");
 
 const router = express.Router();
+// Revalidar a interface no servidor, incluindo CSS e service worker.
+router.use(["/app", "/instalar", "/service-worker.js"], (req, res, next) => {
+  res.set("Cache-Control", "no-store, no-cache, must-revalidate");
+  next();
+});
 router.use(require("./imagens-otimizadas"));
 const publicDir = path.join(__dirname, "admin-public");
 const appPublicDir = path.join(__dirname, "app-public");
@@ -213,8 +218,9 @@ router.get(["/instalar", "/instalar/", "/instalar/index.html"], (req, res) => re
 router.get("/app/instalar.html", (req, res) => {
   res.set("Cache-Control", "no-store").sendFile(path.join(appPublicDir, "instalar.html"));
 });
-router.use("/app", express.static(appPublicDir, { etag: false, lastModified: false }));
-router.use("/instalar", express.static(installPublicDir, { etag: false, lastModified: false }));
+router.use("/app", express.static(appPublicDir, { etag: false, lastModified: false, setHeaders: res => res.set("Cache-Control", "no-store, no-cache, must-revalidate") }));
+// Todos os links legados usam o mesmo instalador moderno.
+router.use("/instalar", (req, res) => res.redirect(302, "/app/instalar.html"));
 router.get("/api/app/sessao", (req, res) => res.set("Cache-Control", "no-store").json({ autenticado: appAutenticado(req), configurado: Boolean(tokenDoApp()) }));
 router.post("/api/app/entrar", (req, res) => {
   const esperado = tokenDoApp();

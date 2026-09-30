@@ -43,7 +43,7 @@ document.querySelector('#sair').addEventListener('click', async () => {
   form.hidden = false;
 });
 
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('/app/service-worker.js', { scope: '/app/' });
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/app/service-worker.js', { scope: '/app/', updateViaCache: 'none' }).then(registro => registro.update()).catch(() => {});
 verificarSessao();
 
 window.addEventListener('load', () => {

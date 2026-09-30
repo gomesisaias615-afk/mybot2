@@ -73,7 +73,7 @@
     catch{const input=$('#copyFallback');input.hidden=false;input.value=url;input.focus();input.select();ajuda.textContent='Copie o endereço selecionado e cole no navegador.';}
   });
   render();
-  if('serviceWorker'in navigator)navigator.serviceWorker.register('/app/service-worker.js').catch(()=>{});
+  if('serviceWorker'in navigator)navigator.serviceWorker.register('/app/service-worker.js',{scope:'/app/',updateViaCache:'none'}).then(registro=>registro.update()).catch(()=>{});
 })();
 </script>
 </body></html>
