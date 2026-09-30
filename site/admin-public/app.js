@@ -460,20 +460,19 @@ function adicionarMapaBase(mapa) {
     crossOrigin: true,
     updateWhenIdle: false,
     keepBuffer: 4,
-    attribution: "&copy; OpenStreetMap"
+    attribution: "&copy; OpenStreetMap &copy; CARTO"
   });
 
   principal.on("tileerror", () => {
     if (reservaAtivada) return;
     reservaAtivada = true;
     mapa.removeLayer(principal);
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 19,
-      subdomains: "abcd",
       crossOrigin: true,
       updateWhenIdle: false,
       keepBuffer: 4,
-      attribution: "&copy; OpenStreetMap &copy; CARTO"
+      attribution: "&copy; OpenStreetMap"
     }).addTo(mapa);
   });
 

@@ -205,19 +205,18 @@ async function abrirMapaLocalizacao(latitude, longitude) {
       attributionControl: true
     });
 
-    const mapaPrincipal = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    const mapaPrincipal = L.tileLayer("/api/mapa/tiles/{z}/{x}/{y}.png", {
       maxZoom: 19,
-      attribution: "&copy; OpenStreetMap"
+      attribution: "&copy; OpenStreetMap &copy; CARTO"
     });
     let mapaReservaAtivado = false;
     mapaPrincipal.on("tileerror", () => {
       if (mapaReservaAtivado) return;
       mapaReservaAtivado = true;
       mapaLocalizacao.removeLayer(mapaPrincipal);
-      L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19,
-        subdomains: "abcd",
-        attribution: "&copy; OpenStreetMap &copy; CARTO"
+        attribution: "&copy; OpenStreetMap"
       }).addTo(mapaLocalizacao);
     });
     mapaPrincipal.addTo(mapaLocalizacao);

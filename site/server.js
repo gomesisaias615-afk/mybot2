@@ -251,10 +251,11 @@ app.get("/api/mapa/tiles/:z/:x/:y.png", async (req, res) => {
   }
 
   try {
+    const chaveCarto = String(process.env.CARTO_BASEMAP_API_KEY || "").trim();
     const fontes = [
-      "https://tile.openstreetmap.org/" + chave + ".png",
-      "https://a.basemaps.cartocdn.com/rastertiles/voyager/" + chave + ".png"
-    ];
+      chaveCarto ? "https://basemaps.cartocdn.com/rastertiles/voyager/" + chave + ".png?key=" + encodeURIComponent(chaveCarto) : null,
+      "https://tile.openstreetmap.org/" + chave + ".png"
+    ].filter(Boolean);
     let imagem;
     for (const fonte of fontes) {
       try {
