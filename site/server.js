@@ -721,6 +721,7 @@ function expandirAbreviacoesEndereco(texto) {
     trav: "Travessa",
     travessa: "Travessa",
     travesa: "Travessa",
+    sntos: "Santos",
     rod: "Rodovia",
     rodovia: "Rodovia",
     est: "Estrada",
