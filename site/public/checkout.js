@@ -15,6 +15,26 @@ let sugestoesEnderecoTimer;
 let sugestoesEnderecoAbertas = false;
 let sugestoesEnderecoScrollInicial = 0;
 let buscaEnderecoControle = 0;
+let catalogoEnderecoPromise;
+let buscaExternaTimer;
+
+function carregarCatalogoEndereco() {
+  if (!catalogoEnderecoPromise) {
+    catalogoEnderecoPromise = json("/api/enderecos/catalogo").catch(() => {
+      catalogoEnderecoPromise = null;
+      return [];
+    });
+  }
+  return catalogoEnderecoPromise;
+}
+
+function chaveBuscaEndereco(texto) {
+  const abreviacoes = { r: "rua", av: "avenida", ave: "avenida", tv: "travessa", trav: "travessa", dr: "doutor", dra: "doutora", rod: "rodovia", est: "estrada", estr: "estrada", jd: "jardim", prof: "professor", profa: "professora", pc: "praca", pca: "praca", cel: "coronel", gov: "governador", pres: "presidente", dep: "deputado", travesa: "travessa", sntos: "santos" };
+  return String(texto || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
+    .replace(/\b(primeiro|1[º°o]?)\s+de\s+maio\b/g, "1 de maio")
+    .replace(/[^a-z0-9\s]/g, " ").split(/\s+/)
+    .filter(Boolean).map(termo => abreviacoes[termo] || termo).join(" ");
+}
 let pixTimerId;
 let enderecoSelecionado = {};
 let confirmacaoTimerId;
@@ -99,6 +119,8 @@ function manterSugestoesEnderecoPorTresMinutos() {
 }
 
 function selecionarSugestaoEndereco(item) {
+  buscaEnderecoControle += 1;
+  clearTimeout(buscaExternaTimer);
   preencherEnderecoLocalizado(item);
   esconderSugestoes();
   $("statusLocalizacao").classList.remove("error");
@@ -112,6 +134,20 @@ function escaparSugestao(valor) {
   })[caractere]);
 }
 
+function renderizarSugestoesEndereco(itens) {
+  $("sugestoesEndereco").innerHTML = itens.map((item, indice) =>
+    `<button type="button" role="option" data-indice="${indice}"><strong>${escaparSugestao(item.logradouro || item.rua || "Endereço")}</strong><small>${escaparSugestao(item.texto || [item.bairro,item.cidade,item.estado].filter(Boolean).join(" — "))}</small></button>`
+  ).join("");
+  if (!itens.length) return esconderSugestoes();
+  $("sugestoesEndereco").classList.remove("hidden");
+  sugestoesEnderecoAbertas = true;
+  sugestoesEnderecoScrollInicial = window.scrollY;
+  manterSugestoesEnderecoPorTresMinutos();
+  $("sugestoesEndereco").querySelectorAll("button").forEach((botao, indice) => {
+    botao.addEventListener("click", () => selecionarSugestaoEndereco(itens[indice]));
+  });
+}
+
 async function buscarSugestoesEndereco() {
   const rua = $("rua").value.trim();
   const bairro = $("bairro").value.trim();
@@ -119,23 +155,26 @@ async function buscarSugestoesEndereco() {
   const estado = $("estadoEntrega").value;
   if (!estado || !cidade || Math.max(rua.length,bairro.length) < 2) return esconderSugestoes();
   const controle = ++buscaEnderecoControle;
+  clearTimeout(buscaExternaTimer);
+  const busca = rua || bairro;
+  const termos = chaveBuscaEndereco(busca).split(" ").filter(termo => termo && !["de", "da", "do", "das", "dos"].includes(termo));
+  const catalogo = await carregarCatalogoEndereco();
+  if (controle !== buscaEnderecoControle) return;
+  const locais = chaveBuscaEndereco(cidade) === "estancia" && estado === "SE"
+    ? catalogo.filter(item => [item.rua, ...(item.aliases || [])].some(nome => {
+      const alvo = chaveBuscaEndereco(`${nome} ${item.bairro}`);
+      return termos.every(termo => alvo.includes(termo));
+    })).slice(0, 8) : [];
+  renderizarSugestoesEndereco(locais);
+  buscaExternaTimer = setTimeout(async () => {
   try {
-    const itens = await json(`/api/enderecos/sugestoes?q=${encodeURIComponent(rua || bairro)}&cidade=${encodeURIComponent(cidade)}&estado=${encodeURIComponent(estado)}`);
+    const itens = await json(`/api/enderecos/sugestoes?q=${encodeURIComponent(busca)}&cidade=${encodeURIComponent(cidade)}&estado=${encodeURIComponent(estado)}`);
     if (controle !== buscaEnderecoControle) return;
-    $("sugestoesEndereco").innerHTML = itens.map((item,indice) =>
-      `<button type="button" role="option" data-indice="${indice}"><strong>${escaparSugestao(item.logradouro || item.rua || "Endereço")}</strong><small>${escaparSugestao(item.texto || [item.bairro,item.cidade,item.estado].filter(Boolean).join(" — "))}</small></button>`
-    ).join("");
-    if (!itens.length) return esconderSugestoes();
-    $("sugestoesEndereco").classList.remove("hidden");
-    sugestoesEnderecoAbertas = true;
-    sugestoesEnderecoScrollInicial = window.scrollY;
-    manterSugestoesEnderecoPorTresMinutos();
-    $("sugestoesEndereco").querySelectorAll("button").forEach((botao,indice) => {
-      botao.addEventListener("click", () => selecionarSugestaoEndereco(itens[indice]));
-    });
+    renderizarSugestoesEndereco(itens.length ? itens : locais);
   } catch {
-    esconderSugestoes();
+    // Mantém os resultados locais se a consulta externa falhar.
   }
+  }, 600);
 }
 
 ["rua","bairro"].forEach(id => $(id).addEventListener("input", () => {
@@ -143,7 +182,8 @@ async function buscarSugestoesEndereco() {
   enderecoSelecionado = {};
   esconderSugestoes();
   clearTimeout(buscaEnderecoTimer);
-  buscaEnderecoTimer = setTimeout(buscarSugestoesEndereco, 900);
+  clearTimeout(buscaExternaTimer);
+  buscarSugestoesEndereco();
 }));
 
 function buscarSugestoesAoVoltarParaRua() {
@@ -153,6 +193,8 @@ function buscarSugestoesAoVoltarParaRua() {
 }
 $("rua").addEventListener("focus", buscarSugestoesAoVoltarParaRua);["estadoEntrega","cidadeEntrega"].forEach(id => $(id).addEventListener("change", () => {
   enderecoSelecionado = {};
+  buscaEnderecoControle += 1;
+  clearTimeout(buscaExternaTimer);
   esconderSugestoes();
 }));
 document.addEventListener("click", evento => {
@@ -644,6 +686,7 @@ btnVoltar.addEventListener("click", async () => {
 });
 
 async function iniciar() {
+  carregarCatalogoEndereco();
   try {
     if (!pedidoId || !checkoutToken || !checkoutExpires) {
       throw new Error("Link inválido ou incompleto.");

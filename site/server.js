@@ -620,6 +620,17 @@ function enderecoLocalPorRua(rua, bairro = "") {
   return null;
 }
 
+app.get("/api/enderecos/catalogo", (req, res) => {
+  res.set("Cache-Control", "public, max-age=300");
+  return res.json(catalogoLocalEstancia().map(item => ({
+    rua: formatarNomeEndereco(item.rua), logradouro: formatarNomeEndereco(item.rua),
+    bairro: formatarNomeEndereco(item.bairro), cidade: item.cidade, estado: item.uf,
+    cep: item.cep, latitude: item.latitude, longitude: item.longitude,
+    aliases: item.aliases || [],
+    texto: [formatarNomeEndereco(item.bairro), "Estância - SE", item.cep ? `CEP ${item.cep}` : ""].filter(Boolean).join(" — ")
+  })));
+});
+
 app.get("/api/enderecos/sugestoes", async (req, res) => {
   const busca = expandirAbreviacoesEndereco(String(req.query.q || "").trim());
   const cidade = String(req.query.cidade || configuracaoEntrega().cidadeAtendida).trim();
