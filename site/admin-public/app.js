@@ -1578,6 +1578,7 @@ function dadosFicha(pedido) {
       ? [`OBSERVAÇÃO PARA O ENTREGADOR: ${rec.observacaoEntrega}`]
       : []),
     `CIDADE/CEP: ${valorInformado(rec.cidade)}/${valorInformado(rec.estado)} - ${valorInformado(rec.cep)}`,
+    "ATENÇÃO: As coordenadas do GPS são aproximadas. Confira o endereço, o número e os pontos de referência informados pelo cliente.",
     "",
     `OBSERVAÇÃO: ${valorInformado(pedido.observacaoPizzas, pedido.observacao, rec.observacao)}`,
     `TOTAL: ${moeda(rec.totalFinal ?? pedido.total)}`
@@ -1614,7 +1615,8 @@ function rotaDoMotoboy(pedido) {
 function textoRotaMotoboy(pedido, rota) {
   return "🛵 Rota de entrega do pedido #" + pedido.id +
     "\nAbra no Google Maps para seguir a rota sugerida:" +
-    "\n" + rota;
+    "\n" + rota +
+    "\n\nAtenção: as coordenadas do GPS são aproximadas. Confira o endereço, o número e os pontos de referência informados pelo cliente.";
 }
 
 async function criarFichaMotoboy(pedido) {

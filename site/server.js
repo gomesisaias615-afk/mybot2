@@ -6,6 +6,9 @@ const crypto = require("crypto");
 const express = require("express");
 const cors = require("cors");
 const { buscarGeoapify, obterSugestaoGeoapify, juntarSugestoes } = require("./geoapify-enderecos");
+// Teste externo: só reativa sugestões locais quando esta variável for "true".
+// A base continua disponível para validação de endereços e GPS.
+const sugestoesBaseLocalAtivas = process.env.SUGESTOES_BASE_LOCAL === "true";
 const { aplicarRenomeacoes, nomesEndereco } = require("./renomeacoes-enderecos");
 const { MercadoPagoConfig, Payment } = require("mercadopago");
 const { webhookUrlMercadoPago, publicKeyMercadoPago } = require("../config/pagamento");
@@ -621,7 +624,8 @@ function enderecoLocalPorRua(rua, bairro = "") {
 }
 
 app.get("/api/enderecos/catalogo", (req, res) => {
-  res.set("Cache-Control", "public, max-age=300");
+  res.set("Cache-Control", "no-store");
+  if (!sugestoesBaseLocalAtivas) return res.json([]);
   return res.json(catalogoLocalEstancia().map(item => ({
     rua: formatarNomeEndereco(item.rua), logradouro: formatarNomeEndereco(item.rua),
     bairro: formatarNomeEndereco(item.bairro), cidade: item.cidade, estado: item.uf,
@@ -636,13 +640,13 @@ app.get("/api/enderecos/sugestoes", async (req, res) => {
   const cidade = String(req.query.cidade || configuracaoEntrega().cidadeAtendida).trim();
   const estado = String(req.query.estado || configuracaoEntrega().estadoAtendido).trim().toUpperCase();
   if (busca.length < 2 || normalizar(cidade) !== "estancia" || estado !== "SE") return res.json([]);
-  const locais = sugestoesLocaisDeEstancia(busca);
+  const locais = sugestoesBaseLocalAtivas ? sugestoesLocaisDeEstancia(busca) : [];
   const externas = (await buscarGeoapify(busca)).map(item => ({ ...item,
     rua: formatarNomeEndereco(item.rua), logradouro: formatarNomeEndereco(item.logradouro),
     bairro: formatarNomeEndereco(item.bairro),
     texto: [formatarNomeEndereco(item.bairro), "Estância - SE", item.cep ? `CEP ${item.cep}` : ""].filter(Boolean).join(" — ")
   }));
-  res.set("Cache-Control", "private, max-age=300");
+  res.set("Cache-Control", "no-store");
   return res.json(juntarSugestoes(locais, externas, chaveEnderecoManual));
 });
 
@@ -685,7 +689,7 @@ app.get("/api/painel/enderecos/sugestoes", async (req, res) => {
     if (normalizar(cidade) !== "estancia" || estado !== "SE") {
       return res.status(503).json({ erro: "O mapa não conseguiu pesquisar este endereço agora. Tente novamente." });
     }
-    return res.json(sugestoesLocaisDeEstancia(busca));
+    return res.json(sugestoesBaseLocalAtivas ? sugestoesLocaisDeEstancia(busca) : []);
   }
 });
 
