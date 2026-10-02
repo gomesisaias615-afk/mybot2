@@ -1,2 +1,4582 @@
-[]
-
+[
+  {
+    "rua": "Avenida 1 de Maio",
+    "bairro": "Santa Cruz",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.274385,
+    "longitude": -37.44433
+  },
+  {
+    "rua": "Avenida Constancio Vieira",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.267259,
+    "longitude": -37.446573
+  },
+  {
+    "rua": "Avenida Doutor Osorio Ramos",
+    "bairro": "Conjunto Antonio Carlos Valadares",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.240901,
+    "longitude": -37.430158
+  },
+  {
+    "rua": "Avenida Getúlio Vargas",
+    "bairro": "Santa Cruz",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.274033,
+    "longitude": -37.442335
+  },
+  {
+    "rua": "Avenida João Lídio dos Santos",
+    "bairro": "Santa Cruz",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.274264,
+    "longitude": -37.447897
+  },
+  {
+    "rua": "Avenida João Lima da Silveira",
+    "bairro": "Distrito Industrial",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.243582,
+    "longitude": -37.432976
+  },
+  {
+    "rua": "Avenida Jornalista Augusto Gomes",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.23682,
+    "longitude": -37.426312
+  },
+  {
+    "rua": "Avenida José Reis do Nascimento",
+    "bairro": "Loteamento São Domingos",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.253253,
+    "longitude": -37.436632
+  },
+  {
+    "rua": "Avenida Leonardo Ribeiro",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.265865,
+    "longitude": -37.443908
+  },
+  {
+    "rua": "Avenida Lorival Batista",
+    "bairro": "Loteamento Laura Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.274984,
+    "longitude": -37.433681
+  },
+  {
+    "rua": "Avenida Lourival Batista",
+    "bairro": "Porto d'Areia",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.273594,
+    "longitude": -37.434488
+  },
+  {
+    "rua": "Avenida Manoel Bonfim",
+    "bairro": "Alecrim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.248141,
+    "longitude": -37.453512
+  },
+  {
+    "rua": "Avenida Marcelo Nascimento Montalvão de Abreu",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.261567,
+    "longitude": -37.450246
+  },
+  {
+    "rua": "Avenida Padre Joaquim Antunes de Almeida",
+    "bairro": "Loteamento Luar de Estância",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.250497,
+    "longitude": -37.42849
+  },
+  {
+    "rua": "Avenida Raimundo Silveira Souza",
+    "bairro": "Alagoas",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.256417,
+    "longitude": -37.436314
+  },
+  {
+    "rua": "Avenida Rio Branco",
+    "bairro": "Santa Cruz",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.273886,
+    "longitude": -37.447074
+  },
+  {
+    "rua": "Avenida Rubens Alves da Silva",
+    "bairro": "Santa Cruz",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.274086,
+    "longitude": -37.446977
+  },
+  {
+    "rua": "Avenida Santa Cruz",
+    "bairro": "Santa Cruz",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.276353,
+    "longitude": -37.444808
+  },
+  {
+    "rua": "Avenida Santo Antônio",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.26516,
+    "longitude": -37.441778
+  },
+  {
+    "rua": "Avenida Senhor do Bonfim",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.264139,
+    "longitude": -37.443481
+  },
+  {
+    "rua": "Avenida Tenente Eloi",
+    "bairro": "Residencial Paraíso",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.263096,
+    "longitude": -37.436317
+  },
+  {
+    "rua": "Beco da Bandeira",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.263275,
+    "longitude": -37.446446
+  },
+  {
+    "rua": "Estrada Mata da Negra",
+    "bairro": "Alecrim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.250615,
+    "longitude": -37.449901
+  },
+  {
+    "rua": "Estrada para Biqquinha",
+    "bairro": "Conjunto Antonio Carlos Valadares",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.242432,
+    "longitude": -37.42788
+  },
+  {
+    "rua": "Estrada Vicinal",
+    "bairro": "Conjunto Paulo Amaral Lopes",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.229276,
+    "longitude": -37.421872
+  },
+  {
+    "rua": "Largo Flaviano Lima Bedoia",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.266089,
+    "longitude": -37.440964
+  },
+  {
+    "rua": "Largo João Pessoa",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.270457,
+    "longitude": -37.438865
+  },
+  {
+    "rua": "Largo Luís Jorge Menezes",
+    "bairro": "São Jorge",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.273403,
+    "longitude": -37.430129
+  },
+  {
+    "rua": "Largo Mário Pires",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.265377,
+    "longitude": -37.439659
+  },
+  {
+    "rua": "Praça da Bandeira",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.267669,
+    "longitude": -37.439927
+  },
+  {
+    "rua": "Praça Doutor João Pires Davila",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.239342,
+    "longitude": -37.42387
+  },
+  {
+    "rua": "Praça Gonçalo Prado Rolemberg",
+    "bairro": "Santa Cruz",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.276049,
+    "longitude": -37.445171
+  },
+  {
+    "rua": "Praça Humberto Ferreira",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.269325,
+    "longitude": -37.436455
+  },
+  {
+    "rua": "Praça Jackson de Figueiredo",
+    "bairro": "Loteamento Humberto Ralin",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.273775,
+    "longitude": -37.43883
+  },
+  {
+    "rua": "Praça João Costa e Silva",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.26178,
+    "longitude": -37.447198
+  },
+  {
+    "rua": "Praça Orlando dos Santos",
+    "bairro": "Loteamento Humberto Ralin",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.272254,
+    "longitude": -37.439746
+  },
+  {
+    "rua": "Praça Princesa Isabel",
+    "bairro": "Santa Cruz",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.274307,
+    "longitude": -37.443671
+  },
+  {
+    "rua": "Praça Vereador José Vieira Barreto",
+    "bairro": "Santa Cruz",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.270325,
+    "longitude": -37.443294
+  },
+  {
+    "rua": "Primeira Travessa José Marcelino dos Santos",
+    "bairro": "Loteamento Ávila Meirelles",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.275842,
+    "longitude": -37.43447
+  },
+  {
+    "rua": "Rodovia Governador Mário Covas",
+    "bairro": "Loteamento São Domingos",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.250082,
+    "longitude": -37.437215
+  },
+  {
+    "rua": "Rodovia Rubens Alves da Silva",
+    "bairro": "",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.205336,
+    "longitude": -37.365397
+  },
+  {
+    "rua": "Rodovia SE-472",
+    "bairro": "Dizilena",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.224946,
+    "longitude": -37.422324
+  },
+  {
+    "rua": "Rodovia Venancio Fernandes da Fonseca",
+    "bairro": "Conjunto Camaçari",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.257946,
+    "longitude": -37.44951
+  },
+  {
+    "rua": "Rua 1",
+    "bairro": "Alagoas",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.257612,
+    "longitude": -37.433362
+  },
+  {
+    "rua": "Rua 2",
+    "bairro": "Loteamento Luar de Estância",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.24981,
+    "longitude": -37.428418
+  },
+  {
+    "rua": "Rua 23",
+    "bairro": "Estancinha",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.290578,
+    "longitude": -37.448428
+  },
+  {
+    "rua": "Rua 24",
+    "bairro": "Estancinha",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.291872,
+    "longitude": -37.447409
+  },
+  {
+    "rua": "Rua 25",
+    "bairro": "Estancinha",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.291723,
+    "longitude": -37.445664
+  },
+  {
+    "rua": "Rua 3",
+    "bairro": "Loteamento Luar de Estância",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.249439,
+    "longitude": -37.428683
+  },
+  {
+    "rua": "Rua 3D",
+    "bairro": "Alecrim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.238604,
+    "longitude": -37.461325
+  },
+  {
+    "rua": "Rua 3E",
+    "bairro": "Alecrim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.238972,
+    "longitude": -37.46107
+  },
+  {
+    "rua": "Rua 3R",
+    "bairro": "Alecrim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.239337,
+    "longitude": -37.460812
+  },
+  {
+    "rua": "Rua 3S",
+    "bairro": "Alecrim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.239698,
+    "longitude": -37.460571
+  },
+  {
+    "rua": "Rua 4",
+    "bairro": "Alagoas",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.257335,
+    "longitude": -37.43292
+  },
+  {
+    "rua": "Rua 5",
+    "bairro": "Loteamento Luar de Estância",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.249172,
+    "longitude": -37.429082
+  },
+  {
+    "rua": "Rua 6",
+    "bairro": "Conjunto Antonio Carlos Valadares",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.248747,
+    "longitude": -37.4296
+  },
+  {
+    "rua": "Rua 7",
+    "bairro": "Conjunto Balduíno",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.2697,
+    "longitude": -37.449972
+  },
+  {
+    "rua": "Rua 8",
+    "bairro": "Conjunto Balduíno",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.26913,
+    "longitude": -37.450286
+  },
+  {
+    "rua": "Rua A",
+    "bairro": "Alagoas",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.259549,
+    "longitude": -37.436755
+  },
+  {
+    "rua": "Rua A Leste",
+    "bairro": "Conjunto Ulisses Vieira Lima",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.2523,
+    "longitude": -37.431028
+  },
+  {
+    "rua": "Rua A Oeste",
+    "bairro": "Conjunto Ulisses Vieira Lima",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.25207,
+    "longitude": -37.431552
+  },
+  {
+    "rua": "Rua A Sul",
+    "bairro": "Conjunto Ulisses Vieira Lima",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.252285,
+    "longitude": -37.431064
+  },
+  {
+    "rua": "Rua Acácia Melo Rocha",
+    "bairro": "São Jorge",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.272391,
+    "longitude": -37.431315
+  },
+  {
+    "rua": "Rua Acrisio Esteves da Silva",
+    "bairro": "Alagoas",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.260662,
+    "longitude": -37.43763
+  },
+  {
+    "rua": "Rua Agda Barreto Costa",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.263369,
+    "longitude": -37.445498
+  },
+  {
+    "rua": "Rua Agnaldo Augusto dos Santos",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.270281,
+    "longitude": -37.43684
+  },
+  {
+    "rua": "Rua Alaide Alves de Jesus",
+    "bairro": "Loteamento Laura Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.275569,
+    "longitude": -37.433435
+  },
+  {
+    "rua": "Rua Alberto Bezerra da Silva",
+    "bairro": "Alecrim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.245111,
+    "longitude": -37.449454
+  },
+  {
+    "rua": "Rua Albino Batista Pires",
+    "bairro": "Conjunto Antonio Carlos Valadares",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.243836,
+    "longitude": -37.430241
+  },
+  {
+    "rua": "Rua Alexsandro Souza Santos Soares",
+    "bairro": "Estancinha",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.299338,
+    "longitude": -37.452308
+  },
+  {
+    "rua": "Rua Alfazema",
+    "bairro": "Estancinha",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.293478,
+    "longitude": -37.450633
+  },
+  {
+    "rua": "Rua Alpinia",
+    "bairro": "Estancinha",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.291002,
+    "longitude": -37.449132
+  },
+  {
+    "rua": "Rua Alto da Conceição",
+    "bairro": "Porto d'Areia",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.276638,
+    "longitude": -37.436451
+  },
+  {
+    "rua": "Rua Amor Perfeito",
+    "bairro": "Estancinha",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.291313,
+    "longitude": -37.446403
+  },
+  {
+    "rua": "Rua Ana Lima Cardoso",
+    "bairro": "Conjunto Ulisses Vieira Lima",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.253544,
+    "longitude": -37.433566
+  },
+  {
+    "rua": "Rua Angélica",
+    "bairro": "Estancinha",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.293491,
+    "longitude": -37.449096
+  },
+  {
+    "rua": "Rua Anita Rocha Silva",
+    "bairro": "Conjunto Ulisses Vieira Lima",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.248242,
+    "longitude": -37.432665
+  },
+  {
+    "rua": "Rua Antenor R. dos Santos",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.263092,
+    "longitude": -37.450341
+  },
+  {
+    "rua": "Rua Antônio Barbosa",
+    "bairro": "Loteamento São Domingos",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.254395,
+    "longitude": -37.436942
+  },
+  {
+    "rua": "Rua Antônio C. Carvalho",
+    "bairro": "Residencial Paraíso",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.263244,
+    "longitude": -37.43288
+  },
+  {
+    "rua": "Rua Antonio dos Santos",
+    "bairro": "Alecrim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.249094,
+    "longitude": -37.453905
+  },
+  {
+    "rua": "Rua Antônio Fernandes Reis",
+    "bairro": "Loteamento São Domingos",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.253852,
+    "longitude": -37.436639
+  },
+  {
+    "rua": "Rua Antônio José Montalvão de Abreu",
+    "bairro": "Botequim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.265176,
+    "longitude": -37.433866
+  },
+  {
+    "rua": "Rua Antonio Portugues",
+    "bairro": "Conjunto Piauítinga",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.25869,
+    "longitude": -37.44384
+  },
+  {
+    "rua": "Rua Antônio Rosa de Jesus",
+    "bairro": "Conjunto Antonio Carlos Valadares",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.244323,
+    "longitude": -37.42956
+  },
+  {
+    "rua": "Rua Antônio Serafim",
+    "bairro": "Conjunto Paulo Amaral Lopes",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.232889,
+    "longitude": -37.419748
+  },
+  {
+    "rua": "Rua Aquidabã",
+    "bairro": "Loteamento Humberto Ralin",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.274953,
+    "longitude": -37.440048
+  },
+  {
+    "rua": "Rua Arivaldo da Costa Rocha",
+    "bairro": "Conjunto Ulisses Vieira Lima",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.248821,
+    "longitude": -37.432959
+  },
+  {
+    "rua": "Rua Arnaldo Ribeiro de Mesquita",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.263218,
+    "longitude": -37.449898
+  },
+  {
+    "rua": "Rua B",
+    "bairro": "Alagoas",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.255953,
+    "longitude": -37.435536
+  },
+  {
+    "rua": "Rua Bela Vista",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.240996,
+    "longitude": -37.419521
+  },
+  {
+    "rua": "Rua Belém",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.238929,
+    "longitude": -37.423458
+  },
+  {
+    "rua": "Rua Benjamin Constant",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.270772,
+    "longitude": -37.438747
+  },
+  {
+    "rua": "Rua Bromélia",
+    "bairro": "Estancinha",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.291051,
+    "longitude": -37.446829
+  },
+  {
+    "rua": "Rua C",
+    "bairro": "Loteamento São Domingos",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.250065,
+    "longitude": -37.435401
+  },
+  {
+    "rua": "Rua Cajueiro",
+    "bairro": "Conjunto Camaçari",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.258111,
+    "longitude": -37.449284
+  },
+  {
+    "rua": "Rua Camélia",
+    "bairro": "Estancinha",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.292764,
+    "longitude": -37.448741
+  },
+  {
+    "rua": "Rua Camerino",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.269536,
+    "longitude": -37.43994
+  },
+  {
+    "rua": "Rua Camilo Calazans",
+    "bairro": "Conjunto Paulo Amaral Lopes",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.234237,
+    "longitude": -37.424031
+  },
+  {
+    "rua": "Rua Cândido Araújo",
+    "bairro": "São Jorge",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.272391,
+    "longitude": -37.431315
+  },
+  {
+    "rua": "Rua Candido Ferreira Andrade",
+    "bairro": "Loteamento Humberto Ralin",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.274769,
+    "longitude": -37.44076
+  },
+  {
+    "rua": "Rua Capitão Francelino",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.26835,
+    "longitude": -37.440701
+  },
+  {
+    "rua": "Rua Capitão Salomão",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.270462,
+    "longitude": -37.439069
+  },
+  {
+    "rua": "Rua Carteiro Gilvan Venancio de Jesus",
+    "bairro": "São Jorge",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.273753,
+    "longitude": -37.431748
+  },
+  {
+    "rua": "Rua Chico Mendes",
+    "bairro": "São Jorge",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.27096,
+    "longitude": -37.433949
+  },
+  {
+    "rua": "Rua Cinco",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.261561,
+    "longitude": -37.44982
+  },
+  {
+    "rua": "Rua Copo de Leite",
+    "bairro": "Estancinha",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.289193,
+    "longitude": -37.449215
+  },
+  {
+    "rua": "Rua Coronel Francisco A. Martins",
+    "bairro": "Alagoas",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.256519,
+    "longitude": -37.435204
+  },
+  {
+    "rua": "Rua Cosme Alves Lima",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.266117,
+    "longitude": -37.445843
+  },
+  {
+    "rua": "Rua Cosme Felix dos Santos",
+    "bairro": "Loteamento Laura Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.275544,
+    "longitude": -37.434007
+  },
+  {
+    "rua": "Rua Creusa N. de Andrade",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.264408,
+    "longitude": -37.450075
+  },
+  {
+    "rua": "Rua Crislayne Dias Santos",
+    "bairro": "Conjunto Paulo Amaral Lopes",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.232889,
+    "longitude": -37.419748
+  },
+  {
+    "rua": "Rua Crizzan Cruz Santos",
+    "bairro": "Loteamento Ávila Meirelles",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.275842,
+    "longitude": -37.43447
+  },
+  {
+    "rua": "Rua D",
+    "bairro": "Loteamento São Domingos",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.253812,
+    "longitude": -37.436281
+  },
+  {
+    "rua": "Rua da Bahia",
+    "bairro": "Loteamento Humberto Ralin",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.274373,
+    "longitude": -37.441972
+  },
+  {
+    "rua": "Rua da Cachoeira",
+    "bairro": "Santa Cruz",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.279837,
+    "longitude": -37.446438
+  },
+  {
+    "rua": "Rua da Liberdade",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.268539,
+    "longitude": -37.439872
+  },
+  {
+    "rua": "Rua da Miranga",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.26912,
+    "longitude": -37.435472
+  },
+  {
+    "rua": "Rua da Orquídea",
+    "bairro": "Estancinha",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.290928,
+    "longitude": -37.448209
+  },
+  {
+    "rua": "Rua da Palha",
+    "bairro": "",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.311339,
+    "longitude": -37.414261
+  },
+  {
+    "rua": "Rua da Rosa",
+    "bairro": "Estancinha",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.289368,
+    "longitude": -37.450432
+  },
+  {
+    "rua": "Rua Damião Alves Lima",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.265683,
+    "longitude": -37.4456
+  },
+  {
+    "rua": "Rua de Acesso as Fabricas",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.264452,
+    "longitude": -37.452752
+  },
+  {
+    "rua": "Rua Deocleciano Dos Santos",
+    "bairro": "Conjunto Ulisses Vieira Lima",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.25296,
+    "longitude": -37.434131
+  },
+  {
+    "rua": "Rua Deputado Francisco Araujo de Macedo",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.267441,
+    "longitude": -37.436319
+  },
+  {
+    "rua": "Rua Deputado Francisco Araujo Macedo",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.268292,
+    "longitude": -37.436368
+  },
+  {
+    "rua": "Rua Divaldo Carvalho Costa",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.271331,
+    "longitude": -37.438928
+  },
+  {
+    "rua": "Rua do Açude",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.241721,
+    "longitude": -37.417538
+  },
+  {
+    "rua": "Rua do Cigano",
+    "bairro": "Loteamento São Domingos",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.251781,
+    "longitude": -37.438724
+  },
+  {
+    "rua": "Rua do Cravo",
+    "bairro": "Estancinha",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.290232,
+    "longitude": -37.448655
+  },
+  {
+    "rua": "Rua do Gravata",
+    "bairro": "Loteamento Humberto Ralin",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.274666,
+    "longitude": -37.439644
+  },
+  {
+    "rua": "Rua do Lírio",
+    "bairro": "Estancinha",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.290578,
+    "longitude": -37.448428
+  },
+  {
+    "rua": "Rua do Ouro",
+    "bairro": "Botequim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.264995,
+    "longitude": -37.434977
+  },
+  {
+    "rua": "Rua do Pompeu",
+    "bairro": "Loteamento Ávila Meirelles",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.276985,
+    "longitude": -37.435233
+  },
+  {
+    "rua": "Rua do Queiroz",
+    "bairro": "Botequim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.269262,
+    "longitude": -37.433463
+  },
+  {
+    "rua": "Rua do Xixiu",
+    "bairro": "Santa Cruz",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.274336,
+    "longitude": -37.447447
+  },
+  {
+    "rua": "Rua Dom Quirino",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.268451,
+    "longitude": -37.436083
+  },
+  {
+    "rua": "Rua Domingo Alves da Silva",
+    "bairro": "Porto d'Areia",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.272498,
+    "longitude": -37.435614
+  },
+  {
+    "rua": "Rua Domingos Alves Ribeiro",
+    "bairro": "Conjunto Camaçari",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.261,
+    "longitude": -37.448062
+  },
+  {
+    "rua": "Rua Domingos Gordo",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.269533,
+    "longitude": -37.437057
+  },
+  {
+    "rua": "Rua Domingos Ribeiro de Mesquita",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.262124,
+    "longitude": -37.450242
+  },
+  {
+    "rua": "Rua Doutor Jesse Fontes",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.270161,
+    "longitude": -37.439981
+  },
+  {
+    "rua": "Rua Doutor Osvaldo Cruz",
+    "bairro": "Alagoas",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.256421,
+    "longitude": -37.438427
+  },
+  {
+    "rua": "Rua Doutor Pedro Soares",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.269448,
+    "longitude": -37.439121
+  },
+  {
+    "rua": "Rua Doutor Vicente Portela",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.267322,
+    "longitude": -37.438428
+  },
+  {
+    "rua": "Rua E",
+    "bairro": "Conjunto Ulisses Vieira Lima",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.252263,
+    "longitude": -37.433079
+  },
+  {
+    "rua": "Rua Edgar Barreto de Araujo",
+    "bairro": "Santa Cruz",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.275217,
+    "longitude": -37.446576
+  },
+  {
+    "rua": "Rua Elias de S Avila",
+    "bairro": "Loteamento São Domingos",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.2536,
+    "longitude": -37.435257
+  },
+  {
+    "rua": "Rua Elísio Matos",
+    "bairro": "São Jorge",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.273215,
+    "longitude": -37.433989
+  },
+  {
+    "rua": "Rua Emanuel A Mendonça",
+    "bairro": "Conjunto Antonio Carlos Valadares",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.245174,
+    "longitude": -37.429533
+  },
+  {
+    "rua": "Rua Erasmo Loyola",
+    "bairro": "Santa Cruz",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.277684,
+    "longitude": -37.448884
+  },
+  {
+    "rua": "Rua Esmeraldo dos Santos",
+    "bairro": "Santa Cruz",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.275955,
+    "longitude": -37.446637
+  },
+  {
+    "rua": "Rua Esteves de Freitas",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.263833,
+    "longitude": -37.443595
+  },
+  {
+    "rua": "Rua Estrela do Meio-Dia",
+    "bairro": "Estancinha",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.292163,
+    "longitude": -37.447166
+  },
+  {
+    "rua": "Rua Existente",
+    "bairro": "Loteamento Luar de Estância",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.250756,
+    "longitude": -37.429235
+  },
+  {
+    "rua": "Rua Expedicionário João Ferreira da Silva",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.266394,
+    "longitude": -37.437536
+  },
+  {
+    "rua": "Rua Expedicionário João Fonseca da Silva",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.267346,
+    "longitude": -37.438436
+  },
+  {
+    "rua": "Rua Ezequias Costa de Oliveira",
+    "bairro": "Conjunto Ulisses Vieira Lima",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.251762,
+    "longitude": -37.434702
+  },
+  {
+    "rua": "Rua F",
+    "bairro": "Alagoas",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.255842,
+    "longitude": -37.434467
+  },
+  {
+    "rua": "Rua Fausto Cardoso",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.267431,
+    "longitude": -37.440508
+  },
+  {
+    "rua": "Rua Filadelfo Luiz da Costa",
+    "bairro": "Residencial Paraíso",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.262483,
+    "longitude": -37.435589
+  },
+  {
+    "rua": "Rua Flor de Cerejeira",
+    "bairro": "Estancinha",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.291534,
+    "longitude": -37.448656
+  },
+  {
+    "rua": "Rua Floriano Peixoto",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.266744,
+    "longitude": -37.439571
+  },
+  {
+    "rua": "Rua Fortaleza",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.238808,
+    "longitude": -37.421477
+  },
+  {
+    "rua": "Rua Francisco Abreu Magalhães",
+    "bairro": "Distrito Industrial",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.247089,
+    "longitude": -37.432913
+  },
+  {
+    "rua": "Rua Frei Damião",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.237047,
+    "longitude": -37.422498
+  },
+  {
+    "rua": "Rua Freitas Barreto",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.267871,
+    "longitude": -37.436775
+  },
+  {
+    "rua": "Rua G",
+    "bairro": "Conjunto Ulisses Vieira Lima",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.255167,
+    "longitude": -37.430274
+  },
+  {
+    "rua": "Rua Gardênia",
+    "bairro": "Estancinha",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.292454,
+    "longitude": -37.44694
+  },
+  {
+    "rua": "Rua General Pedra",
+    "bairro": "Loteamento Humberto Ralin",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.273223,
+    "longitude": -37.442139
+  },
+  {
+    "rua": "Rua Genilde Oliveira do Amor",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.269137,
+    "longitude": -37.44178
+  },
+  {
+    "rua": "Rua Geraldo Bispo de Souza",
+    "bairro": "Alecrim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.246922,
+    "longitude": -37.452216
+  },
+  {
+    "rua": "Rua Gilvando Passos",
+    "bairro": "Alecrim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.246503,
+    "longitude": -37.453192
+  },
+  {
+    "rua": "Rua Girassol",
+    "bairro": "Estancinha",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.289554,
+    "longitude": -37.449034
+  },
+  {
+    "rua": "Rua Guilherme Bessa",
+    "bairro": "Botequim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.265826,
+    "longitude": -37.436526
+  },
+  {
+    "rua": "Rua Guilherme Meireles Dos Santos",
+    "bairro": "Loteamento Luar de Estância",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.250548,
+    "longitude": -37.429738
+  },
+  {
+    "rua": "Rua Gumercindo Bessa",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.267056,
+    "longitude": -37.437111
+  },
+  {
+    "rua": "Rua H",
+    "bairro": "Conjunto Ulisses Vieira Lima",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.256596,
+    "longitude": -37.430272
+  },
+  {
+    "rua": "Rua Helvécio Araújo",
+    "bairro": "Residencial Paraíso",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.263872,
+    "longitude": -37.437121
+  },
+  {
+    "rua": "Rua Herbert de Souza",
+    "bairro": "Alagoas",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.2588,
+    "longitude": -37.438815
+  },
+  {
+    "rua": "Rua Hortência",
+    "bairro": "Estancinha",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.291558,
+    "longitude": -37.450092
+  },
+  {
+    "rua": "Rua I",
+    "bairro": "Loteamento Luar de Estância",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.253487,
+    "longitude": -37.428819
+  },
+  {
+    "rua": "Rua Ireno J. dos Santos",
+    "bairro": "São Jorge",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.272758,
+    "longitude": -37.432302
+  },
+  {
+    "rua": "Rua Íris",
+    "bairro": "Estancinha",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.292361,
+    "longitude": -37.448713
+  },
+  {
+    "rua": "Rua Itabaianinha",
+    "bairro": "Santa Cruz",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.275291,
+    "longitude": -37.447094
+  },
+  {
+    "rua": "Rua Ivanilde dos Santos",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.263101,
+    "longitude": -37.450563
+  },
+  {
+    "rua": "Rua IvanildeSilva Froes Borges",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.263369,
+    "longitude": -37.449492
+  },
+  {
+    "rua": "Rua J",
+    "bairro": "Loteamento Luar de Estância",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.250552,
+    "longitude": -37.429914
+  },
+  {
+    "rua": "Rua Janete de Jesus Neves",
+    "bairro": "Conjunto Ulisses Vieira Lima",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.250368,
+    "longitude": -37.431313
+  },
+  {
+    "rua": "Rua Janilson de Souza Santos",
+    "bairro": "Porto d'Areia",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.274872,
+    "longitude": -37.436094
+  },
+  {
+    "rua": "Rua Jasmim",
+    "bairro": "Estancinha",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.291969,
+    "longitude": -37.448686
+  },
+  {
+    "rua": "Rua Jesse Fontes",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.26858,
+    "longitude": -37.442656
+  },
+  {
+    "rua": "Rua Joana D Arc",
+    "bairro": "Residencial Recanto Verde",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.240327,
+    "longitude": -37.415674
+  },
+  {
+    "rua": "Rua João Batista de Oliveira Santos",
+    "bairro": "Loteamento Luar de Estância",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.249866,
+    "longitude": -37.428961
+  },
+  {
+    "rua": "Rua João Café Filho",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.236264,
+    "longitude": -37.42332
+  },
+  {
+    "rua": "Rua João Correia Rocha",
+    "bairro": "São Jorge",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.270884,
+    "longitude": -37.433068
+  },
+  {
+    "rua": "Rua João Costa e Silva",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.23975,
+    "longitude": -37.41911
+  },
+  {
+    "rua": "Rua João da Rosa do Nascimento",
+    "bairro": "Residencial Paraíso",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.262044,
+    "longitude": -37.438568
+  },
+  {
+    "rua": "Rua João de Oliveira Campos",
+    "bairro": "Loteamento Luar de Estância",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.250879,
+    "longitude": -37.42792
+  },
+  {
+    "rua": "Rua João Evangelista dos Santos",
+    "bairro": "Porto d'Areia",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.275466,
+    "longitude": -37.438173
+  },
+  {
+    "rua": "Rua João Francisco da Silva",
+    "bairro": "Porto d'Areia",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.27206,
+    "longitude": -37.435671
+  },
+  {
+    "rua": "Rua João Graciano dos Santos",
+    "bairro": "São Jorge",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.271353,
+    "longitude": -37.432897
+  },
+  {
+    "rua": "Rua João Joaquim Souza",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.272296,
+    "longitude": -37.438415
+  },
+  {
+    "rua": "Rua João Laureano",
+    "bairro": "Candeal",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.287944,
+    "longitude": -37.460351
+  },
+  {
+    "rua": "Rua João Ligio",
+    "bairro": "Santa Cruz",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.274378,
+    "longitude": -37.447051
+  },
+  {
+    "rua": "Rua João Passos de Souza",
+    "bairro": "Conjunto Ulisses Vieira Lima",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.255462,
+    "longitude": -37.43359
+  },
+  {
+    "rua": "Rua João Rosa do Nascimento",
+    "bairro": "Alagoas",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.260227,
+    "longitude": -37.438828
+  },
+  {
+    "rua": "Rua João Sarmento",
+    "bairro": "Santa Cruz",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.2723,
+    "longitude": -37.444181
+  },
+  {
+    "rua": "Rua Joaquim Calazans",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.269198,
+    "longitude": -37.437531
+  },
+  {
+    "rua": "Rua Joaquim Nascimento",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.265935,
+    "longitude": -37.443199
+  },
+  {
+    "rua": "Rua Joaquim Onorio",
+    "bairro": "Santa Cruz",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.277794,
+    "longitude": -37.447266
+  },
+  {
+    "rua": "Rua Jocasta Ribeiro de Mesquita Soarea",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.262325,
+    "longitude": -37.449767
+  },
+  {
+    "rua": "Rua Jorge Amado",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.269796,
+    "longitude": -37.437746
+  },
+  {
+    "rua": "Rua Jorge Prataa",
+    "bairro": "Conjunto Piauítinga",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.263498,
+    "longitude": -37.440538
+  },
+  {
+    "rua": "Rua Jornalista João Esteves da Silveira",
+    "bairro": "Conjunto Piauítinga",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.258886,
+    "longitude": -37.439541
+  },
+  {
+    "rua": "Rua Jornalista Manuel Rodrigues do Nascimento",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.270296,
+    "longitude": -37.439793
+  },
+  {
+    "rua": "Rua José Alves dos Santos",
+    "bairro": "Alecrim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.247241,
+    "longitude": -37.450947
+  },
+  {
+    "rua": "Rua José Antônio Oliveira",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.264449,
+    "longitude": -37.439223
+  },
+  {
+    "rua": "Rua José B Nascimento",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.261914,
+    "longitude": -37.4471
+  },
+  {
+    "rua": "Rua José Bispo dos Santos",
+    "bairro": "Conjunto Antonio Carlos Valadares",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.243395,
+    "longitude": -37.429973
+  },
+  {
+    "rua": "Rua José Bonifácio Santos",
+    "bairro": "Santa Cruz",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.276298,
+    "longitude": -37.448939
+  },
+  {
+    "rua": "Rua José Caetano dos Santos",
+    "bairro": "Alecrim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.247582,
+    "longitude": -37.45606
+  },
+  {
+    "rua": "Rua José da Silva Fróes",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.262095,
+    "longitude": -37.450966
+  },
+  {
+    "rua": "Rua José de Barros Sobrinho",
+    "bairro": "Alagoas",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.258549,
+    "longitude": -37.436492
+  },
+  {
+    "rua": "Rua José de Oliveira",
+    "bairro": "Porto d'Areia",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.275819,
+    "longitude": -37.435305
+  },
+  {
+    "rua": "Rua José Domingos da Cruz",
+    "bairro": "Loteamento Laura Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.274195,
+    "longitude": -37.432764
+  },
+  {
+    "rua": "Rua José Lino de o Neto",
+    "bairro": "Loteamento Luar de Estância",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.250743,
+    "longitude": -37.430238
+  },
+  {
+    "rua": "Rua José M da Costa",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.242003,
+    "longitude": -37.419255
+  },
+  {
+    "rua": "Rua José Marcelino dos Santos",
+    "bairro": "Porto d'Areia",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.275193,
+    "longitude": -37.436139
+  },
+  {
+    "rua": "Rua José Maria",
+    "bairro": "Santa Cruz",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.278103,
+    "longitude": -37.447949
+  },
+  {
+    "rua": "Rua José Martins de Oliveira",
+    "bairro": "Conjunto Ulisses Vieira Lima",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.248821,
+    "longitude": -37.432959
+  },
+  {
+    "rua": "Rua José Miranda de Carvalho",
+    "bairro": "Alagoas",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.257783,
+    "longitude": -37.438535
+  },
+  {
+    "rua": "Rua José Pires",
+    "bairro": "Loteamento Ávila Meirelles",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.27669,
+    "longitude": -37.435284
+  },
+  {
+    "rua": "Rua José Reginaldo N. Costa",
+    "bairro": "Loteamento Ávila Meirelles",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.277784,
+    "longitude": -37.433147
+  },
+  {
+    "rua": "Rua José Roberto Soares",
+    "bairro": "São Jorge",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.273392,
+    "longitude": -37.431471
+  },
+  {
+    "rua": "Rua José Rodrigues Caxico",
+    "bairro": "São Jorge",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.271178,
+    "longitude": -37.433896
+  },
+  {
+    "rua": "Rua José Rodrigues de Matos",
+    "bairro": "Residencial Paraíso",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.262774,
+    "longitude": -37.438256
+  },
+  {
+    "rua": "Rua José Rufino Cavalcanti",
+    "bairro": "Conjunto Ulisses Vieira Lima",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.253011,
+    "longitude": -37.432694
+  },
+  {
+    "rua": "Rua José Sales de Oliveira",
+    "bairro": "Conjunto Ulisses Vieira Lima",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.250179,
+    "longitude": -37.433137
+  },
+  {
+    "rua": "Rua José Venâncio da Cruz",
+    "bairro": "São Jorge",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.272722,
+    "longitude": -37.432778
+  },
+  {
+    "rua": "Rua José Vitor de Jesus",
+    "bairro": "São Jorge",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.272362,
+    "longitude": -37.433852
+  },
+  {
+    "rua": "Rua Joséfa do Espírito Santo",
+    "bairro": "Conjunto Piauítinga",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.260178,
+    "longitude": -37.439372
+  },
+  {
+    "rua": "Rua Josefa Roseana dos Santos",
+    "bairro": "São Jorge",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.273492,
+    "longitude": -37.433314
+  },
+  {
+    "rua": "Rua Joselita de Andrade Gomes",
+    "bairro": "Conjunto Ulisses Vieira Lima",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.250179,
+    "longitude": -37.433137
+  },
+  {
+    "rua": "Rua Josephina de Andrade Santos",
+    "bairro": "Conjunto Antonio Carlos Valadares",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.246201,
+    "longitude": -37.428626
+  },
+  {
+    "rua": "Rua Juciara Silva Melo",
+    "bairro": "Loteamento Luar de Estância",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.252064,
+    "longitude": -37.428498
+  },
+  {
+    "rua": "Rua Juscelino Kubitschek",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.237374,
+    "longitude": -37.424889
+  },
+  {
+    "rua": "Rua K",
+    "bairro": "Residencial Recanto Verde",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.238294,
+    "longitude": -37.414521
+  },
+  {
+    "rua": "Rua L",
+    "bairro": "Loteamento Luar de Estância",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.248533,
+    "longitude": -37.42196
+  },
+  {
+    "rua": "Rua Laurina Francisca",
+    "bairro": "Residencial Paraíso",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.261832,
+    "longitude": -37.4377
+  },
+  {
+    "rua": "Rua Lavina Lima dos Santos",
+    "bairro": "São Jorge",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.271433,
+    "longitude": -37.434241
+  },
+  {
+    "rua": "Rua Leão XIII",
+    "bairro": "Santa Cruz",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.277841,
+    "longitude": -37.446713
+  },
+  {
+    "rua": "Rua Lenaldo Souza Azevedo",
+    "bairro": "Alagoas",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.259233,
+    "longitude": -37.435882
+  },
+  {
+    "rua": "Rua Leonardo Ribeiro",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.265391,
+    "longitude": -37.443629
+  },
+  {
+    "rua": "Rua Leopoldo Amaral",
+    "bairro": "Loteamento Humberto Ralin",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.273302,
+    "longitude": -37.439793
+  },
+  {
+    "rua": "Rua Leopoldo Rodrigues do Nascimento",
+    "bairro": "Botequim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.266762,
+    "longitude": -37.434962
+  },
+  {
+    "rua": "Rua Lessa Pacheco",
+    "bairro": "Conjunto Camaçari",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.25911,
+    "longitude": -37.445827
+  },
+  {
+    "rua": "Rua Lindinalva Dias de Souza",
+    "bairro": "Alecrim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.247683,
+    "longitude": -37.451188
+  },
+  {
+    "rua": "Rua Lourival Batista",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.272072,
+    "longitude": -37.439116
+  },
+  {
+    "rua": "Rua Lourival Silva",
+    "bairro": "Conjunto Camaçari",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.258759,
+    "longitude": -37.445421
+  },
+  {
+    "rua": "Rua Luís Carlos Garcia",
+    "bairro": "Conjunto Piauítinga",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.261389,
+    "longitude": -37.439074
+  },
+  {
+    "rua": "Rua LuziaCardoso Vieira",
+    "bairro": "Conjunto Ulisses Vieira Lima",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.250576,
+    "longitude": -37.43078
+  },
+  {
+    "rua": "Rua M",
+    "bairro": "Conjunto Antonio Carlos Valadares",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.242197,
+    "longitude": -37.424727
+  },
+  {
+    "rua": "Rua M. L. Santos",
+    "bairro": "São Jorge",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.272063,
+    "longitude": -37.433007
+  },
+  {
+    "rua": "Rua Maceió",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.240209,
+    "longitude": -37.420459
+  },
+  {
+    "rua": "Rua Maestro Julio Thomas do Amaral",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.263872,
+    "longitude": -37.450704
+  },
+  {
+    "rua": "Rua Manaus",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.23862,
+    "longitude": -37.423745
+  },
+  {
+    "rua": "Rua Manoel C da Silva",
+    "bairro": "Alagoas",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.258551,
+    "longitude": -37.435339
+  },
+  {
+    "rua": "Rua Manoel da Paixão Franca Froes",
+    "bairro": "Conjunto Camaçari",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.25772,
+    "longitude": -37.44722
+  },
+  {
+    "rua": "Rua Manoel de Barros Lima",
+    "bairro": "Porto d'Areia",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.27499,
+    "longitude": -37.434394
+  },
+  {
+    "rua": "Rua Manoel Messias da Rocha",
+    "bairro": "Alagoas",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.25648,
+    "longitude": -37.435292
+  },
+  {
+    "rua": "Rua Manoel Messias de Sena",
+    "bairro": "Loteamento Luar de Estância",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.251696,
+    "longitude": -37.428311
+  },
+  {
+    "rua": "Rua Manoel Messias dos Santos",
+    "bairro": "Alecrim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.248057,
+    "longitude": -37.455798
+  },
+  {
+    "rua": "Rua Manoel Natureza",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.242964,
+    "longitude": -37.418419
+  },
+  {
+    "rua": "Rua Manoel Rodrigues Nascimento",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.269983,
+    "longitude": -37.439586
+  },
+  {
+    "rua": "Rua Marechal Deodoro da Fonseca",
+    "bairro": "Botequim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.264795,
+    "longitude": -37.438208
+  },
+  {
+    "rua": "Rua Marechal Rondon",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.2405,
+    "longitude": -37.420175
+  },
+  {
+    "rua": "Rua Margarida",
+    "bairro": "Estancinha",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.293139,
+    "longitude": -37.448893
+  },
+  {
+    "rua": "Rua Maria Bezerra Santana",
+    "bairro": "Conjunto Ulisses Vieira Lima",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.249389,
+    "longitude": -37.433242
+  },
+  {
+    "rua": "Rua Maria Celia S. Oliveira",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.264396,
+    "longitude": -37.451226
+  },
+  {
+    "rua": "Rua Maria de Oliveira",
+    "bairro": "Porto d'Areia",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.272764,
+    "longitude": -37.435314
+  },
+  {
+    "rua": "Rua Maria do CarmoReis Nascimento",
+    "bairro": "Conjunto Antonio Carlos Valadares",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.242669,
+    "longitude": -37.430764
+  },
+  {
+    "rua": "Rua Maria Ferreira Santos",
+    "bairro": "Santa Cruz",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.2723,
+    "longitude": -37.444181
+  },
+  {
+    "rua": "Rua Maria Helena Silva Froes",
+    "bairro": "Conjunto Camaçari",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.260341,
+    "longitude": -37.445515
+  },
+  {
+    "rua": "Rua Maria Lucia Fontes Evaristo",
+    "bairro": "Conjunto Ulisses Vieira Lima",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.252863,
+    "longitude": -37.433722
+  },
+  {
+    "rua": "Rua Maria Oliveira Lima",
+    "bairro": "Conjunto Ulisses Vieira Lima",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.255507,
+    "longitude": -37.434197
+  },
+  {
+    "rua": "Rua Maria Santana Santos",
+    "bairro": "Conjunto Camaçari",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.258637,
+    "longitude": -37.4505
+  },
+  {
+    "rua": "Rua Maria São Pedro Santos",
+    "bairro": "Loteamento Laura Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.274388,
+    "longitude": -37.429955
+  },
+  {
+    "rua": "Rua Maria Terezinha de G Lima",
+    "bairro": "Conjunto Antonio Carlos Valadares",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.243897,
+    "longitude": -37.428439
+  },
+  {
+    "rua": "Rua Maria Terezinha dos Santos Gonçalves",
+    "bairro": "Alecrim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.247867,
+    "longitude": -37.455144
+  },
+  {
+    "rua": "Rua Marinho Dias da Silva",
+    "bairro": "Conjunto Ulisses Vieira Lima",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.253602,
+    "longitude": -37.433872
+  },
+  {
+    "rua": "Rua Mário Batista dos Santos",
+    "bairro": "São Jorge",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.270983,
+    "longitude": -37.431961
+  },
+  {
+    "rua": "Rua Marquês de Herval",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.268935,
+    "longitude": -37.437112
+  },
+  {
+    "rua": "Rua Meuquisedek Amado",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.266454,
+    "longitude": -37.441449
+  },
+  {
+    "rua": "Rua Minas Gerais",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.238302,
+    "longitude": -37.424034
+  },
+  {
+    "rua": "Rua Mirena Batista da Costa",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.265545,
+    "longitude": -37.450561
+  },
+  {
+    "rua": "Rua Moises Costa Carvalho",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.26601,
+    "longitude": -37.438529
+  },
+  {
+    "rua": "Rua Monsenhor José Paes de Santiago",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.270857,
+    "longitude": -37.441747
+  },
+  {
+    "rua": "Rua Monsenhor Vitorino Fontes",
+    "bairro": "Residencial Paraíso",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.259688,
+    "longitude": -37.434996
+  },
+  {
+    "rua": "Rua N",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.240159,
+    "longitude": -37.426318
+  },
+  {
+    "rua": "Rua Nabuco Macedo",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.24223,
+    "longitude": -37.418901
+  },
+  {
+    "rua": "Rua Nair de Brito",
+    "bairro": "Alecrim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.243294,
+    "longitude": -37.453393
+  },
+  {
+    "rua": "Rua Natal",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.238677,
+    "longitude": -37.420743
+  },
+  {
+    "rua": "Rua Natanael Jose Do Nascimento",
+    "bairro": "Conjunto Ulisses Vieira Lima",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.252484,
+    "longitude": -37.433582
+  },
+  {
+    "rua": "Rua Nenildon M. dos Santos",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.265065,
+    "longitude": -37.451752
+  },
+  {
+    "rua": "Rua Newton Miranda Barreto",
+    "bairro": "Conjunto Ulisses Vieira Lima",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.250042,
+    "longitude": -37.431947
+  },
+  {
+    "rua": "Rua Nivalda Silva Fontes",
+    "bairro": "Alecrim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.24698,
+    "longitude": -37.453342
+  },
+  {
+    "rua": "Rua Nivaldo Batista de Jesus",
+    "bairro": "Residencial Paraíso",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.262592,
+    "longitude": -37.436662
+  },
+  {
+    "rua": "Rua Nossa Senhora de Guadalupe",
+    "bairro": "Porto d'Areia",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.273269,
+    "longitude": -37.434732
+  },
+  {
+    "rua": "Rua Nova do Porto",
+    "bairro": "Loteamento Laura Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.276265,
+    "longitude": -37.431128
+  },
+  {
+    "rua": "Rua O",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.239459,
+    "longitude": -37.422855
+  },
+  {
+    "rua": "Rua Oscar de O. Santos",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.264691,
+    "longitude": -37.451552
+  },
+  {
+    "rua": "Rua Oscar Santos de Oliveira",
+    "bairro": "Santa Cruz",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.27545,
+    "longitude": -37.446859
+  },
+  {
+    "rua": "Rua Osvaldo dos Santos",
+    "bairro": "Santa Cruz",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.276244,
+    "longitude": -37.447212
+  },
+  {
+    "rua": "Rua Osvaldo Freire da Fonseca",
+    "bairro": "Botequim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.26706,
+    "longitude": -37.434235
+  },
+  {
+    "rua": "Rua Osvaldo Gomes Nascimento",
+    "bairro": "Conjunto Ulisses Vieira Lima",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.250728,
+    "longitude": -37.433622
+  },
+  {
+    "rua": "Rua Otaviano Siqueira",
+    "bairro": "Conjunto Piauítinga",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.261428,
+    "longitude": -37.440234
+  },
+  {
+    "rua": "Rua P",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.241343,
+    "longitude": -37.425251
+  },
+  {
+    "rua": "Rua Paraíba",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.238888,
+    "longitude": -37.420268
+  },
+  {
+    "rua": "Rua Pedro de Oliveira",
+    "bairro": "Conjunto Camaçari",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.256444,
+    "longitude": -37.446336
+  },
+  {
+    "rua": "Rua Pedro Francisco Nascimento",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.263619,
+    "longitude": -37.444392
+  },
+  {
+    "rua": "Rua Pedro Homem da Costa",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.265471,
+    "longitude": -37.439246
+  },
+  {
+    "rua": "Rua Piauí",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.239024,
+    "longitude": -37.422314
+  },
+  {
+    "rua": "Rua Primavera",
+    "bairro": "Estancinha",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.292964,
+    "longitude": -37.448813
+  },
+  {
+    "rua": "Rua Princess Isabel",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.236643,
+    "longitude": -37.424767
+  },
+  {
+    "rua": "Rua Professor Azarias Santos",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.267674,
+    "longitude": -37.440551
+  },
+  {
+    "rua": "Rua Professor José Dias de Oliveira",
+    "bairro": "Alagoas",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.257195,
+    "longitude": -37.438143
+  },
+  {
+    "rua": "Rua Professora Cremildes Freire",
+    "bairro": "Santa Cruz",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.270969,
+    "longitude": -37.443244
+  },
+  {
+    "rua": "Rua Professora Rosy Mary Freire Graça",
+    "bairro": "Loteamento Humberto Ralin",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.27434,
+    "longitude": -37.440366
+  },
+  {
+    "rua": "Rua Q",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.240014,
+    "longitude": -37.422872
+  },
+  {
+    "rua": "Rua R",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.239986,
+    "longitude": -37.422152
+  },
+  {
+    "rua": "Rua Radialista José Sivaldo S Silva",
+    "bairro": "Conjunto Ulisses Vieira Lima",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.248742,
+    "longitude": -37.431817
+  },
+  {
+    "rua": "Rua Raimundo Costa Carvalho",
+    "bairro": "Loteamento Humberto Ralin",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.272502,
+    "longitude": -37.440246
+  },
+  {
+    "rua": "Rua Recife",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.239147,
+    "longitude": -37.41996
+  },
+  {
+    "rua": "Rua Riachuelo",
+    "bairro": "São Jorge",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.270361,
+    "longitude": -37.433757
+  },
+  {
+    "rua": "Rua Ribeiro de Mesquita",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.262115,
+    "longitude": -37.450664
+  },
+  {
+    "rua": "Rua Ribeirópolis",
+    "bairro": "Santa Cruz",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.279198,
+    "longitude": -37.448859
+  },
+  {
+    "rua": "Rua Ricardo Luiz Oliveira Sobral",
+    "bairro": "Loteamento Humberto Ralin",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.273757,
+    "longitude": -37.441843
+  },
+  {
+    "rua": "Rua Roberto de A. Sousa",
+    "bairro": "Conjunto Balduíno",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.266727,
+    "longitude": -37.45191
+  },
+  {
+    "rua": "Rua Rodolfo Oliveira de Andrade",
+    "bairro": "Residencial Paraíso",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.261919,
+    "longitude": -37.438273
+  },
+  {
+    "rua": "Rua Rosilaine Santos R. de Jesus",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.263516,
+    "longitude": -37.450129
+  },
+  {
+    "rua": "Rua S",
+    "bairro": "Residencial Recanto Verde",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.237029,
+    "longitude": -37.409179
+  },
+  {
+    "rua": "Rua Santa Luzia",
+    "bairro": "Santa Cruz",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.274638,
+    "longitude": -37.444399
+  },
+  {
+    "rua": "Rua Santo Antônio",
+    "bairro": "Alecrim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.242247,
+    "longitude": -37.451943
+  },
+  {
+    "rua": "Rua São Caetano",
+    "bairro": "Botequim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.266725,
+    "longitude": -37.431519
+  },
+  {
+    "rua": "Rua São Cristóvão",
+    "bairro": "Santa Cruz",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.275776,
+    "longitude": -37.447392
+  },
+  {
+    "rua": "Rua São João",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.242252,
+    "longitude": -37.418094
+  },
+  {
+    "rua": "Rua São José",
+    "bairro": "Candeal",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.286257,
+    "longitude": -37.459844
+  },
+  {
+    "rua": "Rua São Luiz",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.238318,
+    "longitude": -37.422196
+  },
+  {
+    "rua": "Rua São Paulo",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.237993,
+    "longitude": -37.424321
+  },
+  {
+    "rua": "Rua São Pedro",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.241503,
+    "longitude": -37.415982
+  },
+  {
+    "rua": "Rua Senhora A Liborio",
+    "bairro": "São Jorge",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.272218,
+    "longitude": -37.433445
+  },
+  {
+    "rua": "Rua Sergipe",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.240496,
+    "longitude": -37.419648
+  },
+  {
+    "rua": "Rua Sul",
+    "bairro": "Loteamento Luar de Estância",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.253053,
+    "longitude": -37.429508
+  },
+  {
+    "rua": "Rua T",
+    "bairro": "Conjunto Paulo Amaral Lopes",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.235131,
+    "longitude": -37.417634
+  },
+  {
+    "rua": "Rua Tancredo de Almeida Neves",
+    "bairro": "Conjunto Antonio Carlos Valadares",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.24345,
+    "longitude": -37.430853
+  },
+  {
+    "rua": "Rua Tenente Ferreira de Oliveira",
+    "bairro": "São Jorge",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.271884,
+    "longitude": -37.432523
+  },
+  {
+    "rua": "Rua Tobias Barreto",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.270222,
+    "longitude": -37.43795
+  },
+  {
+    "rua": "Rua Tulipa",
+    "bairro": "Estancinha",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.290818,
+    "longitude": -37.447181
+  },
+  {
+    "rua": "Rua U",
+    "bairro": "Residencial Recanto Verde",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.235894,
+    "longitude": -37.41456
+  },
+  {
+    "rua": "Rua Ulisses Silveira Guimarães",
+    "bairro": "Conjunto Antonio Carlos Valadares",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.245715,
+    "longitude": -37.429227
+  },
+  {
+    "rua": "Rua V",
+    "bairro": "Residencial Recanto Verde",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.238398,
+    "longitude": -37.408899
+  },
+  {
+    "rua": "Rua Valdemar Pinheiro Santana",
+    "bairro": "Alagoas",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.258193,
+    "longitude": -37.435448
+  },
+  {
+    "rua": "Rua Vereador Alcides Jose Dos Santos",
+    "bairro": "Loteamento Luar de Estância",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.250628,
+    "longitude": -37.427823
+  },
+  {
+    "rua": "Rua Vereador José Conrado Lima",
+    "bairro": "Loteamento Humberto Ralin",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.273281,
+    "longitude": -37.440901
+  },
+  {
+    "rua": "Rua Vereador Prudêncio Cunegundes de Melo",
+    "bairro": "Santa Cruz",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.276175,
+    "longitude": -37.443846
+  },
+  {
+    "rua": "Rua Veríssimo Viana",
+    "bairro": "Botequim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.268266,
+    "longitude": -37.434188
+  },
+  {
+    "rua": "Rua Vicente Bandeira de Alencar",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.268718,
+    "longitude": -37.439832
+  },
+  {
+    "rua": "Rua Vicente José Santiago Neto",
+    "bairro": "Alagoas",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.255672,
+    "longitude": -37.437659
+  },
+  {
+    "rua": "Rua Vila Nova",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.240534,
+    "longitude": -37.416289
+  },
+  {
+    "rua": "Rua Violeta",
+    "bairro": "Estancinha",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.289892,
+    "longitude": -37.44885
+  },
+  {
+    "rua": "Rua Visconde de Inhaúma",
+    "bairro": "Botequim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.26558,
+    "longitude": -37.435645
+  },
+  {
+    "rua": "Rua Visconde do Rio Branco",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.267629,
+    "longitude": -37.44233
+  },
+  {
+    "rua": "Rua Voluntário da Pátria",
+    "bairro": "Loteamento Futuro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.267798,
+    "longitude": -37.424336
+  },
+  {
+    "rua": "Rua X",
+    "bairro": "Conjunto Paulo Amaral Lopes",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.235452,
+    "longitude": -37.416538
+  },
+  {
+    "rua": "Rua Y",
+    "bairro": "Conjunto Paulo Amaral Lopes",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.23272,
+    "longitude": -37.425605
+  },
+  {
+    "rua": "Rua Zeca do Forte",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.241189,
+    "longitude": -37.419126
+  },
+  {
+    "rua": "RuaF",
+    "bairro": "Alecrim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.237344,
+    "longitude": -37.460469
+  },
+  {
+    "rua": "Segunda Travessa José Marcelino dos Santos",
+    "bairro": "Loteamento Laura Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.275388,
+    "longitude": -37.433782
+  },
+  {
+    "rua": "Travessa 1 de Maio",
+    "bairro": "Santa Cruz",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.274694,
+    "longitude": -37.444567
+  },
+  {
+    "rua": "Travessa 11",
+    "bairro": "Conjunto Paulo Amaral Lopes",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.231563,
+    "longitude": -37.422389
+  },
+  {
+    "rua": "Travessa 12",
+    "bairro": "Conjunto Paulo Amaral Lopes",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.231244,
+    "longitude": -37.422683
+  },
+  {
+    "rua": "Travessa 3",
+    "bairro": "Conjunto Paulo Amaral Lopes",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.231977,
+    "longitude": -37.418582
+  },
+  {
+    "rua": "Travessa 4",
+    "bairro": "Conjunto Antonio Carlos Valadares",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.243613,
+    "longitude": -37.431215
+  },
+  {
+    "rua": "Travessa A",
+    "bairro": "Conjunto Paulo Amaral Lopes",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.230199,
+    "longitude": -37.423699
+  },
+  {
+    "rua": "Travessa Acrisio Esteves da Silva 1",
+    "bairro": "Alagoas",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.259164,
+    "longitude": -37.437632
+  },
+  {
+    "rua": "Travessa Acrisio Esteves da Silva 2",
+    "bairro": "Alagoas",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.25981,
+    "longitude": -37.437548
+  },
+  {
+    "rua": "Travessa Acrisio Esteves da Silva 3",
+    "bairro": "Alagoas",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.260216,
+    "longitude": -37.437584
+  },
+  {
+    "rua": "Travessa Aquidabã",
+    "bairro": "Loteamento Humberto Ralin",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.274666,
+    "longitude": -37.439644
+  },
+  {
+    "rua": "Travessa Augusto dos Anjos",
+    "bairro": "Botequim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.267953,
+    "longitude": -37.434702
+  },
+  {
+    "rua": "Travessa C",
+    "bairro": "Botequim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.265482,
+    "longitude": -37.432307
+  },
+  {
+    "rua": "Travessa D",
+    "bairro": "Loteamento São Domingos",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.252211,
+    "longitude": -37.436242
+  },
+  {
+    "rua": "Travessa D1",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.239178,
+    "longitude": -37.417131
+  },
+  {
+    "rua": "Travessa D2",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.239194,
+    "longitude": -37.416631
+  },
+  {
+    "rua": "Travessa D3",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.239653,
+    "longitude": -37.416482
+  },
+  {
+    "rua": "Travessa D4",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.239599,
+    "longitude": -37.415779
+  },
+  {
+    "rua": "Travessa da Independência",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.268909,
+    "longitude": -37.439224
+  },
+  {
+    "rua": "Travessa da Rua B",
+    "bairro": "Conjunto Balduíno",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.270633,
+    "longitude": -37.445225
+  },
+  {
+    "rua": "Travessa Deputado Francisco Araujo Macedo",
+    "bairro": "Botequim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.267707,
+    "longitude": -37.435374
+  },
+  {
+    "rua": "Travessa do Cajueiro",
+    "bairro": "Conjunto Camaçari",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.258078,
+    "longitude": -37.446914
+  },
+  {
+    "rua": "Travessa do Gravata",
+    "bairro": "Loteamento Humberto Ralin",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.274163,
+    "longitude": -37.438987
+  },
+  {
+    "rua": "Travessa do Queiroz",
+    "bairro": "São Jorge",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.269688,
+    "longitude": -37.433911
+  },
+  {
+    "rua": "Travessa do Sol",
+    "bairro": "Santa Cruz",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.275955,
+    "longitude": -37.446637
+  },
+  {
+    "rua": "Travessa Domingos Alves Ribeiro",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.263581,
+    "longitude": -37.445222
+  },
+  {
+    "rua": "Travessa Doutor Osório Ramos",
+    "bairro": "Conjunto Antonio Carlos Valadares",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.242389,
+    "longitude": -37.429254
+  },
+  {
+    "rua": "Travessa Doutor Pedro Soares",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.26901,
+    "longitude": -37.438937
+  },
+  {
+    "rua": "Travessa Duque de Caxias",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.271419,
+    "longitude": -37.438263
+  },
+  {
+    "rua": "Travessa Edmundo A. da Cruz",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.263393,
+    "longitude": -37.450397
+  },
+  {
+    "rua": "Travessa Elísio Matos 3",
+    "bairro": "Loteamento Laura Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.274992,
+    "longitude": -37.431702
+  },
+  {
+    "rua": "Travessa Elizio Matos",
+    "bairro": "Loteamento Laura Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.274043,
+    "longitude": -37.43361
+  },
+  {
+    "rua": "Travessa Elizio Matos I",
+    "bairro": "Porto d'Areia",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.273455,
+    "longitude": -37.434562
+  },
+  {
+    "rua": "Travessa Elizio Matos III",
+    "bairro": "Loteamento Laura Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.275422,
+    "longitude": -37.431981
+  },
+  {
+    "rua": "Travessa Floriano Peixoto",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.267587,
+    "longitude": -37.44008
+  },
+  {
+    "rua": "Travessa Herbert de Souza",
+    "bairro": "Alagoas",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.259738,
+    "longitude": -37.438621
+  },
+  {
+    "rua": "Travessa J",
+    "bairro": "Conjunto Paulo Amaral Lopes",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.237296,
+    "longitude": -37.416412
+  },
+  {
+    "rua": "Travessa João de Oliveira",
+    "bairro": "Santa Cruz",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.274912,
+    "longitude": -37.444329
+  },
+  {
+    "rua": "Travessa João Nascimento Filho",
+    "bairro": "Loteamento Humberto Ralin",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.273451,
+    "longitude": -37.439359
+  },
+  {
+    "rua": "Travessa João Passos de Souza",
+    "bairro": "Conjunto Ulisses Vieira Lima",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.255938,
+    "longitude": -37.432912
+  },
+  {
+    "rua": "Travessa João R. dos Santos",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.263745,
+    "longitude": -37.450645
+  },
+  {
+    "rua": "Travessa Joaquim Calazans",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.269872,
+    "longitude": -37.436969
+  },
+  {
+    "rua": "Travessa José de F. Paes",
+    "bairro": "Loteamento Humberto Ralin",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.273406,
+    "longitude": -37.44213
+  },
+  {
+    "rua": "Travessa José Macedo Santos",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.263536,
+    "longitude": -37.449725
+  },
+  {
+    "rua": "Travessa José Marcelino dos Santos",
+    "bairro": "Porto d'Areia",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.274991,
+    "longitude": -37.436838
+  },
+  {
+    "rua": "Travessa José Miranda Carvalho",
+    "bairro": "Alagoas",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.257228,
+    "longitude": -37.439101
+  },
+  {
+    "rua": "Travessa José Raimundo de França",
+    "bairro": "Santa Cruz",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.274117,
+    "longitude": -37.442696
+  },
+  {
+    "rua": "Travessa José Rodrigues de Matos",
+    "bairro": "Botequim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.263958,
+    "longitude": -37.43831
+  },
+  {
+    "rua": "Travessa José Vilson de Jesus Santos",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.262095,
+    "longitude": -37.450966
+  },
+  {
+    "rua": "Travessa Major Osvaldo",
+    "bairro": "Botequim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.266762,
+    "longitude": -37.434962
+  },
+  {
+    "rua": "Travessa Maria Oliveira Lima",
+    "bairro": "Conjunto Ulisses Vieira Lima",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.255259,
+    "longitude": -37.434716
+  },
+  {
+    "rua": "Travessa Monsenhor Vitorino Fontes",
+    "bairro": "Alagoas",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.25731,
+    "longitude": -37.433942
+  },
+  {
+    "rua": "Travessa Monsenhor Viturino",
+    "bairro": "Alagoas",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.258395,
+    "longitude": -37.434563
+  },
+  {
+    "rua": "Travessa Otávio Siqueira",
+    "bairro": "Alagoas",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.260721,
+    "longitude": -37.439027
+  },
+  {
+    "rua": "Travessa P",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.239117,
+    "longitude": -37.424675
+  },
+  {
+    "rua": "Travessa Pedro Homem da Costa",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.264821,
+    "longitude": -37.440722
+  },
+  {
+    "rua": "Travessa Pedro Pires",
+    "bairro": "Centro",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.268218,
+    "longitude": -37.438917
+  },
+  {
+    "rua": "Travessa Raimundo Silveira Souza",
+    "bairro": "Alagoas",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.257389,
+    "longitude": -37.438729
+  },
+  {
+    "rua": "Travessa Riachuelo",
+    "bairro": "São Jorge",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.27129,
+    "longitude": -37.434574
+  },
+  {
+    "rua": "Travessa Rodolfo Oliveira de Andrade",
+    "bairro": "Residencial Paraíso",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.261386,
+    "longitude": -37.437667
+  },
+  {
+    "rua": "Travessa Santa Luzia",
+    "bairro": "Santa Cruz",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.271627,
+    "longitude": -37.442028
+  },
+  {
+    "rua": "Travessa Santo Antônio",
+    "bairro": "Bomfim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.264698,
+    "longitude": -37.44151
+  },
+  {
+    "rua": "Travessa Tenete Eloi",
+    "bairro": "Conjunto Ulisses Vieira Lima",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.254947,
+    "longitude": -37.433383
+  },
+  {
+    "rua": "Travessa Verissimo Viana",
+    "bairro": "Botequim",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.26797,
+    "longitude": -37.433808
+  },
+  {
+    "rua": "Travessa Zeca do Forte",
+    "bairro": "Valter Cardoso Costa",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.242597,
+    "longitude": -37.41866
+  },
+  {
+    "rua": "Via Local 10",
+    "bairro": "Loteamento Luar de Estância",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.251923,
+    "longitude": -37.426206
+  },
+  {
+    "rua": "Via Local 11",
+    "bairro": "Loteamento Luar de Estância",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.253425,
+    "longitude": -37.427371
+  },
+  {
+    "rua": "Via Local 12",
+    "bairro": "Loteamento Luar de Estância",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.251923,
+    "longitude": -37.426206
+  },
+  {
+    "rua": "Via Local 13",
+    "bairro": "Loteamento Luar de Estância",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.253976,
+    "longitude": -37.4266
+  },
+  {
+    "rua": "Via Local 14",
+    "bairro": "Loteamento Luar de Estância",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.25373,
+    "longitude": -37.427019
+  },
+  {
+    "rua": "Via Local 15",
+    "bairro": "Loteamento Luar de Estância",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.253067,
+    "longitude": -37.424486
+  },
+  {
+    "rua": "Via Local 16",
+    "bairro": "Loteamento Luar de Estância",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.25277,
+    "longitude": -37.424179
+  },
+  {
+    "rua": "Via Local 17",
+    "bairro": "Loteamento Luar de Estância",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.252163,
+    "longitude": -37.424118
+  },
+  {
+    "rua": "Via Local 18",
+    "bairro": "Loteamento Luar de Estância",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.253065,
+    "longitude": -37.424391
+  },
+  {
+    "rua": "Via Local 19",
+    "bairro": "Loteamento Luar de Estância",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.25107,
+    "longitude": -37.422961
+  },
+  {
+    "rua": "Via Local 20",
+    "bairro": "Loteamento Luar de Estância",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.249684,
+    "longitude": -37.424288
+  },
+  {
+    "rua": "Via Local 21",
+    "bairro": "Loteamento Luar de Estância",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.25107,
+    "longitude": -37.422961
+  },
+  {
+    "rua": "Via Local 7",
+    "bairro": "Loteamento Luar de Estância",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.249839,
+    "longitude": -37.426873
+  },
+  {
+    "rua": "Via Local 8",
+    "bairro": "Loteamento Luar de Estância",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.249746,
+    "longitude": -37.4265
+  },
+  {
+    "rua": "Via Local 9",
+    "bairro": "Loteamento Luar de Estância",
+    "cidade": "Estância",
+    "estado": "Sergipe",
+    "uf": "SE",
+    "cep": "49200-000",
+    "latitude": -11.250366,
+    "longitude": -37.426324
+  }
+]

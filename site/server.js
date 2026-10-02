@@ -512,7 +512,89 @@ function consultasAlternativasDeLogradouro(busca) {
   return [...new Set(alternativas.map(item => item.trim()).filter(Boolean))];
 }
 
-app.get("/api/enderecos/sugestoes", async (req, res) => {
+function sugestoesLocaisDeEstancia(busca) {
+  const termos = normalizar(expandirAbreviacoesEndereco(busca)).split(" ").filter(Boolean);
+  if (!termos.length) return [];
+  return lerJson(catalogoEnderecosPath, [])
+    .filter(item => {
+      const alvo = normalizar(`${item.rua || item.logradouro || ""} ${item.bairro || ""}`);
+      return termos.every(termo => alvo.includes(termo));
+    })
+    .slice(0, 8)
+    .map((item, indice) => ({
+      placeId: `estancia-local-${indice}`,
+      texto: [item.bairro, `${item.cidade} - ${item.uf}`, item.cep ? `CEP ${item.cep}` : ""].filter(Boolean).join(" — "),
+      rua: item.rua || item.logradouro,
+      logradouro: item.rua || item.logradouro,
+      bairro: item.bairro || "",
+      cidade: item.cidade || "Estância",
+      estado: item.uf || "SE",
+      cep: item.cep || "",
+      latitude: item.latitude,
+      longitude: item.longitude,
+      atribuicao: "© OpenStreetMap contributors"
+    }));
+}
+
+function distanciaEmKm(latitudeA, longitudeA, latitudeB, longitudeB) {
+  const paraRadiano = graus => graus * Math.PI / 180;
+  const diferencaLatitude = paraRadiano(latitudeB - latitudeA);
+  const diferencaLongitude = paraRadiano(longitudeB - longitudeA);
+  const calculo = Math.sin(diferencaLatitude / 2) ** 2
+    + Math.cos(paraRadiano(latitudeA)) * Math.cos(paraRadiano(latitudeB))
+    * Math.sin(diferencaLongitude / 2) ** 2;
+  return 2 * 6371 * Math.asin(Math.sqrt(calculo));
+}
+
+function enderecoLocalMaisProximo(latitude, longitude) {
+  let melhor;
+  for (const item of lerJson(catalogoEnderecosPath, [])) {
+    const distanciaKm = distanciaEmKm(latitude, longitude, Number(item.latitude), Number(item.longitude));
+    if (!Number.isFinite(distanciaKm) || (melhor && distanciaKm >= melhor.distanciaKm)) continue;
+    melhor = { item, distanciaKm };
+  }
+  // A lista contém pontos médios das ruas. Mais distante que isso não é uma
+  // identificação confiável de endereço dentro da área atendida.
+  if (!melhor || melhor.distanciaKm > 4) return null;
+  const item = melhor.item;
+  return {
+    placeId: "estancia-gps-local",
+    rua: item.rua || item.logradouro || "",
+    logradouro: item.rua || item.logradouro || "",
+    numero: "",
+    bairro: item.bairro || "",
+    cidade: item.cidade || "Estância",
+    estado: item.uf || "SE",
+    cep: item.cep || "",
+    latitude,
+    longitude,
+    enderecoFormatado: [item.rua || item.logradouro, item.bairro, "Estância - SE"].filter(Boolean).join(", "),
+    localizacaoAproximada: true,
+    distanciaDaRuaKm: Number(melhor.distanciaKm.toFixed(2)),
+    atribuicao: "© OpenStreetMap contributors"
+  };
+}
+
+function enderecoLocalPorRua(rua) {
+  const busca = normalizar(expandirAbreviacoesEndereco(rua));
+  if (!busca) return null;
+  return lerJson(catalogoEnderecosPath, []).find(item =>
+    normalizar(expandirAbreviacoesEndereco(item.rua || item.logradouro)) === busca
+  ) || null;
+}
+
+app.get("/api/enderecos/sugestoes", (req, res) => {
+  const busca = expandirAbreviacoesEndereco(String(req.query.q || "").trim());
+  const cidade = String(req.query.cidade || configuracaoEntrega().cidadeAtendida).trim();
+  const estado = String(req.query.estado || configuracaoEntrega().estadoAtendido).trim().toUpperCase();
+  if (busca.length < 2 || normalizar(cidade) !== "estancia" || estado !== "SE") return res.json([]);
+  res.set("Cache-Control", "private, max-age=300");
+  return res.json(sugestoesLocaisDeEstancia(busca));
+});
+
+// Esta rota é exclusiva do painel administrativo. Ela pode usar o serviço de
+// mapas para a empresa escolher seu ponto e sua área de entrega.
+app.get("/api/painel/enderecos/sugestoes", async (req, res) => {
   const buscaOriginal = String(req.query.q || "").trim();
   const busca = expandirAbreviacoesEndereco(buscaOriginal);
   const config = configuracaoEntrega();
@@ -549,26 +631,7 @@ app.get("/api/enderecos/sugestoes", async (req, res) => {
     if (normalizar(cidade) !== "estancia" || estado !== "SE") {
       return res.status(503).json({ erro: "O mapa não conseguiu pesquisar este endereço agora. Tente novamente." });
     }
-    const termos = normalizar(busca).split(" ").filter(Boolean);
-    const resultados = lerJson(catalogoEnderecosPath, [])
-      .filter(item => {
-        const alvo = normalizar(expandirAbreviacoesEndereco(`${item.logradouro} ${item.chaveBusca} ${item.bairro}`));
-        return termos.every(termo => alvo.includes(termo));
-      })
-      .slice(0, 8)
-      .map(item => ({
-        placeId: item.id,
-        texto: `${item.logradouro} — ${item.bairro}, Estância - SE`,
-        rua: item.logradouro,
-        logradouro: item.logradouro,
-        bairro: item.bairro,
-        cidade: "Estância",
-        estado: "SE",
-        cep: "",
-        latitude: item.latitude,
-        longitude: item.longitude
-      }));
-    return res.json(resultados);
+    return res.json(sugestoesLocaisDeEstancia(busca));
   }
 });
 
@@ -602,39 +665,31 @@ app.get("/api/enderecos/localizacao-atual", async (req, res) => {
     return res.status(400).json({ erro: "Coordenadas inválidas." });
   }
 
-  try {
-    const url = new URL("https://nominatim.openstreetmap.org/reverse");
-    url.searchParams.set("lat", String(latitude));
-    url.searchParams.set("lon", String(longitude));
-    url.searchParams.set("format", "jsonv2");
-    url.searchParams.set("addressdetails", "1");
-    const dados = await consultarNominatim(url);
-    const endereco = enderecoDoNominatim(dados);
-    if (!enderecoNaArea(endereco)) {
-      return res.status(400).json({ erro: `A localização está fora de ${configuracaoEntrega().cidadeAtendida} - ${configuracaoEntrega().estadoAtendido}.` });
+  const config = configuracaoEntrega();
+  if (normalizar(config.cidadeAtendida) === "estancia" && normalizar(config.estadoAtendido) === "se") {
+    const enderecoLocal = enderecoLocalMaisProximo(latitude, longitude);
+    if (!enderecoLocal) {
+      return res.status(400).json({ erro: "A localização está fora da área de ruas mapeada de Estância - SE." });
     }
     res.set("Cache-Control", "no-store");
-    res.json(endereco);
-  } catch (erro) {
-    console.error("Erro ao localizar endereço pelo GPS:", erro.message);
-    res.status(503).json({ erro: erro.message || "Não foi possível identificar o endereço pelo GPS." });
+    return res.json(enderecoLocal);
   }
+
+  return res.status(503).json({ erro: "A localização automática está disponível apenas para a área local configurada." });
 });
 
 app.post("/api/enderecos/calcular-entrega", async (req, res) => {
   try {
     const latitude = Number(req.body?.latitude);
     const longitude = Number(req.body?.longitude);
-    const url = new URL("https://nominatim.openstreetmap.org/reverse");
-    url.searchParams.set("lat", String(latitude));
-    url.searchParams.set("lon", String(longitude));
-    url.searchParams.set("format", "jsonv2");
-    url.searchParams.set("addressdetails", "1");
-    const localizado = enderecoDoNominatim(await consultarNominatim(url));
-    if (!enderecoNaArea(localizado)) {
-      return res.status(400).json({ erro: `Atendemos somente ${configuracaoEntrega().cidadeAtendida} - ${configuracaoEntrega().estadoAtendido}.` });
+    const config = configuracaoEntrega();
+    if (normalizar(config.cidadeAtendida) === "estancia" && normalizar(config.estadoAtendido) === "se") {
+      if (!enderecoLocalMaisProximo(latitude, longitude)) {
+        return res.status(400).json({ erro: "Atendemos somente a área mapeada de Estância - SE." });
+      }
+      return res.json(await calcularTaxaEntrega(latitude, longitude));
     }
-    res.json(await calcularTaxaEntrega(latitude, longitude));
+    return res.status(400).json({ erro: "A taxa automática está disponível apenas para a área local configurada." });
   } catch (erro) {
     res.status(400).json({ erro: erro.message || "Não foi possível calcular a entrega." });
   }
@@ -829,37 +884,17 @@ app.post("/api/pedido/:pedidoId/endereco", async (req, res) => {
     try {
       let localizado;
       if (Number.isFinite(latitudeEntrega) && Number.isFinite(longitudeEntrega)) {
-        const url = new URL("https://nominatim.openstreetmap.org/reverse");
-        url.searchParams.set("lat", String(latitudeEntrega));
-        url.searchParams.set("lon", String(longitudeEntrega));
-        url.searchParams.set("format", "jsonv2");
-        url.searchParams.set("addressdetails", "1");
-        localizado = enderecoDoNominatim(await consultarNominatim(url));
+        localizado = enderecoLocalMaisProximo(latitudeEntrega, longitudeEntrega);
       } else {
-        // Endereço digitado também é aceito. Tentamos abreviações e tipos de
-        // logradouro equivalentes antes de pedir que o cliente use o mapa.
-        for (const ruaConsultada of consultasAlternativasDeLogradouro(endereco.rua)) {
-          const url = new URL("https://nominatim.openstreetmap.org/search");
-          url.searchParams.set("q", `${ruaConsultada}, ${endereco.numero || ""}, ${bairro}, ${cidade}, ${estado}, Brasil`);
-          url.searchParams.set("format", "jsonv2");
-          url.searchParams.set("addressdetails", "1");
-          url.searchParams.set("countrycodes", "br");
-          url.searchParams.set("limit", "5");
-          const encontrados = await consultarNominatim(url);
-          const candidato = encontrados.map(enderecoDoNominatim).find(item =>
-            enderecoNaArea(item, configEntrega) &&
-            Number.isFinite(item.latitude) && Number.isFinite(item.longitude)
-          );
-          if (!candidato) continue;
-          localizado = candidato;
-          latitudeEntrega = localizado.latitude;
-          longitudeEntrega = localizado.longitude;
-          break;
+        const ruaLocal = enderecoLocalPorRua(endereco.rua);
+        if (ruaLocal) {
+          latitudeEntrega = Number(ruaLocal.latitude);
+          longitudeEntrega = Number(ruaLocal.longitude);
+          localizado = { cidade: ruaLocal.cidade, estado: ruaLocal.uf };
         }
-        if (!localizado) throw new Error("Não encontrei esse endereço no mapa. Confira Rua/Avenida, bairro, cidade e número ou use sua localização.");
       }
-      if (!enderecoNaArea(localizado, configEntrega)) {
-        throw new Error(`O endereço está fora de ${configEntrega.cidadeAtendida} - ${configEntrega.estadoAtendido}.`);
+      if (!localizado) {
+        throw new Error("Selecione uma rua da sugestão ou use sua localização atual para confirmar a entrega.");
       }
       calculoEntrega = await calcularTaxaEntrega(latitudeEntrega, longitudeEntrega);
     } catch (erro) {

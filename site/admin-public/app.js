@@ -595,7 +595,7 @@ async function buscarEnderecoPizzaria() {
   caixa.classList.remove("hidden");
   caixa.innerHTML = "<p>Buscando no mapa...</p>";
   try {
-    const itens = await api("/api/enderecos/sugestoes?q=" + encodeURIComponent(busca) + "&cidade=" + encodeURIComponent(cidade) + "&estado=" + encodeURIComponent(estado) + "&_=" + Date.now());
+    const itens = await api("/api/painel/enderecos/sugestoes?q=" + encodeURIComponent(busca) + "&cidade=" + encodeURIComponent(cidade) + "&estado=" + encodeURIComponent(estado) + "&_=" + Date.now());
     if (controle !== buscaLocalControle) return;
     if (!itens.length) {
       caixa.innerHTML = "<p>Nenhum endereço encontrado. Confira cidade, estado e endereço.</p>";

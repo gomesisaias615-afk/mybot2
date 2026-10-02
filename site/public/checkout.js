@@ -157,11 +157,6 @@ window.addEventListener("scroll", () => {
   esconderSugestoes();
 }, { passive: true });
 
-let mapaLocalizacao;
-let marcadorLocalizacao;
-let coordenadasMapa = null;
-let enderecoMapa = null;
-
 function preencherEnderecoLocalizado(endereco) {
   enderecoSelecionado = endereco;
   $("rua").value = endereco.rua || "";
@@ -172,83 +167,8 @@ function preencherEnderecoLocalizado(endereco) {
   if (endereco.cidade) $("cidadeEntrega").value = endereco.cidade;
 }
 
-async function consultarEnderecoMapa(latitude, longitude) {
+async function consultarEnderecoDaLocalizacao(latitude, longitude) {
   return json(`/api/enderecos/localizacao-atual?lat=${encodeURIComponent(latitude)}&lon=${encodeURIComponent(longitude)}`);
-}
-
-function fecharMapaLocalizacao() {
-  $("modalLocalizacao").classList.add("hidden");
-  document.body.classList.remove("location-modal-open");
-}
-
-function atualizarPontoMapa(latitude, longitude, centralizar = false) {
-  coordenadasMapa = { latitude, longitude };
-  marcadorLocalizacao.setLatLng([latitude, longitude]);
-  if (centralizar) mapaLocalizacao.setView([latitude, longitude], Math.max(mapaLocalizacao.getZoom(), 18));
-  enderecoMapa = null;
-  $("statusMapa").textContent = "Novo ponto selecionado. Confirme para buscar o endereço.";
-}
-
-async function abrirMapaLocalizacao(latitude, longitude) {
-  if (typeof L === "undefined") {
-    throw new Error("O mapa não carregou. Verifique a internet e tente novamente.");
-  }
-
-  $("modalLocalizacao").classList.remove("hidden");
-  document.body.classList.add("location-modal-open");
-  coordenadasMapa = { latitude, longitude };
-  enderecoMapa = null;
-
-  if (!mapaLocalizacao) {
-    mapaLocalizacao = L.map("mapaLocalizacao", {
-      zoomControl: true,
-      attributionControl: true
-    });
-
-    const mapaPrincipal = L.tileLayer("/api/mapa/tiles/{z}/{x}/{y}.png", {
-      maxZoom: 19,
-      attribution: "&copy; OpenStreetMap &copy; CARTO"
-    });
-    let mapaReservaAtivado = false;
-    mapaPrincipal.on("tileerror", () => {
-      if (mapaReservaAtivado) return;
-      mapaReservaAtivado = true;
-      mapaLocalizacao.removeLayer(mapaPrincipal);
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 19,
-        attribution: "&copy; OpenStreetMap"
-      }).addTo(mapaLocalizacao);
-    });
-    mapaPrincipal.addTo(mapaLocalizacao);
-
-    marcadorLocalizacao = L.marker([latitude, longitude], {
-      draggable: true,
-      title: "Arraste para ajustar a entrega"
-    }).addTo(mapaLocalizacao);
-
-    marcadorLocalizacao.on("dragend", event => {
-      const ponto = event.target.getLatLng();
-      atualizarPontoMapa(ponto.lat, ponto.lng);
-    });
-
-    mapaLocalizacao.on("click", event => {
-      atualizarPontoMapa(event.latlng.lat, event.latlng.lng);
-    });
-  }
-
-  mapaLocalizacao.setView([latitude, longitude], 18);
-  marcadorLocalizacao.setLatLng([latitude, longitude]);
-  setTimeout(() => mapaLocalizacao.invalidateSize(), 80);
-
-  $("statusMapa").textContent = "Buscando o endereço deste ponto...";
-  try {
-    enderecoMapa = await consultarEnderecoMapa(latitude, longitude);
-    $("statusMapa").textContent = [enderecoMapa.rua, enderecoMapa.numero, enderecoMapa.bairro]
-      .filter(Boolean)
-      .join(", ") || "Localização encontrada. Ajuste o marcador se necessário.";
-  } catch {
-    $("statusMapa").textContent = "Localização encontrada. Ajuste o marcador e confirme.";
-  }
 }
 
 $("btnMinhaLocalizacao").addEventListener("click", () => {
@@ -269,8 +189,20 @@ $("btnMinhaLocalizacao").addEventListener("click", () => {
   navigator.geolocation.getCurrentPosition(async posicao => {
     try {
       const { latitude, longitude } = posicao.coords;
-      await abrirMapaLocalizacao(latitude, longitude);
-      status.textContent = "Ajuste o ponto no mapa e confirme a localização.";
+      const endereco = await consultarEnderecoDaLocalizacao(latitude, longitude);
+      const calculo = await json("/api/enderecos/calcular-entrega", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ latitude, longitude })
+      });
+      taxaEntrega = Number(calculo.taxaEntrega || 0);
+      preencherEnderecoLocalizado({ ...endereco, latitude, longitude, taxaEntrega, distanciaKm: calculo.distanciaKm });
+      atualizarTotais();
+      $("statusTaxaEntrega").textContent = calculo.modoTaxa === "fixa"
+        ? `Taxa fixa confirmada: ${dinheiro(taxaEntrega)}.`
+        : `Taxa de entrega para a localização informada: ${dinheiro(taxaEntrega)}.`;
+      status.textContent = "Localização confirmada. Confira a rua e informe número, complemento e referência.";
+      $("numero").focus();
     } catch (erro) {
       status.textContent = erro.message;
       status.classList.add("error");
@@ -293,56 +225,6 @@ $("btnMinhaLocalizacao").addEventListener("click", () => {
     timeout: 12000,
     maximumAge: 60000
   });
-});
-
-$("btnConfirmarLocalizacao").addEventListener("click", async () => {
-  const botao = $("btnConfirmarLocalizacao");
-  const statusMapa = $("statusMapa");
-  if (!coordenadasMapa) return;
-
-  botao.disabled = true;
-  botao.textContent = "Confirmando...";
-  statusMapa.textContent = "Buscando o endereço do ponto escolhido...";
-
-  try {
-    const { latitude, longitude } = coordenadasMapa;
-    const endereco = enderecoMapa || await consultarEnderecoMapa(latitude, longitude);
-    const calculo = await json("/api/enderecos/calcular-entrega", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ latitude, longitude })
-    });
-    taxaEntrega = Number(calculo.taxaEntrega || 0);
-    preencherEnderecoLocalizado({ ...endereco, latitude, longitude, taxaEntrega, distanciaKm: calculo.distanciaKm });
-    atualizarTotais();
-    $("statusTaxaEntrega").textContent = calculo.modoTaxa === "fixa"
-      ? `Taxa fixa confirmada: ${dinheiro(taxaEntrega)}.`
-      : `Taxa de entrega para a localização informada: ${dinheiro(taxaEntrega)}.`;
-    fecharMapaLocalizacao();
-
-    const status = $("statusLocalizacao");
-    status.classList.remove("error");
-    status.textContent = endereco.cep
-      ? "Localização confirmada. Confira os dados e informe o tipo de residência."
-      : "Localização confirmada. Confira os dados e preencha o CEP.";
-    (endereco.numero ? $("complemento") : $("numero")).focus();
-  } catch (erro) {
-    statusMapa.textContent = erro.message || "Não foi possível identificar o endereço deste ponto.";
-  } finally {
-    botao.disabled = false;
-    botao.textContent = "Confirmar localização";
-  }
-});
-
-$("btnFecharMapa").addEventListener("click", fecharMapaLocalizacao);
-$("btnCancelarLocalizacao").addEventListener("click", fecharMapaLocalizacao);
-$("modalLocalizacao").addEventListener("click", event => {
-  if (event.target === event.currentTarget) fecharMapaLocalizacao();
-});
-document.addEventListener("keydown", event => {
-  if (event.key === "Escape" && !$("modalLocalizacao").classList.contains("hidden")) {
-    fecharMapaLocalizacao();
-  }
 });
 
 function atualizarTotais() {

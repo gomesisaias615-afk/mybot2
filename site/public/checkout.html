@@ -21,7 +21,6 @@
   <meta name="twitter:title" content="__PIZZARIA_NOME__ | Pagamento seguro">
   <meta name="twitter:description" content="Finalize seu pedido com segurança.">
   <meta name="twitter:image" content="__PUBLIC_URL__/api/identidade/logo">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
   <link rel="stylesheet" href="/style.css">
   <link rel="stylesheet" href="/ios-fixes.css">
 </head>
@@ -176,26 +175,6 @@
     </footer>
     <button id="btnPagar" class="pay-button hidden" type="button">Pagar</button>
   </main>
-  <div id="modalLocalizacao" class="location-modal hidden" role="dialog" aria-modal="true" aria-labelledby="tituloModalLocalizacao">
-    <div class="location-modal-sheet">
-      <div class="location-modal-handle" aria-hidden="true"></div>
-      <header class="location-modal-header">
-        <div>
-          <h2 id="tituloModalLocalizacao">Confirmar localização</h2>
-          <p>Mova o mapa, toque em outro ponto ou arraste o marcador.</p>
-        </div>
-        <button id="btnFecharMapa" class="location-modal-close" type="button" aria-label="Fechar mapa">×</button>
-      </header>
-      <div id="mapaLocalizacao" class="location-map" aria-label="Mapa para ajustar o local de entrega"></div>
-      <p id="statusMapa" class="location-map-status" aria-live="polite">Ajuste o marcador até o ponto exato da entrega.</p>
-      <div class="location-modal-actions">
-        <button id="btnConfirmarLocalizacao" class="primary-button" type="button">Confirmar localização</button>
-        <button id="btnCancelarLocalizacao" class="location-secondary-button" type="button">Voltar</button>
-      </div>
-    </div>
-  </div>
-
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script src="https://sdk.mercadopago.com/js/v2"></script>
   <script src="/checkout.js"></script>
   <script>window.addEventListener("load",()=>setTimeout(()=>document.querySelector("#mybotSplash")?.classList.add("sair"),650));</script>
