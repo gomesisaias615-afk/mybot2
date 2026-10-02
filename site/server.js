@@ -5,10 +5,10 @@ const path = require("path");
 const crypto = require("crypto");
 const express = require("express");
 const cors = require("cors");
-const { buscarGeoapify, obterSugestaoGeoapify, juntarSugestoes } = require("./geoapify-enderecos");
-// Teste externo: só reativa sugestões locais quando esta variável for "true".
-// A base continua disponível para validação de endereços e GPS.
-const sugestoesBaseLocalAtivas = process.env.SUGESTOES_BASE_LOCAL === "true";
+const { buscarGeoapify, obterSugestaoGeoapify, juntarSugestoes, validarEnderecoGeoapify } = require("./geoapify-enderecos");
+// Sugestões locais ativas por padrão, complementadas pelo Geoapify.
+// Para um teste somente externo, configure SUGESTOES_BASE_LOCAL=false.
+const sugestoesBaseLocalAtivas = process.env.SUGESTOES_BASE_LOCAL !== "false";
 const { aplicarRenomeacoes, nomesEndereco } = require("./renomeacoes-enderecos");
 const { MercadoPagoConfig, Payment } = require("mercadopago");
 const { webhookUrlMercadoPago, publicKeyMercadoPago } = require("../config/pagamento");
@@ -965,7 +965,16 @@ app.post("/api/pedido/:pedidoId/endereco", async (req, res) => {
         }
       }
       if (!localizado) {
-        throw new Error("Confira a rua e o bairro/localidade ou selecione o endereço nas sugestões para confirmar a entrega.");
+        localizado = await validarEnderecoGeoapify({
+          rua: expandirAbreviacoesEndereco(endereco.rua), bairro, cidade, estado, cep
+        }, chaveEnderecoManual);
+        if (localizado) {
+          latitudeEntrega = localizado.latitude;
+          longitudeEntrega = localizado.longitude;
+        }
+      }
+      if (!localizado) {
+        throw new Error("Não foi possível validar a rua e o bairro/localidade na base local ou no serviço externo. Confira os dados ou selecione uma sugestão de endereço.");
       }
       calculoEntrega = await calcularTaxaEntrega(latitudeEntrega, longitudeEntrega);
     } catch (erro) {

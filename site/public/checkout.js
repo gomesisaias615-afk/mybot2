@@ -17,6 +17,10 @@ let sugestoesEnderecoScrollInicial = 0;
 let buscaEnderecoControle = 0;
 let catalogoEnderecoPromise;
 let buscaExternaTimer;
+let sugestoesEnderecoItens = [];
+let primeiraSugestaoAte = 0;
+let buscaPersistenteTimer;
+let buscasExternasEmAndamento = 0;
 
 function carregarCatalogoEndereco() {
   if (!catalogoEnderecoPromise) {
@@ -108,6 +112,9 @@ function atualizarMensagemTaxaEntregaInicial() {
 
 function esconderSugestoes() {
   clearTimeout(sugestoesEnderecoTimer);
+  clearTimeout(buscaPersistenteTimer);
+  sugestoesEnderecoItens = [];
+  primeiraSugestaoAte = 0;
   $("sugestoesEndereco").classList.add("hidden");
   $("sugestoesEndereco").innerHTML = "";
   sugestoesEnderecoAbertas = false;
@@ -135,14 +142,31 @@ function escaparSugestao(valor) {
 }
 
 function renderizarSugestoesEndereco(itens) {
+  if (primeiraSugestaoAte) {
+    if (Date.now() >= primeiraSugestaoAte) return esconderSugestoes();
+    itens = (sugestoesEnderecoItens.length ? sugestoesEnderecoItens : itens).slice(0, 1);
+  }
+  sugestoesEnderecoItens = itens;
   $("sugestoesEndereco").innerHTML = itens.map((item, indice) =>
     `<button type="button" role="option" data-indice="${indice}"><strong>${escaparSugestao(item.logradouro || item.rua || "Endereço")}</strong><small>${escaparSugestao(item.texto || [item.bairro,item.cidade,item.estado].filter(Boolean).join(" — "))}</small></button>`
   ).join("");
-  if (!itens.length) return esconderSugestoes();
+  if (!itens.length) {
+    if (!primeiraSugestaoAte) return esconderSugestoes();
+    $("sugestoesEndereco").classList.add("hidden");
+    sugestoesEnderecoAbertas = false;
+    return;
+  }
   $("sugestoesEndereco").classList.remove("hidden");
   sugestoesEnderecoAbertas = true;
   sugestoesEnderecoScrollInicial = window.scrollY;
-  manterSugestoesEnderecoPorTresMinutos();
+  if (primeiraSugestaoAte) {
+    clearTimeout(sugestoesEnderecoTimer);
+    sugestoesEnderecoTimer = setTimeout(() => {
+      buscaEnderecoControle += 1;
+      clearTimeout(buscaExternaTimer);
+      esconderSugestoes();
+    }, primeiraSugestaoAte - Date.now());
+  } else manterSugestoesEnderecoPorTresMinutos();
   $("sugestoesEndereco").querySelectorAll("button").forEach((botao, indice) => {
     botao.addEventListener("click", () => selecionarSugestaoEndereco(itens[indice]));
   });
@@ -158,23 +182,34 @@ async function buscarSugestoesEndereco() {
   clearTimeout(buscaExternaTimer);
   const busca = rua || bairro;
   const termos = chaveBuscaEndereco(busca).split(" ").filter(termo => termo && !["de", "da", "do", "das", "dos"].includes(termo));
+  let locais = [];
+  let externasMostradas = false;
+  // A consulta externa não precisa esperar o carregamento da base local.
+  if (busca.length >= 3) buscaExternaTimer = setTimeout(async () => {
+    buscasExternasEmAndamento += 1;
+    try {
+      const itens = await json(`/api/enderecos/sugestoes?q=${encodeURIComponent(busca)}&cidade=${encodeURIComponent(cidade)}&estado=${encodeURIComponent(estado)}`);
+      if (controle !== buscaEnderecoControle || !itens.length) return;
+      externasMostradas = true;
+      renderizarSugestoesEndereco(itens);
+    } catch {
+      // Uma falha externa não remove as sugestões locais.
+    } finally {
+      buscasExternasEmAndamento -= 1;
+      if (controle === buscaEnderecoControle && primeiraSugestaoAte && !sugestoesEnderecoItens.length) {
+        clearTimeout(buscaPersistenteTimer);
+        buscaPersistenteTimer = setTimeout(tentarSugestaoPersistente, 5000);
+      }
+    }
+  }, 250);
   const catalogo = await carregarCatalogoEndereco();
   if (controle !== buscaEnderecoControle) return;
-  const locais = chaveBuscaEndereco(cidade) === "estancia" && estado === "SE"
+  locais = chaveBuscaEndereco(cidade) === "estancia" && estado === "SE"
     ? catalogo.filter(item => [item.rua, ...(item.aliases || [])].some(nome => {
       const alvo = chaveBuscaEndereco(`${nome} ${item.bairro}`);
       return termos.every(termo => alvo.includes(termo));
     })).slice(0, 8) : [];
-  renderizarSugestoesEndereco(locais);
-  buscaExternaTimer = setTimeout(async () => {
-  try {
-    const itens = await json(`/api/enderecos/sugestoes?q=${encodeURIComponent(busca)}&cidade=${encodeURIComponent(cidade)}&estado=${encodeURIComponent(estado)}`);
-    if (controle !== buscaEnderecoControle) return;
-    renderizarSugestoesEndereco(itens.length ? itens : locais);
-  } catch {
-    // Mantém os resultados locais se a consulta externa falhar.
-  }
-  }, 600);
+  if (!externasMostradas) renderizarSugestoesEndereco(locais);
 }
 
 ["rua","bairro"].forEach(id => $(id).addEventListener("input", () => {
@@ -187,6 +222,9 @@ async function buscarSugestoesEndereco() {
 }));
 
 function buscarSugestoesAoVoltarParaRua() {
+  clearTimeout(buscaPersistenteTimer);
+  clearTimeout(sugestoesEnderecoTimer);
+  primeiraSugestaoAte = 0;
   const rua = $("rua").value.trim();
   const bairro = $("bairro").value.trim();
   if (Math.max(rua.length, bairro.length) >= 2) buscarSugestoesEndereco();
@@ -197,10 +235,33 @@ $("rua").addEventListener("focus", buscarSugestoesAoVoltarParaRua);["estadoEntre
   clearTimeout(buscaExternaTimer);
   esconderSugestoes();
 }));
-document.addEventListener("click", evento => {
-  if (!evento.target.closest("#sugestoesEndereco") && !evento.target.closest("#rua") && !evento.target.closest("#bairro")) esconderSugestoes();
-});
+function tentarSugestaoPersistente() {
+  if (!primeiraSugestaoAte || Date.now() >= primeiraSugestaoAte || sugestoesEnderecoItens.length) return;
+  if (buscasExternasEmAndamento) {
+    buscaPersistenteTimer = setTimeout(tentarSugestaoPersistente, 1000);
+    return;
+  }
+  buscarSugestoesEndereco();
+}
+
+function manterPrimeiraSugestaoAoSair(evento) {
+  if (evento.target.closest("#sugestoesEndereco, #rua, #bairro")) return;
+  if (primeiraSugestaoAte || enderecoSelecionado.rua || modalidadeSelecionada !== "entrega") return;
+  if (!( $("rua").value.trim() || $("bairro").value.trim() ) || !$("cidadeEntrega").value.trim() || !$("estadoEntrega").value) return;
+  primeiraSugestaoAte = Date.now() + 60 * 1000;
+  clearTimeout(sugestoesEnderecoTimer);
+  sugestoesEnderecoTimer = setTimeout(() => {
+    buscaEnderecoControle += 1;
+    clearTimeout(buscaExternaTimer);
+    esconderSugestoes();
+  }, 60 * 1000);
+  if (sugestoesEnderecoItens.length) renderizarSugestoesEndereco(sugestoesEnderecoItens.slice(0, 1));
+  else tentarSugestaoPersistente();
+}
+document.addEventListener("click", manterPrimeiraSugestaoAoSair);
+document.addEventListener("focusin", manterPrimeiraSugestaoAoSair);
 window.addEventListener("scroll", () => {
+  if (primeiraSugestaoAte) return;
   if (!sugestoesEnderecoAbertas) return;
   if (Math.abs(window.scrollY - sugestoesEnderecoScrollInicial) < window.innerHeight * .75) return;
   esconderSugestoes();

@@ -74,4 +74,21 @@ function juntarSugestoes(locais, externas, chaveEndereco) {
   return resultado.slice(0, 16);
 }
 
-module.exports = { buscarGeoapify, obterSugestaoGeoapify, juntarSugestoes };
+async function validarEnderecoGeoapify(endereco, chaveEndereco, buscar = buscarGeoapify) {
+  const rua = chaveEndereco(endereco.rua);
+  const bairro = chaveEndereco(endereco.bairro);
+  if (!rua || !bairro || normalizar(endereco.cidade) !== "estancia" || String(endereco.estado).toUpperCase() !== "SE") return null;
+  const resultados = await buscar(String(endereco.rua).trim());
+  const candidatos = resultados.filter(item =>
+    chaveEndereco(item.rua) === rua && chaveEndereco(item.bairro) === bairro &&
+    normalizar(item.cidade) === "estancia" && item.estado === "SE" &&
+    Number.isFinite(item.latitude) && Number.isFinite(item.longitude) &&
+    Math.abs(item.latitude) <= 90 && Math.abs(item.longitude) <= 180 &&
+    (!/^\d{8}$/.test(item.cep || "") || item.cep === String(endereco.cep || "").replace(/\D/g, ""))
+  );
+  const unicos = [...new Map(candidatos.map(item => [item.latitude + "," + item.longitude, item])).values()];
+  // Não valida uma rua parecida ou escolhe entre localidades ambíguas.
+  return unicos.length === 1 ? unicos[0] : null;
+}
+
+module.exports = { buscarGeoapify, obterSugestaoGeoapify, juntarSugestoes, validarEnderecoGeoapify };
