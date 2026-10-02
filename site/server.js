@@ -513,7 +513,10 @@ function consultasAlternativasDeLogradouro(busca) {
 }
 
 function sugestoesLocaisDeEstancia(busca) {
-  const termos = normalizar(expandirAbreviacoesEndereco(busca)).split(" ").filter(Boolean);
+  const palavrasIgnoradas = new Set(["de", "da", "do", "das", "dos"]);
+  const termos = normalizar(expandirAbreviacoesEndereco(busca))
+    .replace(/[^a-z0-9\s]/g, " ")
+    .split(/\s+/).filter(termo => termo && !palavrasIgnoradas.has(termo));
   if (!termos.length) return [];
   return lerJson(catalogoEnderecosPath, [])
     .filter(item => {
@@ -717,6 +720,7 @@ function expandirAbreviacoesEndereco(texto) {
     tv: "Travessa",
     trav: "Travessa",
     travessa: "Travessa",
+    travesa: "Travessa",
     rod: "Rodovia",
     rodovia: "Rodovia",
     est: "Estrada",

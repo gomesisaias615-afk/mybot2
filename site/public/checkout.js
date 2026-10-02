@@ -114,7 +114,7 @@ async function buscarSugestoesEndereco() {
   if (!estado || !cidade || Math.max(rua.length,bairro.length) < 2) return esconderSugestoes();
   const controle = ++buscaEnderecoControle;
   try {
-    const itens = await json(`/api/enderecos/sugestoes?q=${encodeURIComponent([rua,bairro].filter(Boolean).join(" "))}&cidade=${encodeURIComponent(cidade)}&estado=${encodeURIComponent(estado)}`);
+    const itens = await json(`/api/enderecos/sugestoes?q=${encodeURIComponent(rua || bairro)}&cidade=${encodeURIComponent(cidade)}&estado=${encodeURIComponent(estado)}`);
     if (controle !== buscaEnderecoControle) return;
     $("sugestoesEndereco").innerHTML = itens.map((item,indice) =>
       `<button type="button" role="option" data-indice="${indice}"><strong>${item.logradouro || item.rua || "Endereço"}</strong><small>${item.texto || [item.bairro,item.cidade,item.estado].filter(Boolean).join(" — ")}</small></button>`
