@@ -106,6 +106,12 @@ function selecionarSugestaoEndereco(item) {
   $("numero").focus();
 }
 
+function escaparSugestao(valor) {
+  return String(valor || "").replace(/[&<>"']/g, caractere => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  })[caractere]);
+}
+
 async function buscarSugestoesEndereco() {
   const rua = $("rua").value.trim();
   const bairro = $("bairro").value.trim();
@@ -117,7 +123,7 @@ async function buscarSugestoesEndereco() {
     const itens = await json(`/api/enderecos/sugestoes?q=${encodeURIComponent(rua || bairro)}&cidade=${encodeURIComponent(cidade)}&estado=${encodeURIComponent(estado)}`);
     if (controle !== buscaEnderecoControle) return;
     $("sugestoesEndereco").innerHTML = itens.map((item,indice) =>
-      `<button type="button" role="option" data-indice="${indice}"><strong>${item.logradouro || item.rua || "Endereço"}</strong><small>${item.texto || [item.bairro,item.cidade,item.estado].filter(Boolean).join(" — ")}</small></button>`
+      `<button type="button" role="option" data-indice="${indice}"><strong>${escaparSugestao(item.logradouro || item.rua || "Endereço")}</strong><small>${escaparSugestao(item.texto || [item.bairro,item.cidade,item.estado].filter(Boolean).join(" — "))}</small></button>`
     ).join("");
     if (!itens.length) return esconderSugestoes();
     $("sugestoesEndereco").classList.remove("hidden");
@@ -133,10 +139,11 @@ async function buscarSugestoesEndereco() {
 }
 
 ["rua","bairro"].forEach(id => $(id).addEventListener("input", () => {
+  buscaEnderecoControle += 1;
   enderecoSelecionado = {};
   esconderSugestoes();
   clearTimeout(buscaEnderecoTimer);
-  buscaEnderecoTimer = setTimeout(buscarSugestoesEndereco, 750);
+  buscaEnderecoTimer = setTimeout(buscarSugestoesEndereco, 900);
 }));
 
 function buscarSugestoesAoVoltarParaRua() {
@@ -402,9 +409,11 @@ $("formEndereco").addEventListener("submit", async event => {
         cep: $("cep").value,
         complemento: $("complemento").value,
         referencia: $("referencia").value,
+        observacaoEntrega: $("observacaoEntrega").value,
         horario: $("horario").value,
         quantidadePessoas: $("quantidadePessoas").value,
         latitude: enderecoSelecionado.latitude,
+        placeId: enderecoSelecionado.placeId,
         longitude: enderecoSelecionado.longitude,
         taxaEntrega: enderecoSelecionado.taxaEntrega,
         distanciaKm: enderecoSelecionado.distanciaKm

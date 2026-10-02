@@ -98,8 +98,9 @@
             <label class="number-field">Número<input id="numero" inputmode="numeric"></label>
           </div>
           <div id="sugestoesEndereco" class="address-suggestions hidden" role="listbox" aria-label="Sugestões de endereço"></div>
+          <small>Dados: IBGE e © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>. Powered by <a href="https://www.geoapify.com/" target="_blank" rel="noopener">Geoapify</a>.</small>
           <div class="field-row">
-            <label>Bairro<input id="bairro" autocomplete="address-level3" placeholder="Digite ou selecione uma sugestão"></label>
+            <label>Bairro / localidade<input id="bairro" autocomplete="address-level3" placeholder="Digite ou selecione uma sugestão"></label>
             <label class="cep-field">CEP<input id="cep" required inputmode="numeric" maxlength="8" pattern="[0-9]{8}" placeholder="00000000"></label>
           </div>
           <label>Tipo de residência
@@ -113,6 +114,7 @@
             </span>
           </label>
           <label>Ponto de referência (opcional)<input id="referencia"></label>
+          <label>Observação para o entregador (opcional)<input id="observacaoEntrega" maxlength="500" placeholder="Ex.: tocar a campainha ou entregar na portaria"></label>
         </div>
 
         <div id="camposAgendamento" class="hidden">

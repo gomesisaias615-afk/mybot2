@@ -5,6 +5,8 @@ const path = require("path");
 const crypto = require("crypto");
 const express = require("express");
 const cors = require("cors");
+const { buscarGeoapify, obterSugestaoGeoapify, juntarSugestoes } = require("./geoapify-enderecos");
+const { aplicarRenomeacoes, nomesEndereco } = require("./renomeacoes-enderecos");
 const { MercadoPagoConfig, Payment } = require("mercadopago");
 const { webhookUrlMercadoPago, publicKeyMercadoPago } = require("../config/pagamento");
 const { validarAcesso } = require("../services/painelEstoqueAuth.service");
@@ -512,24 +514,42 @@ function consultasAlternativasDeLogradouro(busca) {
   return [...new Set(alternativas.map(item => item.trim()).filter(Boolean))];
 }
 
+function formatarNomeEndereco(valor) {
+  const conectivos = new Set(["de", "da", "do", "das", "dos", "e"]);
+  const siglas = new Set(["BR", "SE", "IBGE", "UF", "CEP"]);
+  return String(valor || "").trim().split(/\s+/).map((palavra, indice) => {
+    if (siglas.has(palavra.toUpperCase()) || /^(?:BR|SE)-?\d+$/i.test(palavra) || /^[IVXLCDM]+$/i.test(palavra)) return palavra.toUpperCase();
+    const minuscula = palavra.toLocaleLowerCase("pt-BR");
+    if (indice > 0 && conectivos.has(minuscula)) return minuscula;
+    return minuscula.replace(/(^|[-'’])\p{L}/gu, letra => letra.toLocaleUpperCase("pt-BR"));
+  }).join(" ");
+}
+
+function catalogoLocalEstancia() {
+  return aplicarRenomeacoes(lerJson(catalogoEnderecosPath, []),
+    lerJson(path.join(__dirname, "data", "renomeacoes-estancia.json"), []));
+}
+
 function sugestoesLocaisDeEstancia(busca) {
   const palavrasIgnoradas = new Set(["de", "da", "do", "das", "dos"]);
   const termos = normalizar(expandirAbreviacoesEndereco(busca))
     .replace(/[^a-z0-9\s]/g, " ")
     .split(/\s+/).filter(termo => termo && !palavrasIgnoradas.has(termo));
   if (!termos.length) return [];
-  return lerJson(catalogoEnderecosPath, [])
+  return catalogoLocalEstancia()
     .filter(item => {
-      const alvo = normalizar(`${item.rua || item.logradouro || ""} ${item.bairro || ""}`);
-      return termos.every(termo => alvo.includes(termo));
+      return nomesEndereco(item).some(nome => {
+        const alvo = normalizar(expandirAbreviacoesEndereco(`${nome} ${item.bairro || ""}`));
+        return termos.every(termo => alvo.includes(termo));
+      });
     })
     .slice(0, 8)
     .map((item, indice) => ({
       placeId: `estancia-local-${indice}`,
-      texto: [item.bairro, `${item.cidade} - ${item.uf}`, item.cep ? `CEP ${item.cep}` : ""].filter(Boolean).join(" — "),
-      rua: item.rua || item.logradouro,
-      logradouro: item.rua || item.logradouro,
-      bairro: item.bairro || "",
+      texto: [formatarNomeEndereco(item.bairro), `${formatarNomeEndereco(item.cidade)} - ${item.uf}`, item.cep ? `CEP ${item.cep}` : ""].filter(Boolean).join(" — "),
+      rua: formatarNomeEndereco(item.rua || item.logradouro),
+      logradouro: formatarNomeEndereco(item.rua || item.logradouro),
+      bairro: formatarNomeEndereco(item.bairro),
       cidade: item.cidade || "Estância",
       estado: item.uf || "SE",
       cep: item.cep || "",
@@ -551,7 +571,7 @@ function distanciaEmKm(latitudeA, longitudeA, latitudeB, longitudeB) {
 
 function enderecoLocalMaisProximo(latitude, longitude) {
   let melhor;
-  for (const item of lerJson(catalogoEnderecosPath, [])) {
+  for (const item of catalogoLocalEstancia()) {
     const distanciaKm = distanciaEmKm(latitude, longitude, Number(item.latitude), Number(item.longitude));
     if (!Number.isFinite(distanciaKm) || (melhor && distanciaKm >= melhor.distanciaKm)) continue;
     melhor = { item, distanciaKm };
@@ -562,37 +582,57 @@ function enderecoLocalMaisProximo(latitude, longitude) {
   const item = melhor.item;
   return {
     placeId: "estancia-gps-local",
-    rua: item.rua || item.logradouro || "",
-    logradouro: item.rua || item.logradouro || "",
+    rua: formatarNomeEndereco(item.rua || item.logradouro),
+    logradouro: formatarNomeEndereco(item.rua || item.logradouro),
     numero: "",
-    bairro: item.bairro || "",
+    bairro: formatarNomeEndereco(item.bairro),
     cidade: item.cidade || "Estância",
     estado: item.uf || "SE",
     cep: item.cep || "",
     latitude,
     longitude,
-    enderecoFormatado: [item.rua || item.logradouro, item.bairro, "Estância - SE"].filter(Boolean).join(", "),
+    enderecoFormatado: [formatarNomeEndereco(item.rua || item.logradouro), formatarNomeEndereco(item.bairro), "Estância - SE"].filter(Boolean).join(", "),
     localizacaoAproximada: true,
     distanciaDaRuaKm: Number(melhor.distanciaKm.toFixed(2)),
     atribuicao: "© OpenStreetMap contributors"
   };
 }
 
-function enderecoLocalPorRua(rua) {
-  const busca = normalizar(expandirAbreviacoesEndereco(rua));
-  if (!busca) return null;
-  return lerJson(catalogoEnderecosPath, []).find(item =>
-    normalizar(expandirAbreviacoesEndereco(item.rua || item.logradouro)) === busca
-  ) || null;
+function chaveEnderecoManual(valor) {
+  return normalizar(expandirAbreviacoesEndereco(valor))
+    .replace(/[^a-z0-9\s]/g, " ")
+    .split(/\s+/).filter(parte => parte && !["de", "da", "do", "das", "dos"].includes(parte))
+    .join(" ");
 }
 
-app.get("/api/enderecos/sugestoes", (req, res) => {
+function enderecoLocalPorRua(rua, bairro = "") {
+  const busca = chaveEnderecoManual(rua);
+  if (!busca) return null;
+  const candidatos = catalogoLocalEstancia().filter(item =>
+    nomesEndereco(item).some(nome => chaveEnderecoManual(nome) === busca)
+  );
+  const bairroBusca = chaveEnderecoManual(bairro);
+  const correspondentes = bairroBusca ? candidatos.filter(item => chaveEnderecoManual(item.bairro) === bairroBusca) : candidatos;
+  if (correspondentes.length === 1) return correspondentes[0];
+  // A mesma rua pode aparecer em localidades diferentes. Não escolhemos
+  // automaticamente o primeiro ponto ao confirmar um endereço manual.
+  if (!bairroBusca && candidatos.length === 1) return candidatos[0];
+  return null;
+}
+
+app.get("/api/enderecos/sugestoes", async (req, res) => {
   const busca = expandirAbreviacoesEndereco(String(req.query.q || "").trim());
   const cidade = String(req.query.cidade || configuracaoEntrega().cidadeAtendida).trim();
   const estado = String(req.query.estado || configuracaoEntrega().estadoAtendido).trim().toUpperCase();
   if (busca.length < 2 || normalizar(cidade) !== "estancia" || estado !== "SE") return res.json([]);
+  const locais = sugestoesLocaisDeEstancia(busca);
+  const externas = (await buscarGeoapify(busca)).map(item => ({ ...item,
+    rua: formatarNomeEndereco(item.rua), logradouro: formatarNomeEndereco(item.logradouro),
+    bairro: formatarNomeEndereco(item.bairro),
+    texto: [formatarNomeEndereco(item.bairro), "Estância - SE", item.cep ? `CEP ${item.cep}` : ""].filter(Boolean).join(" — ")
+  }));
   res.set("Cache-Control", "private, max-age=300");
-  return res.json(sugestoesLocaisDeEstancia(busca));
+  return res.json(juntarSugestoes(locais, externas, chaveEnderecoManual));
 });
 
 // Esta rota é exclusiva do painel administrativo. Ela pode usar o serviço de
@@ -639,7 +679,7 @@ app.get("/api/painel/enderecos/sugestoes", async (req, res) => {
 });
 
 app.get("/api/enderecos/local/:placeId", async (req, res) => {
-  const catalogo = lerJson(catalogoEnderecosPath, []);
+  const catalogo = catalogoLocalEstancia();
   const endereco = catalogo.find(item => item.id === req.params.placeId);
 
   if (!endereco) {
@@ -707,6 +747,9 @@ function normalizar(texto) {
 }
 
 function expandirAbreviacoesEndereco(texto) {
+  // Equivale as grafias da data no nome da via, sem alterar números de casas
+  // ou outros logradouros que contenham a palavra "primeiro".
+  texto = String(texto || "").replace(/\b(?:primeiro|1[º°o]?)\s+de\s+maio\b/gi, "1 de Maio");
   const abreviacoes = {
     r: "Rua",
     rua: "Rua",
@@ -882,16 +925,24 @@ app.post("/api/pedido/:pedidoId/endereco", async (req, res) => {
   }
 
   let calculoEntrega = { modoTaxa: null, distanciaKm: null, taxaEntrega: 0 };
-  let latitudeEntrega = Number(endereco.latitude);
-  let longitudeEntrega = Number(endereco.longitude);
+  let latitudeEntrega = endereco.latitude == null || endereco.latitude === "" ? NaN : Number(endereco.latitude);
+  let longitudeEntrega = endereco.longitude == null || endereco.longitude === "" ? NaN : Number(endereco.longitude);
 
   if (modalidade === "entrega") {
     try {
       let localizado;
-      if (Number.isFinite(latitudeEntrega) && Number.isFinite(longitudeEntrega)) {
+      if (String(endereco.placeId || "").startsWith("geoapify:")) {
+        const externo = obterSugestaoGeoapify(endereco.placeId);
+        if (!externo || chaveEnderecoManual(externo.rua) !== chaveEnderecoManual(endereco.rua)) {
+          throw new Error("Selecione novamente o endereço nas sugestões para confirmar a entrega.");
+        }
+        localizado = externo;
+        latitudeEntrega = externo.latitude;
+        longitudeEntrega = externo.longitude;
+      } else if (Number.isFinite(latitudeEntrega) && Number.isFinite(longitudeEntrega)) {
         localizado = enderecoLocalMaisProximo(latitudeEntrega, longitudeEntrega);
       } else {
-        const ruaLocal = enderecoLocalPorRua(endereco.rua);
+        const ruaLocal = enderecoLocalPorRua(endereco.rua, bairro);
         if (ruaLocal) {
           latitudeEntrega = Number(ruaLocal.latitude);
           longitudeEntrega = Number(ruaLocal.longitude);
@@ -899,7 +950,7 @@ app.post("/api/pedido/:pedidoId/endereco", async (req, res) => {
         }
       }
       if (!localizado) {
-        throw new Error("Selecione uma rua da sugestão ou use sua localização atual para confirmar a entrega.");
+        throw new Error("Confira a rua e o bairro/localidade ou selecione o endereço nas sugestões para confirmar a entrega.");
       }
       calculoEntrega = await calcularTaxaEntrega(latitudeEntrega, longitudeEntrega);
     } catch (erro) {
@@ -925,6 +976,9 @@ app.post("/api/pedido/:pedidoId/endereco", async (req, res) => {
       ? (tipoResidencia === "casa" ? "Casa" : "Apartamento")
       : "Não se aplica",
     referencia: String(endereco.referencia || "Sem referência").trim(),
+    observacaoEntrega: modalidade === "entrega"
+      ? String(endereco.observacaoEntrega || "").trim().slice(0, 500)
+      : "",
     cidade: "Estância",
     estado: "SE",
     cep: modalidade === "entrega" ? formatarCep(cep) : "Não se aplica",

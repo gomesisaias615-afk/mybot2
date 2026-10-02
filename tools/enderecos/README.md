@@ -1,5 +1,17 @@
 # Gerador de endereços locais
 
+## Denominações municipais verificadas
+
+O servidor aplica `site/data/renomeacoes-estancia.json` sobre o catálogo, sem alterar o arquivo agregado original. Quatro vínculos foram conferidos em 02/10/2026: Via Local 14/Luar de Estância → Sidnei de Souza; Rua B/Bela Vista → Pedro Rubens dos Santos; Rua H/Bela Vista → José Alberto Andrade de Santana; Rua F/Humberto Ralim → Jornalista José Paulo de Andrade. Cada vínculo registra lei e fonte. Os nomes antigos continuam pesquisáveis e aceitos na confirmação manual; a sugestão exibe o novo nome. As coordenadas são os pontos aproximados da via antiga, não um novo levantamento. A associação entre a localidade cadastral Bela Vista e o residencial citado pela lei é uma vinculação geográfica, não um limite oficial de bairro.
+
+As outras 42 denominações levantadas ainda não foram incluídas: falta confirmar o vínculo geográfico. Alexandro Souza Santos Soares foi mencionado para ruas A e C do Albano Franco em leis diferentes e exige conferência adicional. Não utilizar o centro do bairro como coordenada de uma rua. O complemento só aplica vínculos únicos de rua/localidade com coordenadas numéricas, para evitar escolha arbitrária entre homônimos. Rode `node --test site/renomeacoes-enderecos.test.js` para validar.
+
+## Sugestões externas do Geoapify
+
+Configure `GEOAPIFY_API_KEY` no serviço MyBot2 do Render. A chave fica no servidor. `/api/enderecos/sugestoes` combina até 8 resultados locais com até 8 do Geoapify, preservando localidades distintas e removendo repetições. Resultados externos precisam conter rua, coordenadas e município Estância/SE. A consulta usa o endpoint de autocomplete, após 900 ms de pausa no formulário e a partir de 3 caracteres.
+
+Há cache de 10 minutos, agrupamento de consultas idênticas simultâneas, timeout de 2,5 segundos e retorno local se a API falhar. As sugestões externas selecionadas ficam disponíveis por uma hora na memória do servidor para confirmar a coordenada antes do pedido; após reinício ou expiração, o cliente deve selecionar novamente. Créditos e restrições devem ser acompanhados no painel do Geoapify. Atribuição dos provedores aparece abaixo da busca.
+
 ## Complemento oficial do IBGE
 
 A lista do site agora combina o recorte anterior do OpenStreetMap com o cadastro municipal completo do CNEFE, Censo 2022, código IBGE 2802106. Download oficial: https://ftp.ibge.gov.br/Cadastro_Nacional_de_Enderecos_para_Fins_Estatisticos/Censo_Demografico_2022/Arquivos_CNEFE/CSV/Municipio/28_SE/

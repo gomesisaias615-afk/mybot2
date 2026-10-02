@@ -216,6 +216,9 @@ function formatarEnderecoAtendente(pedidoId, endereco, pedido) {
     }
     texto += `➕ *Complemento:* ${endereco.complemento || "Sem complemento"}\n`;
     texto += `📌 *Referência:* ${endereco.referencia || "Sem referência"}\n\n`;
+    if (String(endereco.observacaoEntrega || "").trim()) {
+      texto += `📝 *Observação para o entregador:* ${String(endereco.observacaoEntrega).trim()}\n\n`;
+    }
   }
   texto += `🕒 *Horário do pedido:* ${horarioPedido}`;
 
