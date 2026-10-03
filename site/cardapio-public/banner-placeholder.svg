@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 500" role="img" aria-labelledby="title">
-  <title id="title">Espaço para imagem de capa</title>
-  <defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#0d3b2b"/><stop offset="1" stop-color="#15965a"/></linearGradient></defs>
-  <rect width="1200" height="500" fill="url(#g)"/>
-  <text x="600" y="245" text-anchor="middle" font-family="Arial,sans-serif" font-size="54" font-weight="700" fill="#fff">IMAGEM DE CAPA</text>
-  <text x="600" y="315" text-anchor="middle" font-family="Arial,sans-serif" font-size="28" fill="#d9f7e7">Adicione a identidade da nova pizzaria</text>
-</svg>
-

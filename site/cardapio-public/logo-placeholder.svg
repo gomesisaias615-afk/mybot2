@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
-  <title id="title">Espaço para logo</title>
-  <rect width="512" height="512" rx="96" fill="#effbf5"/>
-  <circle cx="256" cy="220" r="112" fill="none" stroke="#15965a" stroke-width="24"/>
-  <path d="M180 220h152M256 144v152" stroke="#15965a" stroke-width="24" stroke-linecap="round"/>
-  <text x="256" y="405" text-anchor="middle" font-family="Arial,sans-serif" font-size="48" font-weight="700" fill="#0d3b2b">LOGO</text>
-</svg>
-
