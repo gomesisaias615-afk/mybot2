@@ -102,6 +102,7 @@
             <label>Bairro / localidade<input id="bairro" autocomplete="address-level3" placeholder="Digite ou selecione uma sugestão"></label>
             <label class="cep-field">CEP<input id="cep" required inputmode="numeric" maxlength="8" pattern="[0-9]{8}" placeholder="00000000"></label>
           </div>
+          <div id="sugestoesBairro" class="address-suggestions hidden" role="listbox" aria-label="Sugestões de bairro ou localidade"></div>
           <label>Tipo de residência
             <span class="select-wrap">
               <select id="complemento">
@@ -178,6 +179,7 @@
     <button id="btnPagar" class="pay-button hidden" type="button">Pagar</button>
   </main>
   <script src="https://sdk.mercadopago.com/js/v2"></script>
+  <script src="/bairros-busca.js"></script>
   <script src="/checkout.js"></script>
   <script>window.addEventListener("load",()=>setTimeout(()=>document.querySelector("#mybotSplash")?.classList.add("sair"),650));</script>
 </body>

@@ -623,6 +623,7 @@ function enderecoLocalPorRua(rua, bairro = "") {
   return null;
 }
 
+require("./bairros-sugestoes").registrarBairros(app, configuracaoEntrega, () => catalogoLocalEstancia());
 app.get("/api/enderecos/catalogo", (req, res) => {
   res.set("Cache-Control", "no-store");
   if (!sugestoesBaseLocalAtivas) return res.json([]);

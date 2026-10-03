@@ -177,10 +177,10 @@ async function buscarSugestoesEndereco() {
   const bairro = $("bairro").value.trim();
   const cidade = $("cidadeEntrega").value.trim();
   const estado = $("estadoEntrega").value;
-  if (!estado || !cidade || Math.max(rua.length,bairro.length) < 2) return esconderSugestoes();
+  if (!estado || !cidade || rua.length < 2) return esconderSugestoes();
   const controle = ++buscaEnderecoControle;
   clearTimeout(buscaExternaTimer);
-  const busca = rua || bairro;
+  const busca = rua;
   const termos = chaveBuscaEndereco(busca).split(" ").filter(termo => termo && !["de", "da", "do", "das", "dos"].includes(termo));
   let locais = [];
   let externasMostradas = false;
@@ -212,7 +212,7 @@ async function buscarSugestoesEndereco() {
   if (!externasMostradas) renderizarSugestoesEndereco(locais);
 }
 
-["rua","bairro"].forEach(id => $(id).addEventListener("input", () => {
+["rua"].forEach(id => $(id).addEventListener("input", () => {
   buscaEnderecoControle += 1;
   enderecoSelecionado = {};
   esconderSugestoes();
@@ -245,9 +245,9 @@ function tentarSugestaoPersistente() {
 }
 
 function manterPrimeiraSugestaoAoSair(evento) {
-  if (evento.target.closest("#sugestoesEndereco, #rua, #bairro")) return;
+  if (evento.target.closest("#sugestoesEndereco, #rua")) return;
   if (primeiraSugestaoAte || enderecoSelecionado.rua || modalidadeSelecionada !== "entrega") return;
-  if (!( $("rua").value.trim() || $("bairro").value.trim() ) || !$("cidadeEntrega").value.trim() || !$("estadoEntrega").value) return;
+  if (!$("rua").value.trim() || !$("cidadeEntrega").value.trim() || !$("estadoEntrega").value) return;
   primeiraSugestaoAte = Date.now() + 60 * 1000;
   clearTimeout(sugestoesEnderecoTimer);
   sugestoesEnderecoTimer = setTimeout(() => {
@@ -746,6 +746,10 @@ btnVoltar.addEventListener("click", async () => {
   }
 });
 
+const buscaBairros = MyBotBairros.iniciar({
+  obterArea:()=>({cidade:$("cidadeEntrega").value.trim(),estado:$("estadoEntrega").value}),
+  alterado:()=>{enderecoSelecionado={};}
+});
 async function iniciar() {
   carregarCatalogoEndereco();
   try {
